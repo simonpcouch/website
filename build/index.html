@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<head>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154996836-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154996836-1');
+</script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title> Simon P. Couch </title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
+
+<style>
+@import url('https://fonts.googleapis.com/css?family=Open+Sans|Slabo+27px');
+@import url('https://fonts.googleapis.com/css?family=Raleway');
+
+body {
+  color: #000;
+  background-color: #f4f4f4;
+  transition: background-color 0.75s ease;
+  text-align: center;
+  font-size: 120%;
+  line-height: 1.618;
+}
+
+h1, h2, h3, h4{
+  letter-spacing: 0.05em;
+  line-height: 1.1;
+  font-family: 'Slabo 27px', serif;
+}
+
+h1 {
+    font-size: 3em;
+}
+
+h2 {
+    font-size: 1.5em;
+}
+p {
+  max-width: 30em;
+  margin-bottom: 1.618em;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.link-text {
+    font-family: 'Open Sans', sans-serif;
+    color: #f4f4f4;
+    text-decoration: underline;
+}
+
+a {
+  color: black;
+}
+
+.panel {
+  min-height: 100vh;
+  display: flex;
+  justify-content: space-around;
+  flex-direction: column;
+  align-items: center;
+}
+
+.color-blue {
+  background-color: #1c4a61;
+  color: #ffffff;
+}
+
+.color-white {
+  background-color: #e8e8e8;
+}
+
+.color-indigo {
+  background-color: #331242;
+  color: #ffffff;
+}
+.color-brown {
+  background-color: #4f3520;
+  color: #ffffff;
+}
+
+.text {
+  min-height: 100vh;
+  jutify-content: center;
+  text-align: center;
+}
+
+.color-green {
+  background-color: #37402d;
+  color: #ffffff;
+}
+
+.color-yellow {
+  background-color: #b5b13e;
+}
+.color-orange {
+  background-color: #D97B37;
+}
+.color-red {
+  background-color: #4a0e07;
+}
+
+#about, #research, #experience, #projects{
+  color: #f4f4f4;
+}
+
+.box-container {
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.box {
+  margin: 2.5%;
+  padding: 2.5%;
+  width: 45%;
+  box-sizing: border-box;
+  background: #f4f4f4;
+  border-radius: 15px;
+  display: inline-block;
+}
+
+.box p {
+  font-family: 'Open Sans', sans-serif;
+  line-height: 1.618;
+  letter-spacing: 0.05em;
+  color: #333;
+  text-align: center;
+}
+
+.box h2 {
+  line-height: 1.618;
+  color: #333;
+}
+
+hr.title {
+	border-top: 2px solid #333;
+}
+
+#contact {
+    margin-top: 15%;
+}
+ 
+div.container
+{
+    font-family: Raleway;
+    margin: 0 auto;
+    padding: 1.5% 1.5%;
+    text-align: right;
+}
+
+div.container a
+{
+    color: #333;
+    text-decoration: none;
+    font: 20px Raleway;
+    margin: 0px 10px;
+    padding: 10px 10px;
+    position: relative;
+    z-index: 0;
+    cursor: pointer;
+}
+
+div.topLeftBorders a:before
+{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 2px;
+    height: 0px;
+    background: #333;
+    content: "";
+    opacity: 1;
+    transition: all 0.3s;
+}
+
+div.topLeftBorders a:after
+{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 2px;
+    background: #333;
+    content: "";
+    opacity: 1;
+    transition: all 0.3s;
+}
+
+div.topLeftBorders a:hover:before
+{
+    height: 100%;
+}
+
+div.topLeftBorders a:hover:after
+{
+    opacity: 0;
+    top: 100%;
+}
+
+</style>
+</head>
+<body>
+    <div class="container indigo topLeftBorders">
+        <a href="#home">HOME</a>
+        <a href="#about">ABOUT</a>
+        <a href="#projects">PROJECTS</a>
+        <a href="#research">RESEARCH</a>
+        <a href="#experience">EXPERIENCE</a>
+        <a href="#contact">CONTACT</a>
+    </div> 
+  
+    
+<!-- =========================== New panel! =========================== -->
+ 
+    
+    <div class="panel" data-color="white" id="home">
+        <div>
+            <h1> Simon P. Couch </h1>
+            <p> R developer, statistics student, etc. </p> 
+            <p> 
+                <a href="https://www.linkedin.com/in/simonpcouch" target='_blank'><i class="fa fa-linkedin-square" style="font-size:36px"></i></a>
+                <a href="https://github.com/simonpcouch" target='_blank'><i class="fa fa-github-square" style="font-size:36px"></i></a>
+                <a href="https://twitter.com/simonpcouch" target='_blank'><i class="fa fa-twitter-square" style="font-size:36px"></i></a>
+            </p>
+            <p> <a href="#about"><i class="fa fa-arrow-down" aria-hidden="true"></i></a></p>
+            <br>
+            <br>
+        </div>
+    </div>
+ 
+    
+<!-- =========================== New panel! =========================== -->    
+
+    
+    <div class="panel" data-color="green" id="about">
+        <p> <a href="#home"><i class="fa fa-arrow-up" aria-hidden="true" style="color: #f4f4f4"></i></a></p>
+        <div class="text">
+        <h1>About Me</h1>
+        <img src="simon.jpg" alt=" " width=230px align="left" vspace="16px" hspace="12px" style="border:3px solid white;">
+        <p> From a small town in Kansas, I currently attend Reed College in Portland, Oregon studying Mathematical Statistics. </p>
+        <p> I care about data science, statistics, and the thoughtful application of these practices in enabling and articulating social arguments. </p>
+        <p> When I'm not working, I enjoy writing music, being outdoors, cooking, and spending time with my friends and family. </p>
+        <p> <a href="#projects"><i class="fa fa-arrow-down" aria-hidden="true" style="color: #f4f4f4"></i></a></p>
+        <br>
+        </div>
+    </div>
+
+
+<!-- =========================== New panel! =========================== -->
+
+
+    <div class="panel" data-color="brown" id="projects">
+        <p> <a href="#projects"><i class="fa fa-arrow-up" aria-hidden="true" style="color: #f4f4f4"></i></a></p>
+        <div class="box-container">
+        <h1>Some Projects I Work On</h1>
+        
+            <div data-aos="fade-up" data-aos-duration="700">
+              <div class="box">
+                  <h2>A Grammar for Hypothesis Testing in the Tidyverse</h2>
+                  
+                  <p>I'm a contributor to {infer}, a widely used R package providing a framework for hypothesis testing in the R tidyverse setting that emphasizes the underlying intuition behind "statistical significance."</p>
+                  <p><a href="https://infer.netlify.com/">learn more</a> // <a href="https://github.com/tidymodels/infer">source code</a></p>
+                  
+              </div>
+            </div>
+            
+            <div data-aos="fade-up" data-aos-duration="1000">
+              <div class="box">
+                  <h2> Making Bikeshare Data Accessible </h2>
+                  <p>I maintain and co-author the R package {gbfs}, providing a suite of tools to easily interface with live bikeshare data from hundreds of cities worldwide. </p>
+                  <p><a href="https://gbfs.netlify.com/">learn more</a> // <a href="https://github.com/ds-civic-data/gbfs">source code</a></p>
+              </div>
+            </div>
+            
+            <div data-aos="fade-up" data-aos-duration="1000">
+              <div class="box">
+                  <h2> An Alternative to Rankings-Based College Exploration </h2>
+                  <p>In this work, my co-authors and I argued that newsmagazine college rankings like those provided by U.S. News are both unhelpful for prospective students and reinforce existing status obsession. As an alternative, we developed a data-centered tool that focuses on what makes a college similar to, not better than, another college.</p>
+                  <p><a href="https://github.com/simonpcouch/College-Exploration">source code</a></p>
+              </div>
+            </div>
+            
+        </div>
+        <p> <a href="#research"><i class="fa fa-arrow-down" aria-hidden="true" style="color: #f4f4f4"></i></a></p>
+        <br>
+    </div>
+
+
+<!-- =========================== New panel! =========================== -->
+
+
+    <div class="panel" data-color="blue" id="research">
+        <p> <a href="#projects"><i class="fa fa-arrow-up" aria-hidden="true" style="color: #f4f4f4"></i></a></p>
+        <div class="box-container">
+        <h1>Research Projects</h1>
+        
+            <div data-aos="fade-up" data-aos-duration="700">
+              <div class="box">
+            		<h2> Differentially Private Nonparametric Hypothesis Testing </h2>
+            		<p> <i>  Proceedings of the 2019 ACM SIGSAC Conference on Computer and Communications Security - London, United Kingdom</i>  </p>
+            		<p> Our group developed a new class of privacy-preserving hypothesis tests, largely analogous to the non-parametrics in conventional statistics, that drastically improves on all existing differentially-private tests intended for the same use cases.</p>
+                <p> <i> <b> Simon P. Couch </b>, Zeki Kazan, Kaiyan Shi, Andrew Bray, Adam Groce </i> </p>
+                <p><a href="https://dl.acm.org/citation.cfm?id=3319535.3339821">official publication</a> // <a href="https://github.com/simonpcouch/non-pm-dpht">source code and drafts</a> </p>    
+              </div>
+            </div>
+
+            <div data-aos="fade-up" data-aos-duration="1000">
+              <div class="box">
+            		<h2> Encouraging Equitable Bikeshare </h2>
+            		<p> <i>  (Submitted)</i>  </p>
+                <p> In making use of my R package {gbfs} to scrape latitude/longitudes of over 45,000 bikes across the country and joining that data with census demographic data, this project set out to determine the characteristics of a community that are most salient in understanding the spatial distribution of bikes, and how these interact with different operating models of bikeshare programs. A preliminary report on this research tied for second place in the ASA-sponsored “Undergraduate Statistics Research Competition.”</p>
+                <p> <i> Advised by Heather Kitada Smalley Ph.D. </i></p>
+                <p><a href="https://www.causeweb.org/usproc/usresp/2019/spring/winners">award-winning paper</a> // <a href="https://github.com/simonpcouch/bikeshare">source code and drafts</a></p>    
+              </div>
+            </div>
+            
+            <div data-aos="fade-up" data-aos-duration="1000">
+              <div class="box">
+            		<h2> Gendering Code Documentation</h2>
+                <p> <i> (In Preparation) </i> </p>
+                <p> Through interviews with women in statistical computing, as well as quantitative analyses utilizing web scraping and text mining methods, I argue that code documentation in the tidyverse is written more effectively and inclusively than other R code documentation, and that this is meaningful for understanding gender representation in the user community.</p>
+                <p> <i> Advised by Kjersten Whittington Ph.D.</i></p>
+                <p><a href="https://github.com/simonpcouch/gendering_documentation">source code and drafts</a></p>    
+              </div>
+            </div>
+            
+            <div data-aos="fade-up" data-aos-duration="1000">
+              <div class="box">
+            		<h2> Social Divisions in Data </h2>
+            		<p> <i> (In Preparation) </i>  </p>
+                <p> I argue that, rather than viewing datasets as unargumentative, sterile, or “raw,” datasets express and reinforce the social conceptualizations held by their authors. More specifically, in this paper, I examine how sex, gender, race, and ethnicity are named and encoded as variables in data, and how this process is patterned by identities held by the datasets’ authors. </p>
+                <p> <i>Advised by Kjersten Whittington Ph.D.</i> </p>
+                <p><a href="https://github.com/simonpcouch/social_divisions_in_data">source code and drafts</a></p>    
+              </div>
+            </div>
+            
+        </div>
+        <p> <a href="#experience"><i class="fa fa-arrow-down" aria-hidden="true" style="color: #f4f4f4"></i></a></p>
+        <br>
+    </div>
+
+
+<!-- =========================== New panel! =========================== -->
+
+
+    <div class="panel" data-color="red" id="experience">
+      <p> <a href="#research"><i class="fa fa-arrow-up" aria-hidden="true" style="color: #f4f4f4"></i></a></p>
+      <div class="box-container">
+        <h1>Professional Experience</h1>
+        
+        <div data-aos="fade-up" data-aos-duration="700">
+          <div class="box">
+            <h2>...In Industry</h2>
+            <div>
+                <hr class="title">
+            </div>
+            <p><strong>Analytics Intern - John Deere</strong> <br> Olathe, Kansas // May 2019 - August 2019</p>
+            <p>automated data integrity checks, consulted on third-party data purchases, reported on survey panel research, and developed geospatial models on customer mobility</p>
+            <br>
+            <p><strong>Data Analysis Intern - Kartini Clinic for Children & Families</strong> <br> Portland, OR // January 2018</p>
+            <p>analyzed, interpreted, and modeled financial and pharmacogenetic data, conducted company-wide presentations to communicate notable findings, and advised future data collection strategies at this adolescent eating disorder clinic</p>
+          </div>
+        </div>
+        
+        <div data-aos="fade-up" data-aos-duration="1000">
+          <div class="box">
+            <h2>...On-Campus</h2>
+            <div>
+                <hr class="title">
+            </div>
+            <p><strong>Data Science Consultant</strong> <br> Instructional Technology Services <br> January 2019 - Present</p>
+            <p>advise and implement programs in R and other data technologies to catalyze research efforts by faculty and student researchers</p>
+            <br>
+            <p><strong>R Developer</strong> <br> Associate Professor of Statistics Andrew Bray <br> December 2017 - Present</p>
+            <p>write, optimize, build tests for, and maintain expressive, concise, and computationally efficient code to assist R users in real-world problem solving</p>
+            <br>
+            <p><strong>Teaching Assistant</strong> <br> Assistant Professor of Statistics Kelly McConville <br> August 2019 - Present</p>
+            <p>lecture and host lab sessions for courses in computational statistics, foster a positive and inclusive environment in what is many students' first experience with coding and analytics</p>
+            <br>
+            <p><strong>House Adviser</strong> <br> Reed College Residence Life <br> August 2018 - Present</p>
+            <p>maintain close relationships with each of 15 to 20 residents yearly, plan times to come together as a group, and encourage proactive conflict resolution</p>
+            <br>
+            <p><strong>Peer Career Adviser</strong> <br> Center for Life Beyond Reed <br> August 2018 - May 2019</p>
+            <p>advised students one-on-one on various professional development pursuits and coordinated in-residence workshops and information sessions, leading the Research, Technology, and Innovation Community of Purpose</p>
+          </div>
+        </div>
+        
+        <div data-aos="fade-up" data-aos-duration="1000">
+          <div class="box">
+            <h2>Skills</h2>
+            <div>
+                <hr class="title">
+            </div>
+            
+            <p><strong>R</strong><i> (advanced)</i></p>
+            <p><strong>Git & GitHub</strong><i> (intermediate)</i></p>
+            <p><strong>Python</strong> <i>(intermediate)</i></p>
+            <p><strong>SQL</strong> <i>(intermediate)</i></p>
+            <p><strong>ArcGIS Pro</strong> <i>(intermediate)</i></p>
+            <p><strong>Tableau</strong><i> (intermediate)</i></p>
+            <p><strong>LaTeX</strong> <i>(intermediate)</i></p>
+            <p><strong>Jupyter</strong> <i>(basic)</i></p>
+            <p><strong>CSS</strong> <i>(basic)</i></p>
+            <p><strong>HTML</strong> <i>(basic)</i></p>
+          </div>
+        </div>
+      </div>
+      <p> <a href="#contact"><i class="fa fa-arrow-down" aria-hidden="true" style="color: #f4f4f4"></i></a></p>
+      <br>
+    </div>
+    
+<!-- =========================== New panel! =========================== -->
+    
+    <div class="panel" data-color="white" id="contact">
+        <p> <a href="#experience"><i class="fa fa-arrow-up" aria-hidden="true"></i></a></p>
+        <div>
+        <h1>Contact Me</h1>
+        <p> I'm always glad to talk data science, statistics, and carrying more inclusive masculinities in these settings. </p>
+        <p> <a href="mailto:simonpatrickcouch@gmail.com" target="_top"> Feel free to reach out!</a> </p>        
+        <p> Also, connect with me. :) </p>
+        <p> 
+                <a href="https://www.linkedin.com/in/simonpcouch" target='_blank'><i class="fa fa-linkedin-square" style="font-size:36px"></i></a>
+                <a href="https://github.com/simonpcouch" target='_blank'><i class="fa fa-github-square" style="font-size:36px"></i></a>
+                <a href="https://twitter.com/simonpcouch" target='_blank'><i class="fa fa-twitter-square" style="font-size:36px"></i></a>
+        </p>
+        <br>
+        <p> <a href="#home"><i class="fa fa-arrow-up" aria-hidden="true"></i></a></p>
+        </div>
+    </div>
+<script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script>
+  AOS.init();
+</script>
+<script>
+$(window).scroll(function() {
+  
+  // selectors
+  var $window = $(window),
+      $body = $('body'),
+      $panel = $('.panel');
+  
+  // Change 33% earlier than scroll position so colour is there when you arrive.
+  var scroll = $window.scrollTop() + ($window.height() / 2);
+ 
+  $panel.each(function () {
+    var $this = $(this);
+    
+    // if position is within range of this panel.
+    // So position of (position of top of div <= scroll position) && (position of bottom of div > scroll position).
+    // Remember we set the scroll to 33% earlier in scroll var.
+    if ($this.position().top <= scroll && $this.position().top + $this.height() > scroll) {
+          
+      // Remove all classes on body with color-
+      $body.removeClass(function (index, css) {
+        return (css.match (/(^|\s)color-\S+/g) || []).join(' ');
+      });
+       
+      // Add class of currently active div
+      $body.addClass('color-' + $(this).data('color'));
+    }
+  });    
+  
+}).scroll();
+</script>
+<script>
+$(document).ready(function(){
+  // Add smooth scrolling to all links
+  $("a").on('click', function(event) {
+
+    // Make sure this.hash has a value before overriding default behavior
+    if (this.hash !== "") {
+      // Prevent default anchor click behavior
+      event.preventDefault();
+      var hash = this.hash;
+      $('html, body').animate({
+        scrollTop: $(hash).offset().top
+      }, 500, function(){
+        // Add hash (#) to URL when done scrolling (default click behavior)
+        window.location.hash = hash;
+	return false;
+      });
+    } // End if
+  });
+});
+</script>
+</body>
+</html>
