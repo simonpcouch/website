@@ -1,4 +1,4 @@
-[![Build Status](https://api.netlify.com/api/v1/badges/96db9a50-343e-4b3a-80b9-a834112f63e2/deploy-status)](https://app.netlify.com/sites/simonpcouch/deploys)
+[![Build Status](https://api.netlify.com/api/v1/badges/96db9a50-343e-4b3a-80b9-a834112f63e2/deploy-status)](https://simonpcouch.netlify.com)
 
 Website Source Code
 ================
