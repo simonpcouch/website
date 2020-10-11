@@ -1,8 +1,8 @@
 [build]
   command = "python freeze.py"
-  publish = "build/"
+  publish = "build"
   
 [context.blog]
   command = "hugo -b $DEPLOY_PRIME_URL --buildFuture"
-  publish = "public/"
+  publish = "public"
   HUGO_VERSION = "0.71.0"
