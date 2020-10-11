@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Blog | Simon Couch</title>
+    <link>/</link>
+      <atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <description>Blog</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><copyright>© Simon Couch 2020</copyright><lastBuildDate>Wed, 01 Jan 2020 00:00:00 +0000</lastBuildDate>
+    <image>
+      <url>/img/yoal-desurmont-JsQbvseVlzs-unsplash.jpg</url>
+      <title>Blog</title>
+      <link>/</link>
+    </image>
+    
+    <item>
+      <title>The Blog Thing! We&#39;re Doing It!</title>
+      <link>/blog/2020/intro/</link>
+      <pubDate>Sun, 11 Oct 2020 00:00:00 +0000</pubDate>
+      <guid>/blog/2020/intro/</guid>
+      <description>&lt;p&gt;Hi yall!&lt;/p&gt;
+&lt;p&gt;For a while now, I&amp;rsquo;ve wished I had a place to share some short posts on R, statistics, data science, and the like. I decided I&amp;rsquo;d take a Sunday to get this subdomain up and running! This setup uses blogdown and is based on a fork of 
+&lt;a href=&#34;https://juliasilge.com/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Julia Silge&amp;rsquo;s website&lt;/a&gt;!&lt;/p&gt;
+&lt;p&gt;There&amp;rsquo;s more information about myself and what I work on on my 
+&lt;a href=&#34;https://simonpcouch.com&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;main website&lt;/a&gt;.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>About</title>
+      <link>/about/</link>
+      <pubDate>Wed, 01 Jan 2020 00:00:00 +0000</pubDate>
+      <guid>/about/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

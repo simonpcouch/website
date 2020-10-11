@@ -1,8 +1,3 @@
-[![Build Status](https://api.netlify.com/api/v1/badges/96db9a50-343e-4b3a-80b9-a834112f63e2/deploy-status)](https://www.simonpcouch.com/)
+This blog is built with [blogdown](https://github.com/rstudio/blogdown) and [Hugo](https://gohugo.io/), with the [Academic](https://sourcethemes.com/academic/) theme. I deploy my blog using [Netlify](https://www.netlify.com/). This setup is based on a fork of [Julia Silge's website](https://juliasilge.com/)!
 
-Website Source Code
-================
-
-This repository contains source code for my [personal website](https://www.simonpcouch.com/).
-
-Thanks to [Abenezer Mamo](https://github.com/abmamo) and [Francesca Guiducci](https://github.com/engfragui) for the help in getting the back-end running!
+My blog posts are released under a [Creative Commons Attribution-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-sa/4.0/).

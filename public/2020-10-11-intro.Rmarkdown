@@ -1,0 +1,18 @@
+---
+title: "The Blog Thing! We're Doing It!"
+date: 2020-10-11
+slug: "intro"
+tags: [rstats]
+---
+
+Hi yall!
+
+For a while now, I've wished I had a place to share some short posts on R, statistics, data science, and the like. I decided I'd take a Sunday to get this subdomain up and running! This setup uses blogdown and is based on a fork of [Julia Silge's website](https://juliasilge.com/)!
+
+I'm currently wrapping up my Bachelor's in math/statistics (minor in sociology) at Reed College and maintaining a few R packages.
+
+Most recently, I've been focusing on developing {stacks}, an R package for stacked ensemble modeling that aligns with the {tidymodels} ecosystem. This began as an internship project at RStudio, and is now the focus of my undergraduate thesis.
+
+I care about data science, statistics, and the thoughtful application of these practices in enabling and articulating social arguments.
+
+There's more information about myself and what I work on on my [main website](https://simonpcouch.com)!
