@@ -207,6 +207,44 @@ For a while now, I&rsquo;ve wished I had a place to share some short posts on R,
 
 
 
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154996836-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+
+  function gtag() {
+      dataLayer.push(arguments);
+  }
+
+  function trackOutboundLink(url, target) {
+    gtag('event', 'click', {
+         'event_category': 'outbound',
+         'event_label': url,
+         'transport_type': 'beacon',
+         'event_callback': function () {
+           if (target !== '_blank') {
+             document.location = url;
+           }
+         }
+    });
+    console.debug("Outbound link clicked: " + url);
+  }
+
+  function onClickCallback(event) {
+    if ((event.target.tagName !== 'A') || (event.target.host === window.location.host)) {
+      return;
+    }
+    trackOutboundLink(event.target, event.target.getAttribute('target'));  
+  }
+
+  gtag('js', new Date());
+  gtag('config', 'UA-154996836-1', {});
+
+  
+  document.addEventListener('click', onClickCallback, false);
+</script>
+
+
   
 
 
@@ -240,8 +278,8 @@ For a while now, I&rsquo;ve wished I had a place to share some short posts on R,
   <meta property="og:url" content="/blog/2020/intro/">
   <meta property="og:title" content="The Blog Thing! We&#39;re Doing It! | Simon Couch">
   <meta property="og:description" content="Hi yall!
-For a while now, I&rsquo;ve wished I had a place to share some short posts on R, statistics, data science, and the like. I decided I&rsquo;d take a Sunday to get this subdomain up and running!"><meta property="og:image" content="/img/yoal-desurmont-JsQbvseVlzs-unsplash.jpg">
-  <meta property="twitter:image" content="/img/yoal-desurmont-JsQbvseVlzs-unsplash.jpg"><meta property="og:locale" content="en-us">
+For a while now, I&rsquo;ve wished I had a place to share some short posts on R, statistics, data science, and the like. I decided I&rsquo;d take a Sunday to get this subdomain up and running!"><meta property="og:image" content="/img/goat-rocks.jpg">
+  <meta property="twitter:image" content="/img/goat-rocks.jpg"><meta property="og:locale" content="en-us">
   
     
       <meta property="article:published_time" content="2020-10-11T00:00:00&#43;00:00">

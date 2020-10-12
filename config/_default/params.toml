@@ -101,7 +101,7 @@ contact_links = [
 ############################
 
 # Default image for social sharing and search engines. Place image in `static/img/` folder and specify image name here.
-sharing_image = "yoal-desurmont-JsQbvseVlzs-unsplash.jpg"
+sharing_image = "goat-rocks.jpg"
 
 # Twitter username (without @). Used when a visitor shares your site on Twitter.
 twitter = "simonpcouch"
@@ -203,7 +203,7 @@ plugins_js  = []
 ## Marketing
 ############################
 [marketing]
-  google_analytics = ""
+  google_analytics = "UA-154996836-1"
   google_tag_manager = ""
 
 ############################
