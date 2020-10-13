@@ -3,6 +3,6 @@
   publish = "build"
   
 [context.blog]
-  command = "hugo -b $DEPLOY_PRIME_URL --buildFuture"
+  command = "hugo"
   publish = "public"
   HUGO_VERSION = "0.71.0"
