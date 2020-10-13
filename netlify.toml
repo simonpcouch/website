@@ -2,7 +2,7 @@
   command = "python freeze.py"
   publish = "build"
   
-[context.blog]
-  command = "hugo"
+[context.branch-deploy]
+  command = "hugo --gc --minify -b $DEPLOY_PRIME_URL"
   publish = "public"
   HUGO_VERSION = "0.71.0"
