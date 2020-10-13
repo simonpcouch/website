@@ -1,4 +1,4 @@
-[build]
+[context.production]
   command = "python freeze.py"
   publish = "build"
   
