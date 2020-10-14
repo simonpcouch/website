@@ -18,4 +18,4 @@
   {{ if eq $v "country" | and $address.country }}{{$address_display = $address_display | append $address.country | append (index $format.delimiters $k | default "") }}{{end}}
 {{end}}
 
-{{ (delimit $address_display "") }}
+{{ return (delimit $address_display "") }}
