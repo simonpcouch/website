@@ -9,7 +9,6 @@
       {{ printf "<script src=\"%s\" integrity=\"%s\" crossorigin=\"anonymous\"></script>" (printf $js.imagesLoaded.url $js.imagesLoaded.version) $js.imagesLoaded.sri | safeHTML }}
       {{ printf "<script src=\"%s\" integrity=\"%s\" crossorigin=\"anonymous\"></script>" (printf $js.isotope.url $js.isotope.version) $js.isotope.sri | safeHTML }}
       {{ printf "<script src=\"%s\" integrity=\"%s\" crossorigin=\"anonymous\"></script>" (printf $js.fancybox.url $js.fancybox.version) $js.fancybox.sri | safeHTML }}
-      {{ printf "<script src=\"%s\" integrity=\"%s\" crossorigin=\"anonymous\"></script>" (printf $js.instantpage.url $js.instantpage.version) $js.instantpage.sri | safeHTML }}
 
       {{ if or .Params.diagram site.Params.diagram }}
         {{ printf "<script src=\"%s\" integrity=\"%s\" crossorigin=\"anonymous\" title=\"mermaid\"></script>" (printf $js.mermaid.url $js.mermaid.version) $js.mermaid.sri | safeHTML }}
@@ -62,14 +61,13 @@
         'post': {{ i18n "posts" }},
         'project': {{ i18n "projects" }},
         'publication' : {{ i18n "publications" }},
-        'talk' : {{ i18n "talks" }},
-        'slides' : {{ i18n "slides" | default (i18n "btn_slides") }}
+        'talk' : {{ i18n "talks" }}
         };
     </script>
     {{ end }}
 
     {{/* Load hash anchors for documentation pages. */}}
-    {{ if in (slice "book" "docs") .Type }}
+    {{ if eq .Type "docs" }}
     {{ printf "<script src=\"%s\" integrity=\"%s\" crossorigin=\"anonymous\"></script>" (printf $js.anchor.url $js.anchor.version) $js.anchor.sri | safeHTML }}
     <script>
       anchors.add();
@@ -151,7 +149,7 @@
     {{ $js_academic := resources.Get "js/academic.js" }}
     {{ $js_academic_search := resources.Get "js/academic-search.js" }}
     {{ $js_algolia_search := resources.Get "js/algolia-search.js" }}
-    {{ $js_bootstrap := resources.Get "js/_vendor/bootstrap.min.js" }}
+    {{ $js_bootstrap := resources.Get "js/vendor/bootstrap.min.js" }}
     {{ $js_bundle := slice $js_bootstrap $js_linebreak $js_academic }}
     {{ if eq site.Params.search.engine 1 }}
       {{ $js_bundle = $js_bundle | append $js_academic_search }}

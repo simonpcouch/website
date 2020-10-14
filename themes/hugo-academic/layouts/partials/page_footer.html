@@ -10,4 +10,16 @@
 </div>
 {{ end }}
 
-{{ partial "page_related" . }}
+{{ if ne .Type "page" }}
+  {{ $related := site.RegularPages.Related . | first 5 }}
+  {{ with $related }}
+  <div class="article-widget content-widget-hr">
+    <h3>{{ i18n "related" }}</h3>
+    <ul>
+      {{ range . }}
+      <li><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>
+      {{ end }}
+    </ul>
+  </div>
+  {{ end }}
+{{ end }}

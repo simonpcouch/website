@@ -38,11 +38,9 @@
     </h3>
 
     {{ with $summary }}
-    <a href="{{ $item.RelPermalink }}" class="summary-link">
-      <div class="article-style">
-        {{.}}
-      </div>
-    </a>
+    <div class="article-style">
+      {{ . }}
+    </div>
     {{ end }}
 
     <div class="stream-meta article-metadata">
@@ -80,7 +78,7 @@
     {{ with $resource }}
     {{ $image := .Resize "150x" }}
     <a href="{{$link}}" {{ $target | safeHTMLAttr }}>
-      <img src="{{ $image.RelPermalink }}" alt="{{ $item.Title }}">
+      <img src="{{ $image.RelPermalink }}" alt="">
     </a>
     {{end}}
   </div>

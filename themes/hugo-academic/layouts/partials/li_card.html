@@ -45,7 +45,7 @@
   {{ with $resource }}
   {{ $image := .Fill (printf "918x517 q90 %s" $anchor) }}
   <a href="{{ $item.RelPermalink }}">
-      <img src="{{ $image.RelPermalink }}" class="article-banner" alt="{{ $item.Title }}">
+      <img src="{{ $image.RelPermalink }}" class="article-banner" alt="">
   </a>
   {{end}}
 
@@ -54,11 +54,9 @@
   </h3>
 
   {{ with $summary }}
-  <a href="{{ $item.RelPermalink }}" class="summary-link">
-    <div class="article-style">
-      <p>{{.}}</p>
-    </div>
-  </a>
+  <div class="article-style">
+    <p>{{.}}</p>
+  </div>
   {{ end }}
 
   {{ if $show_buttons }}

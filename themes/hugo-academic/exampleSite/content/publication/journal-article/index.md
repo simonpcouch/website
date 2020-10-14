@@ -3,9 +3,6 @@ title: "An example journal article"
 authors:
 - admin
 - Robert Ford
-author_notes:
-- "Equal contribution"
-- "Equal contribution"
 date: "2015-09-01T00:00:00Z"
 doi: ""
 

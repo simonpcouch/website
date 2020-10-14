@@ -15,10 +15,6 @@
 {{ end }}
 
 {{/* Generate homepage. */}}
-{{ if eq .Type "book" }}
-  {{ partial "book_layout.html" . }}
-{{ else }}
-  {{ partial "widget_page.html" . }}
-{{ end }}
+{{ partial "widget_page.html" . }}
 
 {{- end -}}
