@@ -34,18 +34,6 @@ data = pd.read_csv("data.csv")
 data.head()
 ```
 
-### Charts
-
-Academic supports the popular [Plotly](https://plot.ly/) chart format.
-
-Save your Plotly JSON in your page folder, for example `chart.json`, and then add the `{{</* chart data="chart" */>}}` shortcode where you would like the chart to appear.
-
-Demo:
-
-{{< chart data="line-chart" >}}
-
-You might also find the [Plotly JSON Editor](http://plotly-json-editor.getforge.io/) useful.
-
 ### Math
 
 Academic supports a Markdown extension for $\LaTeX$ math. You can enable this feature by toggling the `math` option in your `config/_default/params.toml` file.
@@ -54,7 +42,7 @@ To render *inline* or *block* math, wrap your LaTeX math with `$...$` or `$$...$
 
 Example **math block**:
 
-```latex
+```tex
 $$\gamma_{n} = \frac{ 
 \left | \left (\mathbf x_{n} - \mathbf x_{n-1} \right )^T 
 \left [\nabla F (\mathbf x_{n}) - \nabla F (\mathbf x_{n-1}) \right ] \right |}
@@ -67,16 +55,16 @@ $$\gamma_{n} = \frac{ \left | \left (\mathbf x_{n} - \mathbf x_{n-1} \right )^T 
 
 Example **inline math** `$\nabla F(\mathbf{x}_{n})$` renders as $\nabla F(\mathbf{x}_{n})$.
 
-Example **multi-line math** using the `\\\\` math linebreak:
+Example **multi-line math** using the `\\` math linebreak:
 
-```latex
-$$f(k;p_0^*) = \begin{cases} p_0^* & \text{if }k=1, \\\\
+```tex
+$$f(k;p_0^*) = \begin{cases} p_0^* & \text{if }k=1, \\
 1-p_0^* & \text {if }k=0.\end{cases}$$
 ```
 
 renders as
 
-$$f(k;p_0^*) = \begin{cases} p_0^* & \text{if }k=1, \\\\
+$$f(k;p_0^*) = \begin{cases} p_0^* & \text{if }k=1, \\
 1-p_0^* & \text {if }k=0.\end{cases}$$
 
 ### Diagrams
@@ -257,9 +245,9 @@ renders as
 | Content Cell  | Content Cell  |
 | Content Cell  | Content Cell  |
 
-### Callouts
+### Asides
 
-Academic supports a [shortcode for callouts](https://sourcethemes.com/academic/docs/writing-markdown-latex/#alerts), also referred to as *asides*, *hints*, or *alerts*. By wrapping a paragraph in `{{%/* alert note */%}} ... {{%/* /alert */%}}`, it will render as an aside.
+Academic supports a [shortcode for asides](https://sourcethemes.com/academic/docs/writing-markdown-latex/#alerts), also referred to as *notices*, *hints*, or *alerts*. By wrapping a paragraph in `{{%/* alert note */%}} ... {{%/* /alert */%}}`, it will render as an aside.
 
 ```markdown
 {{%/* alert note */%}}
@@ -272,20 +260,6 @@ renders as
 {{% alert note %}}
 A Markdown aside is useful for displaying notices, hints, or definitions to your readers.
 {{% /alert %}}
-
-### Spoilers
-
-Add a spoiler to a page to reveal text, such as an answer to a question, after a button is clicked.
-
-```markdown
-{{</* spoiler text="Click to view the spoiler" */>}}
-You found me!
-{{</* /spoiler */>}}
-```
-
-renders as
-
-{{< spoiler text="Click to view the spoiler" >}} You found me! {{< /spoiler >}}
 
 ### Icons
 
