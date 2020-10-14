@@ -15,4 +15,4 @@
   {{ if not .Params.all_day }}{{ $str = $str | append ((time $t2).Format (site.Params.time_format)) }}{{ end }}
 {{ end }}
 
-{{ return (delimit $str " ") }}
+{{ (delimit $str " ") }}
