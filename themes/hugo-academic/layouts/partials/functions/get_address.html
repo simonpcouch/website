@@ -17,3 +17,5 @@
   {{ if eq $v "postcode" | and $address.postcode }}{{$address_display = $address_display | append $address.postcode | append (index $format.delimiters $k | default "") }}{{end}}
   {{ if eq $v "country" | and $address.country }}{{$address_display = $address_display | append $address.country | append (index $format.delimiters $k | default "") }}{{end}}
 {{end}}
+
+{{ return (delimit $address_display "") }}
