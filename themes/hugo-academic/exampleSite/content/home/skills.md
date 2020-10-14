@@ -32,4 +32,20 @@ subtitle = ""
   name = "Photography"
   description = "10%"
 
+# Uncomment to use emoji icons.
+# [[feature]]
+#  icon = ":smile:"
+#  icon_pack = "emoji"
+#  name = "Emojiness"
+#  description = "100%"  
+
+# Uncomment to use custom SVG icons.
+# Place custom SVG icon in `assets/images/icon-pack/`, creating folders if necessary.
+# Reference the SVG icon name (without `.svg` extension) in the `icon` field.
+# [[feature]]
+#  icon = "your-custom-icon-name"
+#  icon_pack = "custom"
+#  name = "Surfing"
+#  description = "90%"
+
 +++

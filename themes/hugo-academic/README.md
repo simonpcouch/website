@@ -4,22 +4,20 @@
 
 ### The Page Builder to Easily Create Professional Websites :pencil2: :newspaper: :rocket:
 
-**Create a free website with Academic using Markdown, Jupyter, or RStudio. Choose a beautiful color theme and build anything with the Page Builder - over 50 _widgets_, _themes_, and _language packs_ included!**
+**Create _any_ kind of website for free with Academic using Markdown, Jupyter, or RStudio. Choose a beautiful color theme and build anything with the Page Builder - over 50 _widgets_, _themes_, and _language packs_ included!**
 
-[Check out the latest **demo**](https://academic-demo.netlify.com/) of what you'll get in less than 10 minutes, or [view the **showcase**](https://sourcethemes.com/academic/#expo) of personal, project, and business sites.
+[Check out the latest **demo**](https://academic-demo.netlify.app) of what you'll get in less than 10 minutes, or [view the **showcase**](https://sourcethemes.com/academic/user-stories/) of personal, project, and business sites.
 
 - 👉 [**Get Started**](https://sourcethemes.com/academic/docs/install/)
 - 📚 [View the **documentation**](https://sourcethemes.com/academic/docs/)
 - 💬 [Chat with the **Academic community**](https://spectrum.chat/academic) or [**Hugo community**](https://discourse.gohugo.io)
+- :heart: **Support development** of Academic:
+  - :heart: [**Become a backer** on GitHub or Patreon to **unlock rewards and extra features**](https://sourcethemes.com/academic/plans/)
+  - ☕️ [**Donate a coffee**](https://paypal.me/cushen)
+  - :woman_technologist: [**Contribute**](https://sourcethemes.com/academic/docs/contribute/)
 - 🐦 Twitter: [@source_themes](https://twitter.com/source_themes) [@GeorgeCushen](https://twitter.com/GeorgeCushen) [#MadeWithAcademic](https://twitter.com/search?q=%23MadeWithAcademic&src=typd)
 - 💡 [Request a **feature** or report a **bug**](https://github.com/gcushen/hugo-academic/issues)
 - ⬆️ **Updating?** View the [Update Guide](https://sourcethemes.com/academic/docs/update/) and [Release Notes](https://sourcethemes.com/academic/updates/)
-- :heart: **Support development** of Academic:
-  - ☕️ [**Donate a coffee**](https://paypal.me/cushen)
-  - 💵 [Become a backer on **Patreon**](https://www.patreon.com/cushen)
-  - 🖼️ [Decorate your laptop or journal with an Academic **sticker**](https://www.redbubble.com/people/neutreno/works/34387919-academic)
-  - 👕 [Wear the **T-shirt**](https://academic.threadless.com/)
-  - :woman_technologist: [**Contribute**](https://sourcethemes.com/academic/docs/contribute/)
 
 [![Screenshot](https://raw.githubusercontent.com/gcushen/hugo-academic/master/academic.png)](https://github.com/gcushen/hugo-academic/)
 
@@ -43,7 +41,7 @@
 
 ## Themes
 
-Academic comes with **automatic day (light) and night (dark) mode** built-in. Alternatively, click the sun/moon icon in the top right of the [Demo](https://academic-demo.netlify.com/) to set your preferred mode!
+Academic comes with **automatic day (light) and night (dark) mode** built-in. Alternatively, click the sun/moon icon in the top right of the [Demo](https://academic-demo.netlify.app) to set your preferred mode!
 
 Choose a stunning theme for your site and [customize it](https://sourcethemes.com/academic/docs/customization/#custom-theme) to your liking:
 
@@ -53,36 +51,32 @@ Choose a stunning theme for your site and [customize it](https://sourcethemes.co
 
 ## The Future of Technical Content Writing
 
-[![Writing technical content](https://sourcethemes.com/academic/img/docs/writing-technical-content.gif)](https://academic-demo.netlify.com/post/writing-technical-content/)
+[![Writing technical content](https://sourcethemes.com/academic/img/docs/writing-technical-content.gif)](https://academic-demo.netlify.apppost/writing-technical-content/)
 
 ## Ecosystem
 
 * **[Academic Admin](https://github.com/sourcethemes/academic-admin):** An admin tool to import publications from BibTeX or import assets for an offline site
 * **[Academic Scripts](https://github.com/sourcethemes/academic-scripts):** Scripts to help migrate content to new versions of Academic
 
-## Install
+## Create your site
 
 You can choose from one of the following four methods to install:
 
-* **one-click install using your web browser (recommended)**
+* **one-minute Github/Gitlab install using your web browser (recommended)**
 * install on your computer using Git with the Command Prompt/Terminal app
 * install on your computer by downloading the ZIP files
 * install on your computer with RStudio
 
-### Install with web browser
+### Create your site with GitHub
 
-[Install Academic with Netlify](https://app.netlify.com/start/deploy?repository=https://github.com/sourcethemes/academic-kickstart)
-  * One-click install of Academic creates an `academic-kickstart` repository in your GitHub or GitLab account
-  * Netlify will provide you with a customizable URL to access your new site, [or get your own domain](https://sourcethemes.com/academic/docs/domain/)
-  * Shortly after editing content in your repository, your site will automatically update
-  * Optionally, to edit your site in a [Markdown editor](https://www.typora.io) on your computer, perform the steps in the [*Install with Git*](#install-with-git) section below
+[**Create your site now with GitHub** :rocket:](https://sourcethemes.com/academic/docs/install/)
 
-### Install with Git
+### Create your site on your computer with Git
 
 Prerequisites:
 
 * [Download and install Git](https://git-scm.com/downloads)
-* [Download and install Hugo Extended v0.63.1+](https://gohugo.io/getting-started/installing/#quick-install)
+* [Download and install Hugo Extended v0.73-v0.74](https://gohugo.io/getting-started/installing/#quick-install)
 
 Install:
 
@@ -101,24 +95,24 @@ Install:
     git submodule update --init --recursive
     ```
 
-### Install with ZIP
+### Create your site on your computer _without_ Git
 
 Prerequisites:
 
-* [Download and install Hugo Extended v0.63.1+](https://gohugo.io/getting-started/installing/#quick-install)
+* [Download and install Hugo Extended v0.73-v0.74](https://gohugo.io/getting-started/installing/#quick-install)
 
 Install:
 
 1. [Download](https://github.com/sourcethemes/academic-kickstart/archive/master.zip) and extract *Academic Kickstart*
 2. [Download](https://github.com/gcushen/hugo-academic/archive/master.zip) and extract the *Academic theme* files from the `hugo-academic-master` folder to the `themes/academic/` folder in *Academic Kickstart*
 
-### Install with RStudio
+### Create your site with RStudio
 
-[Install Academic with RStudio](https://sourcethemes.com/academic/docs/install/#install-with-rstudio)
+[Install Academic with RStudio](http://localhost:59000/academic/docs/install-locally/#install-with-rstudio)
 
 ## Demo content
 
-For inspiration, refer to the [Markdown content](https://github.com/gcushen/hugo-academic/tree/master/exampleSite) which powers the [Demo](https://academic-demo.netlify.com/).
+For inspiration, refer to the [Markdown content](https://github.com/gcushen/hugo-academic/tree/master/exampleSite) which powers the [Demo](https://academic-demo.netlify.app).
 
 If you wish to initialise your site with the demo content, copy the contents of the `themes/academic/exampleSite/` folder to your website root folder, overwriting existing files if necessary. The `exampleSite` folder contains an example config file and content to help you get started. The following command can be used to accomplish this:
 
