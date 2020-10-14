@@ -3,6 +3,6 @@
   publish = "build"
   
 [context.branch-deploy]
-  command = "hugo --gc --minify -b $DEPLOY_PRIME_URL"
+  command = "hugo"
   publish = "public"
   HUGO_VERSION = "0.68.3"
