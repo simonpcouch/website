@@ -1,7 +1,7 @@
 ---
 authors:
 - admin
-bio: Statistics Student, R Developer, Goofball
+bio: Blogging about data science, statistics, and other assorted goofballery
 email: ""
 organizations:
 - name: Reed College
