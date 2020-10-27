@@ -384,7 +384,7 @@ wind_test %>%
   coord_obs_pred()
 ```
 
-<img src="index_files/figure-html/unnamed-chunk-27-1.png" width="768" />
+![](https://raw.githubusercontent.com/simonpcouch/website/blog/content/blog/2020-10-27/index_files/figure-html/unnamed-chunk-27-1.png)<!-- -->
 
 Looks like our predictions were pretty strong! How do the stacks predictions perform, though, as compared to the members' predictions? We can use the `type = "members"` argument to generate predictions from each of the ensemble members.
 
