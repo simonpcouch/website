@@ -31,7 +31,7 @@ To demonstrate how to build an ensemble with `stacks`, we'll make use of this we
 
 > Natural Resources Canada has published the Canadian Wind Turbine Database, which contains the precise latitude and longitude of every turbine, along with details like its dimensions, its power output, its manufacturer and the date it was commissioned. There is also an interactive map... "For the first time, Canadians have access to centralized geographic and technical information on individual wind turbines that make up individual wind farms, (which) were all collected prior to now very much on an aggregated basis," said Tom Levy, senior wind engineer at the federal Natural Resources Department.
 
-Making use of the `stacks` package, we'll build an stacked ensemble model to predict turbine capacity in kilowatts based on turbine characteristics.
+Making use of the `stacks` package, we'll build a stacked ensemble model to predict turbine capacity in kilowatts based on turbine characteristics.
 
 We'll load up needed packages and then get going! 
 
