@@ -27,4 +27,6 @@ I'm currently wrapping up my Bachelor's in math/statistics (minor in sociology) 
 
 Most recently, I've been focusing on developing {stacks}, an R package for stacked ensemble modeling that aligns with the {tidymodels} ecosystem. This began as an internship project at RStudio, and is now the focus of my undergraduate thesis.
 
-I care about data science, statistics, and the thoughtful application of these practices in enabling and articulating social arguments.
+I care about data science, statistics, and the informed application of these practices in empowering and articulating social arguments.
+
+I'm always glad to talk about carrying more inclusive masculinities, especially in technical settings. 
