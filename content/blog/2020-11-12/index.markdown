@@ -215,7 +215,7 @@ Each `.pdf` looks something like this:
 
 Nothing too fancy, but definitely snazzier and more pleasant to read than a spreadsheet.🦋
 
-That's it! If you'd like to spend some time with this code yourself, an abbreviated `.R` file is available [here]("https://github.com/simonpcouch/website/raw/blog/content/blog/2020-11-12/plain_code.R").
+That's it! If you'd like to spend some time with this code yourself, an abbreviated `.R` file is available [here](https://github.com/simonpcouch/website/raw/blog/content/blog/2020-11-12/plain_code.R).
 
 It seems like these kinds of problems come with all sorts of twists and turns in practice. Some other directions you could go with this:
 
