@@ -220,4 +220,4 @@ That's it! If you'd like to spend some time with this code yourself, an abbrevia
 It seems like these kinds of problems come with all sorts of twists and turns in practice. Some other directions you could go with this:
 
 * You could run this script on some regular interval, scheduling this task with CRON or GitHub Actions.
-* Interweaving actual code results with text in these PDFs is a bit tricky. `rmarkdown`'s `render()` will parse code chunks as normal when called on `.Rmd` files, and you'll be dropping in code chunks with `"```{r}"`.
+* Interweaving actual code results with text in these PDFs is a bit tricky. `rmarkdown`'s `render()` will parse code chunks as normal when called on `.Rmd` files, and you'll be dropping in code chunks with `"```{r}"`. [Parameterized reports](https://rmarkdown.rstudio.com/developer_parameterized_reports.html%23parameter_types%2F) could come in handy here as well.
