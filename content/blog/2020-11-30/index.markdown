@@ -4,6 +4,8 @@ date: '2020-11-30'
 slug: stacks-0-1-0
 tags:
   - rstats
+  - tidymodels
+  - stacks
 subtitle: ''
 image:
   caption: ''
