@@ -31,6 +31,7 @@ The order of this post roughly follows the order in which I asked myself questio
 * How do I decide which schools to apply to?
 * What does a grad school application look like?
 * What should I spend the most time on while applying?
+* Should I reach out to potential advisers? Or mention their name(s) in my application?
 * What do I do after I apply?
 
 Many of these answers speak to Ph.D. programs more so than M.A./M.S.', and some may apply more accurately to biostatistics than statistics. I don't have a good understanding of how many of these answers apply to schools outside of the U.S., and many of these answers depend on my lived experience in some other way.[^4] I'll try to specify when I understand that to be the case.
@@ -185,6 +186,24 @@ Once you've decided where you want to apply, here's some sage advice from Rohan'
 
 I will say that some of my most productive moments in figuring out what I wanted from grad school---and how to reflect that in my application---happened away from my computer. If it's an option for you timeline- and mental health-wise, take a couple days away from your applications frequently.
 
+## Should I reach out to potential advisers? Or mention their name(s) in my application?
+
+It seems like the norm in some academic fields is to have specific advisers that you'd like to work with in mind before applying. In some, even, you might be expected to reach out to those advisers and have informational interviews before applying.
+
+My sense is that this is generally _not_ an expectation in (bio)statistics. Smaller schools may appreciate if you show that you know what some number of specific faculty do, but in general, do not feel like you need to reach out to specific faculty or even mention them in your application.
+
+You _should_ mention specific faculty in your application if there are people you're really interested in working with (and especially if you really only want to go to a school if you're able to work with a specific adviser). If you do so, expect that a school will take that seriously to some extent. For example, if you are given an interview with a school, that person might be your interviewer. If not, and you are accepted, that person might reach out to you personally following your acceptance. (My _n_ here is _really_ small.) If you mention a really prominent faculty member in your application, show that you know how their research interests relate to others' in the department, and maybe mention another more junior professor or two.
+
+Only send faculty an email while you're applying if all of the following are true:
+
+1. You _really_ want to work with them
+2. You've checked their website to see if they mention their boundaries re: being reached out to
+3. You can't find any signs that they are surely not taking students---if this is unclear from what you can find online, asking whether they're taking students could be part of your introductory email!
+
+John Muschelli at Johns Hopkins Biostatistics [gave some great advice](https://hopstat.wordpress.com/2020/10/01/some-things-i-wish-i-knew-about-grad-school/) related to what that introductory email could look like in a recent blog post.
+
+Regardless of whether you mention the names of specific faculty members, your application should reflect that you do have a sense for what faculty in the department research and that you have demonstrated interest in those research areas. Demonstrated interest could be prior research, but also speaking insightfully to the research area and its implications.
+
 ## What do I do after I apply?
 
 You'll likely wait a good while. Some programs list dates you'll hear back by on their website, and some subset of those dates are correct/up-to-date. The latest date for most offers is April 15th, though offers start coming out as early as January. Biostatistics programs seem to have earlier application deadlines and get back to people earlier.🕰
@@ -234,3 +253,5 @@ Regardless, if this post has been helpful for you, give me a holler. It'll make 
 ------------
 
 _Thanks to Grayson White ([\@graysonwwhite](https://twitter.com/graysonwwhite)) for his feedback on this post. Incredibly helpful._
+
+_Edit, 25 March 2021: Added some additional thoughts thanks to enlightening conversations with Keshav Motwani ([\@keshav_motwani](https://twitter.com/keshav_motwani))._
