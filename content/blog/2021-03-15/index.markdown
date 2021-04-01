@@ -192,8 +192,8 @@ After some discussions, an update to this section of this post, and further disc
 
 My best advice here is to:
 
-1) Read professors' Contact pages thoroughly to see if they appreciate/expect being reached out
-2) Ask your recommenders if they have thoughts about this practice, especially as related to the specific schools you're applying to.
+1) Read professors' Contact pages thoroughly to see if they appreciate/expect being reached out to.
+2) Ask your recommenders if they have thoughts about this practice, especially as related to the specific departments you're applying to.
 
 :-)
 
