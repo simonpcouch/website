@@ -188,6 +188,18 @@ I will say that some of my most productive moments in figuring out what I wanted
 
 ## Should I reach out to potential advisers? Or mention their name(s) in my application?
 
+After some discussions, an update to this section of this post, and further discussions on this section, I'm not sure I can speak confidently to this question.
+
+My best advice here is to:
+
+1) Read professors' Contact pages thoroughly to see if they appreciate/expect being reached out
+2) Ask your recommenders if they have thoughts about this practice, especially as related to the specific schools you're applying to.
+
+:-)
+
+<details>
+  <summary>I've collapsed the previous iteration of this answer below!</summary>
+
 It seems like the norm in some academic fields is to have specific advisers that you'd like to work with in mind before applying. In some, even, you might be expected to reach out to those advisers and have informational interviews before applying.
 
 My sense is that this is generally _not_ an expectation in (bio)statistics. Smaller schools may appreciate if you show that you know what some number of specific faculty do, but in general, do not feel like you need to reach out to specific faculty or even mention them in your application.
@@ -203,6 +215,9 @@ Only send faculty an email while you're applying if all of the following are tru
 John Muschelli at Johns Hopkins Biostatistics [gave some great advice](https://hopstat.wordpress.com/2020/10/01/some-things-i-wish-i-knew-about-grad-school/) related to what that introductory email could look like in a recent blog post.
 
 Regardless of whether you mention the names of specific faculty members, your application should reflect that you do have a sense for what faculty in the department research and that you have demonstrated interest in those research areas. Demonstrated interest could be prior research, but also speaking insightfully to the research area and its implications.
+
+</details> 
+
 
 ## What do I do after I apply?
 
