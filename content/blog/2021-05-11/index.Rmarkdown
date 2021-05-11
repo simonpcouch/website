@@ -13,7 +13,7 @@ image:
   focal_point: ''
   preview_only: yes
 math: true
-summary: "Some arguments for why {stacks} requires (at least) four separate functions to build an ensemble model rather than wrapping them all up into one."
+summary: "Why {stacks} requires (at least) four separate functions to build an ensemble model rather than wrapping them all up into one."
 ---
 
 > This is the second of four blog posts on the development process of the {stacks} package, excerpted from my Reed senior thesis project _Tidy Model Stacking with R_.
