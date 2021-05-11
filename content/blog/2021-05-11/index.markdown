@@ -155,7 +155,7 @@ time_to_add[["elapsed"]]
 ## [1] 2
 ```
 
-The time to add these candidate members was 2 seconds. Now, evaluating the runtime for fitting the meta-learner for one possible penalty value:
+The time to add these candidate members was 1.6 seconds. Now, evaluating the runtime for fitting the meta-learner for one possible penalty value:
 
 
 ```r
@@ -201,10 +201,10 @@ time_to_fit[["elapsed"]]
 ```
 
 ```
-## [1] 11
+## [1] 10
 ```
 
-The time to fit the meta-learner in this case was 10.6 seconds. At first glance, the time to add candidates may seem negligible in comparison, given that it took only 18.9% of the time needed to fit the meta-learner.
+The time to fit the meta-learner in this case was 9.5 seconds. At first glance, the time to add candidates may seem negligible in comparison, given that it took only 16.9% of the time needed to fit the meta-learner.
 
 However, note that the proposed model stack is being evaluated on only 11 potential members and cross-validation folds of roughly 450 rows. While the computational complexity of adding additional candidates depends on the computational complexity of prediction for a given candidate, the runtime to add `n` candidates can be reasonably assumed to scale roughly linearly with `n`. (That is, we assume that a "randomly chosen" statistical model will take just as long to compute predictions as the next.) 
 
@@ -215,7 +215,7 @@ On the other hand, in theory, the time to fit an elastic net model scales with t
 <p class="caption">Figure 1: A plot showing the time to fit an elastic net model in seconds, averaged across 30 simulations, as a function of the number of rows and predictors. While the relationship is surely not perflectly linear, it is near so; in most applied use cases, the time to fit the elastic net meta-learner can be reasonably estimated with a linear approximation on the number of predictors.</p>
 </div>
 
-While the runtime of the elastic net fitting operation does not scale perfectly linearly with the number of predictors, in most applied model stacking settings, a linearity assumption is appropriate for estimating the time to fit such a model. The "predictors," in the case of fitting the meta-learner, are the candidate model outputs. Thus, while a 18.9% increase seems negligible in the context of this example, that proportion roughly holds for significantly more computationally intensive ensembling use cases. For many applied use cases of model ensembling (i.e. on the scale of 10-100 candidate members being evaluated for training on much larger datasets than in this example), the need to redundantly add candidates each time a practitioner would like to refine her grid search in fitting the meta-learner becomes more cumbersome. 
+While the runtime of the elastic net fitting operation does not scale perfectly linearly with the number of predictors, in most applied model stacking settings, a linearity assumption is appropriate for estimating the time to fit such a model. The "predictors," in the case of fitting the meta-learner, are the candidate model outputs. Thus, while a 16.9% increase seems negligible in the context of this example, that proportion roughly holds for significantly more computationally intensive ensembling use cases. For many applied use cases of model ensembling (i.e. on the scale of 10-100 candidate members being evaluated for training on much larger datasets than in this example), the need to redundantly add candidates each time a practitioner would like to refine her grid search in fitting the meta-learner becomes more cumbersome. 
 
 Given this, then, {stacks}' syntax ought to delineate between the steps of adding candidate models and blending their predictions.
 
@@ -266,12 +266,12 @@ prepare_candidates(
 
 To recognize the problem(s) that such a syntax leaves unaddressed, we must look to the intersection of tidy design principles and data pedagogy.
 
-In many ways, the approach to add candidate members implemented in `prepare_candidates` presents like a "vectorized" alternative to `add_candidates`. In communities of statistical computing, vectorization is often used colloquially to communicate that a function is able to iteratively perform computations on an input if that input has length greater than one. More exactly, a function `\(f\)` is vectorized over a vector input `\(x\)` if and only if `\(g_j(f(x)) = f(g_j(x))~\forall~j\)`, where  `\(g_j\)` takes in some subsettable object `\(x\)` and outputs the `\(j\)`-th element. It follows, then, that `\(f\)` may be vectorized over `\(x\)` if
-`\(g_j\)` is well-defined for all `\(~j~\in~ \{1,~2,~...,~\max(\vert x \vert,~ \vert f(x)\vert)\}\)`, where `\(\vert \vert\)` denotes the number of subsettable elements indexed by `\(j\)`.
+In many ways, the approach to add candidate members implemented in `prepare_candidates` presents like a "vectorized" alternative to `add_candidates`. In communities of statistical computing, vectorization is often used colloquially to communicate that a function is able to iteratively perform computations on an input if that input has length greater than one. More exactly, a function $f$ is vectorized over a vector input $x$ if and only if $g_j(f(x)) = f(g_j(x))~\forall~j$, where  $g_j$ takes in some subsettable object $x$ and outputs the $j$-th element. It follows, then, that $f$ may be vectorized over $x$ if
+$g_j$ is well-defined for all $~j~\in~ \{1,~2,~...,~\max(\vert x \vert,~ \vert f(x)\vert)\}$, where $\vert \vert$ denotes the number of subsettable elements indexed by $j$.
 
-In R, if `\(x\)` is an S3 object, `\(g_j\)` can be written as `g_j <- function(x) {x[[j]]}`. For context, I note some common objects subsettable with this syntax and the results of subsetting them.
+In R, if $x$ is an S3 object, $g_j$ can be written as `g_j <- function(x) {x[[j]]}`. For context, I note some common objects subsettable with this syntax and the results of subsetting them.
 
-* `data.frame`: Subsetting the `j`th element of a data frame, or its subclasses, returns the `j`th column of the data frame. For this section, `tune_results` objects and `data_stack`s are notable subclasses of data frames. `tune_results` objects encapsulate model definitions and do not have a number of columns sensitive to the number of candidate members specified therein. `data_stack` objects collate validation set predictions from each candidate member and have a number of columns one greater than the number of candidates in the regression setting, or one greater than the _number of candidates_ `\(\times\)` _number of possible outcomes_ in the classification setting.
+* `data.frame`: Subsetting the `j`th element of a data frame, or its subclasses, returns the `j`th column of the data frame. For this section, `tune_results` objects and `data_stack`s are notable subclasses of data frames. `tune_results` objects encapsulate model definitions and do not have a number of columns sensitive to the number of candidate members specified therein. `data_stack` objects collate validation set predictions from each candidate member and have a number of columns one greater than the number of candidates in the regression setting, or one greater than the _number of candidates_ $\times$ _number of possible outcomes_ in the classification setting.
 * `list`: Subsetting the `j`th element of a list returns the `j`th element of the list, which can be an R object with any number of dimensions or class structures. Note that `data.frame`s are a `list` subclass, though are usually not colloquially referred to as such.
 * atomic `vector`: Subsetting the `j`th element of an atomic vector returns the `j`th element of the vector, which must be an atomic element. Note that (non-atomic) `list`s are vectors, though are usually not colloquially referred to as such.
 
@@ -310,13 +310,13 @@ x
 ## [2] "a model definition specifying two candidate members"
 ```
 
-Thus, `\(g_j\)` is well-defined only for `\(j \in \{1,~2\}\)` where `\(g_1(x) = a\)` and `\(g_2(x) = b\)`. Note, though, that we can only subset `\(x\)` to extract model definitions---candidate members themselves are not subsettable elements of `a` or `b`.
+Thus, $g_j$ is well-defined only for $j \in \{1,~2\}$ where $g_1(x) = a$ and $g_2(x) = b$. Note, though, that we can only subset $x$ to extract model definitions---candidate members themselves are not subsettable elements of `a` or `b`.
 
 This example may present as overly-simplistic, but encapsulates the principal issue with proposing that `add_candidates` may be vectorizable over model definitions. Regardless of how many candidate members a model definition specifies, its fundamental "elements" (i.e. the results of subsetting the `tune_results` object) are the same. That is, the length of an `tune_results` model definition object is not determined by the number of candidate members. In this way, there is no way to "subset out" a specific candidate member from neither `a` nor `b`. 
 
 If the output of `prepare_candidates` was also subsettable by model definition, this may not be an issue. However, the output of any call to `prepare_candidates` is a `data_stack` object with a number of columns one greater than the number of candidates specified in `...`, where the first column always contains the true validation set outcomes from the shared resamples used to define each model definition. The "elements" of this object, then, are the candidate members in question. Model definitions may specify any number of candidate members.
 
-More concretely, let `\(f\)` be `prepare_candidates` and `\(g_j\)` be defined by `g_j <- function(x) {x[[j]]}`. Then `\(f(a)\)` is a data frame with two subsettable columns, where `\(g_1(f(a))\)` returns the true validation set outcomes and `\(g_2(f(a))\)` returns the validation set predictions for the candidate member specified by `a`. Similarly, `\(g_1(f(b))\)` returns the true validation set outcomes, and `\(g_2(f(b))\)` and `\(g_3(f(b))\)` return the validation set predictions for the first and second candidate members specified by `b`, respectively. Finally, `\(g_1(f(x))\)` again returns the true validation set outcomes, `\(g_2(f(x))\)` returns the validation set predictions for the candidate member specified by `a`, and `\(g_3(f(x))\)` and `\(g_4(f(x))\)` return the validation set predictions for the first and second candidate members specified by `b`, respectively.
+More concretely, let $f$ be `prepare_candidates` and $g_j$ be defined by `g_j <- function(x) {x[[j]]}`. Then $f(a)$ is a data frame with two subsettable columns, where $g_1(f(a))$ returns the true validation set outcomes and $g_2(f(a))$ returns the validation set predictions for the candidate member specified by `a`. Similarly, $g_1(f(b))$ returns the true validation set outcomes, and $g_2(f(b))$ and $g_3(f(b))$ return the validation set predictions for the first and second candidate members specified by `b`, respectively. Finally, $g_1(f(x))$ again returns the true validation set outcomes, $g_2(f(x))$ returns the validation set predictions for the candidate member specified by `a`, and $g_3(f(x))$ and $g_4(f(x))$ return the validation set predictions for the first and second candidate members specified by `b`, respectively.
 
 The `prepare_candidates` approach, then, is only vectorized in the colloquial sense of the word. I argue, further, that not only is this pseudo-vectorization ultimately not helpful for user experience, but actively detracts from a practitioner's ability to add candidates in context.
 
