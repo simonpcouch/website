@@ -26,6 +26,14 @@ summary: "Weighing the pros and cons of several possible schemas for naming the 
 
 Over the course of development of {stacks}, we considered many "trios" of names for the core functions.
 
+The core functions in the trio perform the following operations, respectively:
+
+* Add candidate member models to a data stack, proposing them for inclusion in an ensemble model. This function was ultimately named `add_candidates()`.
+* Fit a "meta-learner" that combines the predictions from each of the candidates members in the data stack. This function was ultimately named `blend_predictions()`.
+* Fit each of the candidate members with nonzero stacking coefficients (i.e. coefficients from the meta-learner, one for each candidate member) on the whole training set. This function was ultimately named `fit_members()`.
+
+To learn more about how each of these functions are used in practice, check out the [Getting Started vignette](https://stacks.tidymodels.org/articles/basics.html).
+
 We felt relatively sure that each trio ought to share some sort of basic grammatical structure. For example, each function name could be composed of:
 
 -   only a verb, e.g. `add`, `blend`, & `fit`
@@ -35,7 +43,7 @@ We felt relatively sure that each trio ought to share some sort of basic grammat
 
 The verbs and direct objects in question and the meanings they imply, as well, left us with many options to consider. (The name of the package itself going without saying.)
 
-I argue, though, that this question is not only an aesthetic one, but one whose answer implicates a number of technical challenges and implications for data pedagogy. To demonstrate, I will consider a few of the later iterations of these sets of function names. I refer to these sets as "grammars" rather than "syntaxes" in order to accentuate that I am no longer considering the coarseness with which the requisite operations for fitting an ensemble model are grouped into functions---there will always be four distinct functions in this section---but the _names_ given to each function.
+I argue, though, that this question is not only an aesthetic one, but one whose answer implicates a number of technical challenges and implications for data pedagogy. To demonstrate, I will consider a few of the later iterations of these sets of function names. I refer to these sets as "grammars" rather than "syntaxes" (as in the [previous blog post](https://blog.simonpcouch.com/blog/dev-docs-p2/)) in order to accentuate that I am no longer considering the coarseness with which the requisite operations for fitting an ensemble model are grouped into functions---there will always be three distinct functions in this section---but the _names_ given to each function.
 
 ### add, blend, & fit
 
