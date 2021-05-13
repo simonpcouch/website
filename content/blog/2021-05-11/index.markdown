@@ -19,8 +19,10 @@ summary: "Why {stacks} requires (at least) four separate functions to build an e
 > This is the second of four blog posts on the development process of the {stacks} package, excerpted from my Reed senior thesis project _Tidy Model Stacking with R_.
 >
 > **Part 1:** [_Introduction_](https://blog.simonpcouch.com/blog/dev-docs-p1/)
-> 
+>
 > **Part 3:** [_Naming Things_](https://blog.simonpcouch.com/blog/dev-docs-p3/)
+> 
+> **Part 4:** [_Big Things_](https://blog.simonpcouch.com/blog/dev-docs-p4/)
 
 
 

@@ -21,6 +21,8 @@ summary: "Weighing the pros and cons of several possible schemas for naming the 
 > **Part 1:** [_Introduction_](https://blog.simonpcouch.com/blog/dev-docs-p1/)
 > 
 > **Part 2:** [_Splitting Things Up_](https://blog.simonpcouch.com/blog/dev-docs-p2/)
+> 
+> **Part 4:** [_Big Things_](https://blog.simonpcouch.com/blog/dev-docs-p4/)
 
 
 

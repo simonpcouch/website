@@ -16,10 +16,12 @@ summary: "Introducing a set of blog posts reflecting on the development process 
 ---
 
 > This is the first of four blog posts on the development process of the {stacks} package, excerpted from my Reed senior thesis project _Tidy Model Stacking with R_.
->
-> **Part 2:** [_Splitting Things Up_](https://blog.simonpcouch.com/blog/dev-docs-p2/)
 > 
+> **Part 2:** [_Splitting Things Up_](https://blog.simonpcouch.com/blog/dev-docs-p2/)
+>
 > **Part 3:** [_Naming Things_](https://blog.simonpcouch.com/blog/dev-docs-p3/)
+> 
+> **Part 4:** [_Big Things_](https://blog.simonpcouch.com/blog/dev-docs-p4/)
 
 
 
