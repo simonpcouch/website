@@ -40,7 +40,7 @@ ggplot(mtcars, aes(x = hp, y = mpg)) +
   super_fancy_layer()
 ```
 
-<img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-3-1.png" width="672" />
+![A scatter plot with horsepower (range 0 to 350) on the x axis and miles per gallon (range 10 to 35) of cars, showing a nonlinear, negative association. The key insight here is that adding `super_fancy_layer()`, which just outputs a list containing `theme_minimal()`, applies that theme to the plot via the plus operator; rather than the default gray panel background, the plot now has a white one.](https://github.com/simonpcouch/website/blob/blog/content/blog/2021-06-10/index_files/figure-html/unnamed-chunk-3-1.png?raw=true)
 
 ...I had never thought about how `super_fancy_layer()` might "access" information from the earlier lines. What if I want `super_fancy_layer()` to modify bits and pieces of the existing plot, depending on what's in the plot already, rather than adding a layer on top of the whole thing?[^1]
 
