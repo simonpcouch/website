@@ -10,7 +10,7 @@ image:
   caption: ''
   focal_point: ''
   preview_only: yes
-summary: "Writing iterative code with '+' using rather than '%>%' was a tough transition my first time around. I thought it might be worth sharing some lessons learned about implementing a pipable programming style when extending {ggplot2}."
+summary: "Writing iterative code with '+' rather than '%>%' was a tough transition my first time around."
 ---
 
 ```{r, include = FALSE}
