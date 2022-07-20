@@ -1,4 +1,4 @@
-[context]
+[build]
   command = "hugo"
   publish = "public"
   HUGO_VERSION = "0.101.0"
