@@ -93,7 +93,7 @@ http://blog.yoursite.com/* https://www.yoursite.com/blog/:splat 301!
 
 ...on a new line.
 
-For an example, you can check out my redirect rules [here](https://github.com/simonpcouch/website/blob/9b97762/public/_redirects):
+For an example, you can check out my redirect rules [here](https://github.com/simonpcouch/website/blob/c531e8d/public/_redirects):
 
 ```r
 http://blog.simonpcouch.com/* https://www.simonpcouch.com/:splat 301!
