@@ -1,3 +1,1 @@
-This blog is built with Hugo Apero. I deploy my blog using [Netlify](https://www.netlify.com/). This setup is based on a fork of [Julia Silge's website](https://juliasilge.com/)!
-
-My blog posts are released under a [Creative Commons Attribution-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-sa/4.0/).
+This site is built with [Hugo Apéro](https://hugo-apero-docs.netlify.app/), and I've repo-dived on [Julia Silge](juliasilge.com) and [Silvia Canelón's](https://www.silviacanelon.com/) personal websites while tweaking and troubleshooting. The site is deployed using [Netlify](https://www.netlify.com/). My blog posts are released under a [Creative Commons Attribution-ShareAlike 4.0 International License](https://creativecommons.org/licenses/by-sa/4.0/).
