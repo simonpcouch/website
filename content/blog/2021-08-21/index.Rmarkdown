@@ -1,0 +1,34 @@
+---
+title: "{infer} v1.0.0 is on CRAN"
+date: '2021-08-21'
+slug: infer-v-1-0-0
+tags:
+  - personal
+  - tidymodels
+  - infer
+  - rstats
+subtitle: ''
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: yes
+summary: "Some short reflections on working on the {infer} R package."
+---
+
+In Fall 2017, during my first semester at Reed, I took an introductory statistics course. A prospective biology major, I was told learning how to code would be helpful later on in my coursework. I used R for the first time during the labs for that class, getting to know packages like {ggplot2} and {dplyr}. Another cornerstone of that class was {infer}, a package whose ubiquity I assumed was similar to {ggplot2} and {dplyr}. At the time, the thought that packages changed over time, or were written by people, or even had source code, had probably yet to occur to me.
+
+During the spring semester, I somehow heard through the math department grapevine that our professor, Andrew Bray, had himself written the package (with help from many co-authors, of course). Our cohort had been the first to learn about inference with {infer} as an aid---a package that was, at the time, just a repository on Andrew's GitHub profile, yet to be sent off to CRAN.
+
+In the years that followed, {infer} changed a lot. The package's first CRAN release came in early 2018, and its core authors worked through dozens of releases, adding new test statistics, improving visualization methods, and so on.
+
+I changed a lot during those years, too. I got really into the whole R thing (goodbye, biology major!), traveled to many places I'd never dreamed of traveling to, and met a lot of folks with whom I made memories I'll never forget. But, yeah---the R thing!
+
+Andrew helped me make my first pull request to {infer} in the fall of my sophomore year. I made some edits to the vignettes and asked "is this right?" maybe 40 times before ultimately submitting the PR. The {infer} dev team, characteristically, was incredibly thoughtful, kind, and helpful in bringing my submission up to snuff. Over time, I became a bit cozier with R and the flow of collaborative package development, ultimately signing on as an intern (and then contractor) with RStudio, taking over as maintainer of [{broom}](https://broom.tidymodels.org), and writing the [{stacks}](https://stacks.tidymodels.org) package.
+
+In full circle, this last summer, I was supported by package co-author Mine Çetinkaya-Rundel and RStudio to wrap up some loose ends on the {infer} package. The package, after several semesters utilized in many classrooms outside of Reed's walls, had proved to be a valuable tool for teaching statistical inference intuitively. At the same time, its shortcomings as a pedagogical tool were well-acknowledged, and a "production release" of the package would need to reckon with these shortcomings. While the package expressed randomization-based inference on one or two variables well, its functionality could not take an introductory statistics class from start to finish; lack of support for multiple explanatory variables and smooth, theory-based distributions meant that instructors needed one-off solutions from different packages to finish out a full semester.
+
+So---we did the thing! A good few months of thoughtful discussions resulted in a grammar that feels good. No silver bullets, but nevertheless an interface that is principled and unified. I spent much of the summer working on this release, and it was wrapped up and shipped off to CRAN last week. Huzzah!
+
+I'm super grateful for the opportunity to work on this project, and wrote a good bit about the package and what's new in v1.0.0 in a [blog post](https://www.tidyverse.org/blog/2021/08/infer-1-0-0/) on the tidyverse blog. I'm hopeful that this release will "fill the gaps" in teaching an introductory statistics class with {infer} as an aid, start to finish.
+
+A genuine thank you to all of those in the greater {infer} orbit. I'm better for knowing each of you.
