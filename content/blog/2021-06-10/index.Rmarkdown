@@ -13,6 +13,14 @@ image:
 summary: "Writing iterative code with '+' rather than '%>%' was a tough transition my first time around."
 ---
 
+```{r}
+library(knitr)
+
+opts_chunk$set(
+  collapse = TRUE
+)
+```
+
 ```{r, include = FALSE}
 library(ggplot2)
 ```

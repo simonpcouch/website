@@ -13,6 +13,14 @@ summary: "All of my friends are posting their Spotify Wrapped, and I'm jealous."
 ---
 
 
+```r
+library(knitr)
+
+opts_chunk$set(
+  collapse = TRUE
+)
+```
+
 Aside from exchanging playlists with my partner every once in a while, I'm not much of a Spotify user. Around this time every year, though, all of my friends start posting their Spotify Wrapped, and I get jealous.
  
 I _do_ get the Wrapped for Artists report from my high school band, and I'm pleased to report we had 13 total listens this year. Not quite the dopamine hit I'm looking for, though.
@@ -67,9 +75,6 @@ I also packaged up some example output of this function with the `wrapped` data 
 library(wrapped)
 
 wrapped
-```
-
-```
 ## # A tibble: 594 × 8
 ##       id track_title         artist album genre date_added skip_count play_count
 ##    <int> <chr>               <chr>  <chr> <chr> <date>          <dbl>      <dbl>
@@ -99,9 +104,6 @@ wrapped <-
   relocate(play_count, .before = everything())
 
 wrapped
-```
-
-```
 ## # A tibble: 594 × 7
 ##    play_count track_title          artist      album genre date_added skip_count
 ##         <dbl> <chr>                <chr>       <chr> <chr> <date>          <dbl>
@@ -131,9 +133,6 @@ The blessing of posting on my own platform, as well, is that I can annotate the 
 wrapped %>%
   select(track_title, artist, play_count) %>%
   head(10)
-```
-
-```
 ## # A tibble: 10 × 3
 ##    track_title          artist       play_count
 ##    <chr>                <chr>             <dbl>
@@ -162,9 +161,6 @@ wrapped %>%
   summarize(play_count = sum(play_count, na.rm = TRUE)) %>%
   arrange(desc(play_count)) %>%
   head()
-```
-
-```
 ## # A tibble: 6 × 2
 ##   artist       play_count
 ##   <chr>             <dbl>
@@ -189,9 +185,6 @@ wrapped %>%
   summarize(play_count = sum(play_count, na.rm = TRUE)) %>%
   arrange(desc(play_count)) %>%
   head()
-```
-
-```
 ## # A tibble: 6 × 2
 ##   genre                  play_count
 ##   <chr>                       <dbl>
@@ -214,9 +207,6 @@ wrapped %>%
   summarize(play_count = sum(play_count, na.rm = TRUE)) %>%
   arrange(desc(play_count)) %>%
   slice(7:10)
-```
-
-```
 ## # A tibble: 4 × 2
 ##   genre       play_count
 ##   <chr>            <dbl>
@@ -235,9 +225,6 @@ wrapped %>%
   summarize(play_count = sum(play_count, na.rm = TRUE), .groups = "drop") %>%
   arrange(desc(play_count)) %>%
   head()
-```
-
-```
 ## # A tibble: 6 × 3
 ##   album              artist       play_count
 ##   <chr>              <chr>             <dbl>
@@ -271,9 +258,6 @@ wrapped %>%
   arrange(desc(skip_count)) %>%
   head() %>%
   select(1:3)
-```
-
-```
 ## # A tibble: 6 × 3
 ##   play_count track_title               artist      
 ##        <dbl> <chr>                     <chr>       
@@ -299,7 +283,7 @@ wrapped %>%
   geom_bar()
 ```
 
-<img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-11-1.png" alt="A ggplot bar plot with weekdays on the x axis and count of imports on the y axis. Most days have around 50 songs imported, but both Friday and Saturday have a count of around 175." width="672" />
+<img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-12-1.png" alt="A ggplot bar plot with weekdays on the x axis and count of imports on the y axis. Most days have around 50 songs imported, but both Friday and Saturday have a count of around 175." width="672" />
 
 Yeah!!! Looks like I decide to sleep in most Fridays, but do tend to get my redemption the day after.
 

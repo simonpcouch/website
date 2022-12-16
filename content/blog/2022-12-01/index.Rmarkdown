@@ -12,6 +12,13 @@ image:
 summary: "All of my friends are posting their Spotify Wrapped, and I'm jealous."
 ---
 
+```{r}
+library(knitr)
+
+opts_chunk$set(
+  collapse = TRUE
+)
+```
 
 Aside from exchanging playlists with my partner every once in a while, I'm not much of a Spotify user. Around this time every year, though, all of my friends start posting their Spotify Wrapped, and I get jealous.
  

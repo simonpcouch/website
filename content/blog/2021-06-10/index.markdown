@@ -14,6 +14,15 @@ summary: "Writing iterative code with '+' rather than '%>%' was a tough transiti
 ---
 
 
+```r
+library(knitr)
+
+opts_chunk$set(
+  collapse = TRUE
+)
+```
+
+
 
 Writing iterative code with {ggplot2}'s plus (`+`) operator rather than {magrittr}'s pipe (`%>%`) was a tough transition my first time around.
 
@@ -156,9 +165,6 @@ So... pretty lame so far. If I call:
 
 ```r
 super_fancy_layer()
-```
-
-```
 ## [1] "A super fancy layer."
 ## attr(,"class")
 ## [1] "fancy_layer"
@@ -175,9 +181,6 @@ All that I've done is bundled up what the user passed to me into a little `fancy
 
 ```r
 class(super_fancy_layer())
-```
-
-```
 ## [1] "fancy_layer"
 ```
 
@@ -240,9 +243,6 @@ Getting the `ggplot_add` method working is the biggest leap here, but my first m
 
 ```r
 super_fancy_layer()
-```
-
-```
 ## [1] "A super fancy layer."
 ## attr(,"class")
 ## [1] "fancy_layer"
