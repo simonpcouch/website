@@ -10,7 +10,7 @@ intro: |
 
   My name's Simon. I write software for statistical modeling at RStudio.
   
-  I studied statistics and sociology at Reed College, and am on leave from a PhD program in Biostatistics at Johns Hopkins. Throughout my career so far, I've had a deep and enduring interest in statistical software development---I think, done well, statistical software has an incredible impact on our ability to think intuitively about statistics and data science.
+  I studied statistics and sociology at Reed College, and had a brief stint in a PhD program in Biostatistics at Johns Hopkins. Throughout my career so far, I've had a deep and enduring interest in statistical software development---I think, done well, statistical software has an incredible impact on our ability to think intuitively about statistics and data science.
   
   Most days, I'm working on maintaining R packages in the [tidymodels ecosystem](https://www.tidymodels.org/). My [GitHub profile](https://github.com/simonpcouch) links out to some of the projects I spend my time with.
 
