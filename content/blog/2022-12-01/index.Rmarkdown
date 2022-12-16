@@ -12,7 +12,7 @@ image:
 summary: "All of my friends are posting their Spotify Wrapped, and I'm jealous."
 ---
 
-```{r}
+```{r, echo = FALSE}
 library(knitr)
 
 opts_chunk$set(

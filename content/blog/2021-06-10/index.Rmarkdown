@@ -13,7 +13,7 @@ image:
 summary: "Writing iterative code with '+' rather than '%>%' was a tough transition my first time around."
 ---
 
-```{r}
+```{r, echo = FALSE}
 library(knitr)
 
 opts_chunk$set(

@@ -14,13 +14,6 @@ summary: "Writing iterative code with '+' rather than '%>%' was a tough transiti
 ---
 
 
-```r
-library(knitr)
-
-opts_chunk$set(
-  collapse = TRUE
-)
-```
 
 
 
