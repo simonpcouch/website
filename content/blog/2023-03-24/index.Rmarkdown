@@ -183,7 +183,7 @@ save(benchmarks_parsnip, file = "data/benchmarks_parsnip.Rda")
 
 Plotting:
 
-```{r}
+```{r, fig.alt = "A ggplot2 line graph plotting relative change in time to evaluate model fits with the parsnip package. Fits on datasets with 100 training rows are 6 to 20 times faster, while fits on datasets with 100,000 or more rows take about the same amount of time as they used to."}
 ggplot(benchmarks_parsnip) +
   aes(x = rows, y = speedup, color = spec) + 
   geom_line(linewidth = .9) +
@@ -303,7 +303,7 @@ save(benchmarks_tidymodels, file = "data/benchmarks_tidymodels.Rda")
 ```
 
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, fig.alt = "A ggplot2 line plot with the same axes and general idea as before, this time describing the relative speedup in a whole-game pipeline. In this plot, the maximum speedups are by a factor of 2 to 3 rather than 6 to 20."}
 ggplot(benchmarks_tidymodels) +
   aes(x = rows, y = speedup, color = spec) + 
   geom_line(linewidth = .9) +

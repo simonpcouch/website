@@ -41,16 +41,16 @@ d
 ## # A tibble: 100 × 16
 ##    class   two_factor_1 two_factor_2 non_linear_1 non_linear_2 non_linear_3
 ##    <fct>          <dbl>        <dbl>        <dbl>        <dbl>        <dbl>
-##  1 class_1      -1.65         0.0812       0.507        0.415         0.979
-##  2 class_2      -0.191        1.17         0.728        0.113         0.435
-##  3 class_1      -1.21         0.291        0.928        0.611         0.798
-##  4 class_2       1.48         0.817        0.243        0.957         0.802
-##  5 class_1      -1.40         0.579        0.881        0.199         0.894
-##  6 class_1       2.13         2.84        -0.662        0.538         0.407
-##  7 class_2       0.0310      -1.32         0.697        0.0366        0.851
-##  8 class_2       0.0934      -1.07        -0.905        0.992         0.496
-##  9 class_2      -0.377       -1.03         0.0987       0.645         0.393
-## 10 class_1      -3.14        -0.866       -0.871        0.808         0.798
+##  1 class_1       -0.661       -0.165       0.691        0.668        0.571 
+##  2 class_2       -1.09        -0.846       0.749        0.0735       0.934 
+##  3 class_2        1.34         0.957      -0.240        0.424        0.186 
+##  4 class_2       -1.05         0.704      -0.500        0.0914       0.790 
+##  5 class_1       -2.41        -2.29        0.868        0.507        0.0417
+##  6 class_2       -1.19        -1.55       -0.475        0.258        0.776 
+##  7 class_2        0.184       -0.960      -0.766        0.626        0.411 
+##  8 class_1       -1.29        -0.636       0.998        0.616        0.997 
+##  9 class_1        0.233        0.877      -0.0455       0.412        0.720 
+## 10 class_1       -2.82        -0.910       0.182        0.991        0.994 
 ## # … with 90 more rows, and 10 more variables: linear_01 <dbl>, linear_02 <dbl>,
 ## #   linear_03 <dbl>, linear_04 <dbl>, linear_05 <dbl>, linear_06 <dbl>,
 ## #   linear_07 <dbl>, linear_08 <dbl>, linear_09 <dbl>, linear_10 <dbl>
@@ -68,17 +68,17 @@ fit(logistic_reg(), class ~ ., d)
 ## 
 ## Coefficients:
 ##  (Intercept)  two_factor_1  two_factor_2  non_linear_1  non_linear_2  
-##     1.268883      1.299300     -1.505552     -0.357801     -1.494118  
+##      1.75608       1.94784      -1.99943      -0.84886      -0.93818  
 ## non_linear_3     linear_01     linear_02     linear_03     linear_04  
-##    -1.348705     -0.002479     -0.156661      0.248633      0.014328  
+##     -1.75258       0.53917       0.15238      -0.05635      -0.43106  
 ##    linear_05     linear_06     linear_07     linear_08     linear_09  
-##    -0.161975      0.379646     -0.239448     -0.259289      0.130317  
+##      0.20716       0.10594      -0.86227       0.11783      -0.54713  
 ##    linear_10  
-##     0.030761  
+##     -0.16726  
 ## 
 ## Degrees of Freedom: 99 Total (i.e. Null);  84 Residual
-## Null Deviance:	    137.6 
-## Residual Deviance: 96.09 	AIC: 128.1
+## Null Deviance:	    138.3 
+## Residual Deviance: 79.97 	AIC: 112
 ```
 
 The default engine for a logistic regression in tidymodels is `stats::glm()`. So, in the style of the above graphic, this code:
@@ -230,7 +230,7 @@ ggplot(benchmarks_parsnip) +
   scale_color_manual(values = c("#c4b291", "#588d75", "#c5784f"))
 ```
 
-<img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-7-1.png" width="672" />
+<img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-7-1.png" alt="A ggplot2 line graph plotting relative change in time to evaluate model fits with the parsnip package. Fits on datasets with 100 training rows are 6 to 20 times faster, while fits on datasets with 100,000 or more rows take about the same amount of time as they used to." width="672" />
 
 Two things worth noting:
 
@@ -317,7 +317,7 @@ Tidying up with the same steps and then plotting:
 
 
 
-<img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-10-1.png" width="672" />
+<img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-10-1.png" alt="A ggplot2 line plot with the same axes and general idea as before, this time describing the relative speedup in a whole-game pipeline. In this plot, the maximum speedups are by a factor of 2 to 3 rather than 6 to 20." width="672" />
 
 Again, we see major speedups for smaller datasets, and the effect gradually disappears with larger ones as engine fit time trumps our overhead.
 
