@@ -95,6 +95,10 @@ PygmentsCodeFences = true
       icon_pack = "fab"
       url       = "https://www.linkedin.com/in/simonpcouch/"
   [[params.social]]
+      icon      = "mastodon" # icon name without the 'fa-'
+      icon_pack = "fab"
+      url       = "https://fosstodon.org/@simonpcouch"
+  [[params.social]]
       icon      = "orcid" # icon name without the 'fa-'
       icon_pack = "ai"
       url       = "https://orcid.org/0000-0001-5676-5107"
