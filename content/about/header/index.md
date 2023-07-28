@@ -8,4 +8,4 @@ headline: |
 
 <!-- this is a subheadline -->
 
-Hey, I'm Simon. I write software for statistical modeling at RStudio, and believe that statistical software has an incredible impact on our ability to think intuitively about statistics and data science.
+Hey, I'm Simon. I write software for statistical modeling at Posit (née RStudio), and believe that statistical software has an incredible impact on our ability to think intuitively about statistics and data science.

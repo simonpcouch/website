@@ -1,6 +1,6 @@
 ---
 title: "Simon P. Couch"
-subtitle: "Building software for statistical modeling at RStudio"
+subtitle: "Building software for statistical modeling at Posit (née RStudio)"
 description: "Hey, I'm Simon. I appreciate you dropping by. This a personal website where I blog about statistical software and other assorted tomfoolery."
 images:
   - img/simon-profile.png

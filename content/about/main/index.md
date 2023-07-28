@@ -8,7 +8,7 @@ show_intro: true
 show_outro: false
 intro: |
 
-  My name's Simon. I write software for statistical modeling at RStudio.
+  My name's Simon. I write software for statistical modeling at Posit (née RStudio).
   
   I studied statistics and sociology at Reed College, and had a brief stint in a PhD program in Biostatistics at Johns Hopkins. Throughout my career so far, I've had a deep and enduring interest in statistical software development---I think, done well, statistical software has an incredible impact on our ability to think intuitively about statistics and data science.
   
