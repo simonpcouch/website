@@ -243,7 +243,7 @@ Many blog posts in this genre have a common ending, and for good reason. It goes
 
 Other people have spoken earnestly and helpfully to navigating this process; this is surely not the first or last post in this genre. Here are some links to other wonderful blog posts on similar topics, some of which I've cited already:
 
-- [Rohan Alexander](https://rohanalexander.com/posts/2021-03-13-grad-school-applications/) on your CV, personal statement, and rec letters
+- [Rohan Alexander](https://rohanalexander.com/posts/2021-03-13-grad-school-applications/grad-school-applications.html) on your CV, personal statement, and rec letters
 - [John Muschelli](https://hopstat.wordpress.com/2020/10/01/some-things-i-wish-i-knew-about-grad-school/) on applying, interviewing, choosing between offers, early grad school life
 - [Amelia McNamara](https://www.amelia.mn/blog/teaching/2016/10/19/GradSchool.html) in a Q&A style post, including many, many links to helpful information and perspectives
 
