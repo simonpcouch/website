@@ -14,7 +14,7 @@ intro: |
   
   Most days, I'm working on maintaining R packages in the [tidymodels ecosystem](https://www.tidymodels.org/). My [GitHub profile](https://github.com/simonpcouch) links out to some of the projects I spend my time with.
 
-  I'm currently based out of Baltimore, MD. When I'm not working, I enjoy cooking, hanging with my dog Millie, and playing American folk music.
+  I'm currently based out of Chicago, IL. When I'm not working, I enjoy cooking, hanging with my dog Millie, and playing American folk music.
 
   This site is built with [Hugo Apéro](https://hugo-apero-docs.netlify.app/), and I've repo-dived on [Julia Silge](juliasilge.com) and [Silvia Canelón's](https://www.silviacanelon.com/) personal websites while tweaking and troubleshooting. The site is deployed using [Netlify](https://www.netlify.com/). My blog posts are released under a [Creative Commons Attribution-ShareAlike 4.0 International License](https://creativecommons.org/licenses/by-sa/4.0/).
 
