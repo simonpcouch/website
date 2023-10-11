@@ -26,7 +26,7 @@ library(tidymodels)
 
 A familiar pastime---plotting `mtcars`:
 
-```{r plot-mtcars}
+```{r plot-mtcars, fig.alt = "A ggplot2 dot plot displaying horsepower, ranging from 0 to 350, on the x axis, and miles per gallon, ranging from 10 to 35, on the y axis. Points are colored by the number of cylinders in the car's engine, one of 4, 6, or 8."}
 ggplot(mtcars) +
   aes(x = hp, y = mpg, color = factor(cyl)) +
   geom_point()
@@ -85,7 +85,7 @@ Each row describes the results for a model configuration, `.config`. The thing t
 
 A plot might be a bit more illustrative:
 
-```{r autoplot}
+```{r autoplot, fig.alt = "A ggplot2 line plot. The number of neighbors, from 1 to 14, is on the x axis, and the error metric is on the y axis. The plot is faceted by error metric, with root mean squared error showing consistently higher error with more neighbors, and the R squared showing an optimal number of neighbors near 6."}
 autoplot(res)
 ```
 

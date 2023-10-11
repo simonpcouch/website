@@ -32,7 +32,7 @@ ggplot(mtcars) +
   geom_point()
 ```
 
-<img src="{{< blogdown/postref >}}index_files/figure-html/plot-mtcars-1.png" width="672" />
+<img src="{{< blogdown/postref >}}index_files/figure-html/plot-mtcars-1.png" alt="A ggplot2 dot plot displaying horsepower, ranging from 0 to 350, on the x axis, and miles per gallon, ranging from 10 to 35, on the y axis. Points are colored by the number of cylinders in the car's engine, one of 4, 6, or 8." width="672" />
 
 The fuel efficiency of a car tends to drop off as the horsepower increases, and more cylinders tend to be associated with higher horsepower. Cozy.
 
@@ -130,7 +130,7 @@ A plot might be a bit more illustrative:
 autoplot(res)
 ```
 
-<img src="{{< blogdown/postref >}}index_files/figure-html/autoplot-1.png" width="672" />
+<img src="{{< blogdown/postref >}}index_files/figure-html/autoplot-1.png" alt="A ggplot2 line plot. The number of neighbors, from 1 to 14, is on the x axis, and the error metric is on the y axis. The plot is faceted by error metric, with root mean squared error showing consistently higher error with more neighbors, and the R squared showing an optimal number of neighbors near 6." width="672" />
 
 We tried out values for `n` ranging from 2 to 14. With respect to root mean squared error, at least, more neighbors meant more error. 
 
