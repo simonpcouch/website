@@ -10,6 +10,7 @@ website:
   favicon: assets/cabin.png
   page-navigation: true
   back-to-top-navigation: true
+  google-analytics: "G-DDB8R0B1ZW"
   navbar:
     logo: assets/cabin.png
     tools:
