@@ -12,6 +12,9 @@ listing:
   categories: false
   sort-ui: false
   filter-ui: false
+  feed: 
+    type: partial
+    description: "A data science blog"
   fields: [title, summary, author, categories, date, image]
   image-placeholder: featured.png
   image-align: right

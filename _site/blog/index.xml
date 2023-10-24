@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss  xmlns:atom="http://www.w3.org/2005/Atom" 
+      xmlns:media="http://search.yahoo.com/mrss/" 
+      xmlns:content="http://purl.org/rss/1.0/modules/content/" 
+      xmlns:dc="http://purl.org/dc/elements/1.1/" 
+      version="2.0">
+<channel>
+<title>Simon P. Couch</title>
+<link>https://simonpcouch.com/blog/index.html</link>
+<atom:link href="https://simonpcouch.com/blog/index.xml" rel="self" type="application/rss+xml"/>
+<description>A data science blog</description>
+<generator>quarto-1.3.450</generator>
+<lastBuildDate>Wed, 11 Oct 2023 05:00:00 GMT</lastBuildDate>
+<item>
+  <title>Down the submodels rabbit hole with tidymodels</title>
+  <link>https://simonpcouch.com/blog/2023-10-11-submodels-rabbit-hole/index.html</link>
+  <description><![CDATA[ A familiar pastime—plotting <code>mtcars</code>: ]]></description>
+  <guid>https://simonpcouch.com/blog/2023-10-11-submodels-rabbit-hole/index.html</guid>
+  <pubDate>Wed, 11 Oct 2023 05:00:00 GMT</pubDate>
+  <media:content url="https://simonpcouch.com/blog/2023-10-11-submodels-rabbit-hole/featured.png" medium="image" type="image/png" height="131" width="144"/>
+</item>
+<item>
+  <title>Hiking the 2023 John Muir Trail / Nüümü Poyo</title>
+  <link>https://simonpcouch.com/blog/2023-09-01-jmt-2023/index.html</link>
+  <description><![CDATA[ The John Muir Trail (JMT) is a backpacking trail through California’s Sierra Nevada. For folks heading northbound, the trail begins at the top of Mt. Whitney—the tallest mountain in the contiguous US—ascending 8 mountain passes over 214 miles to Yosemite Valley. The JMT’s route traces portions of Nüümü Poyo, or the People’s Trail: historically significant trade routes maintained by people indigenous to what is now California. ]]></description>
+  <guid>https://simonpcouch.com/blog/2023-09-01-jmt-2023/index.html</guid>
+  <pubDate>Fri, 01 Sep 2023 05:00:00 GMT</pubDate>
+  <media:content url="https://simonpcouch.com/blog/2023-09-01-jmt-2023/featured.jpg" medium="image" type="image/jpeg"/>
+</item>
+<item>
+  <title>Optimizing model parameters faster with tidymodels</title>
+  <link>https://simonpcouch.com/blog/2023-08-04-parallel-racing/index.html</link>
+  <description><![CDATA[ Especially for large amounts of data or large grids of parameters, the time and resources needed to tune statistical models can quickly become a barrier to getting machine learning models deployed. Many examples online demonstrating how to tune hyperparameters with tidymodels use <code>tune_grid()</code> on one CPU core. Making use of parallel processing and using a near-drop-in replacement for <code>tune_grid()</code> can speed up hyperparameter tuning by 20-30x! ]]></description>
+  <guid>https://simonpcouch.com/blog/2023-08-04-parallel-racing/index.html</guid>
+  <pubDate>Fri, 04 Aug 2023 05:00:00 GMT</pubDate>
+  <media:content url="https://simonpcouch.com/blog/2023-08-04-parallel-racing/featured.png" medium="image" type="image/png" height="141" width="144"/>
+</item>
+<item>
+  <title>Moving On From Baltimore</title>
+  <link>https://simonpcouch.com/blog/2023-07-28-moving-on-s23/index.html</link>
+  <description><![CDATA[ 2 years ago, I sent out <a href="https://www.simonpcouch.com/blog/whats-next-s21/">a post</a> around the time I graduated from college. I wrote about my gratitude for my time in Oregon, my excitement to start a PhD program in Biostatistics at Johns Hopkins, and the joy of raising my then-very-young dog, Millie. Soon after, in summer 2021, I made the road trip to Baltimore, MD. ]]></description>
+  <guid>https://simonpcouch.com/blog/2023-07-28-moving-on-s23/index.html</guid>
+  <pubDate>Fri, 28 Jul 2023 05:00:00 GMT</pubDate>
+  <media:content url="https://simonpcouch.com/blog/2023-07-28-moving-on-s23/featured.png" medium="image" type="image/png" height="135" width="144"/>
+</item>
+<item>
+  <title>The tidymodels is getting a whole lot faster</title>
+  <link>https://simonpcouch.com/blog/2023-03-24-speedups-2023/index.html</link>
+  <description><![CDATA[ The <a href="https://www.tidymodels.org/">tidymodels packages</a> provide a consistent, expressive, and safe interface to all sorts of modeling algorithms in R. ]]></description>
+  <guid>https://simonpcouch.com/blog/2023-03-24-speedups-2023/index.html</guid>
+  <pubDate>Fri, 24 Mar 2023 05:00:00 GMT</pubDate>
+  <media:content url="https://simonpcouch.com/blog/2023-03-24-speedups-2023/featured.png" medium="image" type="image/png" height="152" width="144"/>
+</item>
+<item>
+  <title>Analyzing my own music listening data with R and the tidyverse</title>
+  <link>https://simonpcouch.com/blog/2022-12-01-listening-2022/index.html</link>
+  <description><![CDATA[ Aside from exchanging playlists with my partner every once in a while, I’m not much of a Spotify user. Around this time every year, though, all of my friends start posting their Spotify Wrapped, and I get jealous. ]]></description>
+  <guid>https://simonpcouch.com/blog/2022-12-01-listening-2022/index.html</guid>
+  <pubDate>Thu, 01 Dec 2022 06:00:00 GMT</pubDate>
+  <media:content url="https://simonpcouch.com/blog/2022-12-01-listening-2022/featured.jpg" medium="image" type="image/jpeg"/>
+</item>
+<item>
+  <title>Redirecting from sub-domains with Netlify</title>
+  <link>https://simonpcouch.com/blog/2022-07-20-netlify-subdomain-redirect/index.html</link>
+  <description><![CDATA[ This post outlines how to redirect from a subdomain with Netflify for people who—like me—who don’t really understand what that means.🌝🌚 ]]></description>
+  <guid>https://simonpcouch.com/blog/2022-07-20-netlify-subdomain-redirect/index.html</guid>
+  <pubDate>Wed, 20 Jul 2022 05:00:00 GMT</pubDate>
+  <media:content url="https://simonpcouch.com/blog/2022-07-20-netlify-subdomain-redirect/featured.jpg" medium="image" type="image/jpeg"/>
+</item>
+<item>
+  <title>{infer} v1.0.0 is on CRAN</title>
+  <link>https://simonpcouch.com/blog/2021-08-21-infer-v-1-0-0/index.html</link>
+  <description><![CDATA[ In Fall 2017, during my first semester at Reed, I took an introductory statistics course. A prospective biology major, I was told learning how to code would be helpful later on in my coursework. I used R for the first time during the labs for that class, getting to know packages like {ggplot2} and {dplyr}. Another cornerstone of that class was {infer}, a package whose ubiquity I assumed was similar to {ggplot2} and {dplyr}. At the time, the thought that packages changed over time, or were written by people, or even had source code, had probably yet to occur to me. ]]></description>
+  <guid>https://simonpcouch.com/blog/2021-08-21-infer-v-1-0-0/index.html</guid>
+  <pubDate>Sat, 21 Aug 2021 05:00:00 GMT</pubDate>
+  <media:content url="https://simonpcouch.com/blog/2021-08-21-infer-v-1-0-0/featured.jpg" medium="image" type="image/jpeg"/>
+</item>
+<item>
+  <title>Applying to the NSF Graduate Research Fellowship (GRFP)</title>
+  <link>https://simonpcouch.com/blog/2021-08-02-apply-to-nsf-grfp/index.html</link>
+  <description><![CDATA[ Last fall, I applied to (and was awarded) the National Science Foundation’s Graduate Research Fellowship (NSF GRFP). Much of the advice that made me feel most informed and confident about the application process required some degree of access that it should not have—personal connections, institutional resources, and/or hindsight—and I feel this information should be publicly available. I’m far from an expert about how this all works, and can only speak to my personal experience, but I hope I can help others feel more confident in putting together their applications (or deciding whether or not to) by sharing my experience. The format (and, sometimes, content) of this post will follow from my <a href="https://blog.simonpcouch.com/blog/apply-to-stats-grad-school">post on applying to graduate school in statistics/biostatistics</a>. ]]></description>
+  <guid>https://simonpcouch.com/blog/2021-08-02-apply-to-nsf-grfp/index.html</guid>
+  <pubDate>Mon, 02 Aug 2021 05:00:00 GMT</pubDate>
+  <media:content url="https://simonpcouch.com/blog/2021-08-02-apply-to-nsf-grfp/featured.jpg" medium="image" type="image/jpeg"/>
+</item>
+<item>
+  <title>Pipe-esque Programming with {ggplot2}’s Plus Operator</title>
+  <link>https://simonpcouch.com/blog/2021-06-10-ggplot-pipe-plus/index.html</link>
+  <description><![CDATA[ Writing iterative code with {ggplot2}’s plus (<code>+</code>) operator rather than {magrittr}’s pipe (<code>%&gt;%</code>) was a tough transition my first time around. ]]></description>
+  <guid>https://simonpcouch.com/blog/2021-06-10-ggplot-pipe-plus/index.html</guid>
+  <pubDate>Thu, 10 Jun 2021 05:00:00 GMT</pubDate>
+  <media:content url="https://simonpcouch.com/blog/2021-06-10-ggplot-pipe-plus/featured.jpg" medium="image" type="image/jpeg"/>
+</item>
+<item>
+  <title>Big Things (Developer Documentation pt. 4)</title>
+  <link>https://simonpcouch.com/blog/2021-05-13-dev-docs-p4/index.html</link>
+  <description><![CDATA[ This is the last of four blog posts on the development process of the {stacks} package, excerpted from my Reed senior thesis project <em>Tidy Model Stacking with R</em>. ]]></description>
+  <guid>https://simonpcouch.com/blog/2021-05-13-dev-docs-p4/index.html</guid>
+  <pubDate>Thu, 13 May 2021 05:00:00 GMT</pubDate>
+  <media:content url="https://simonpcouch.com/blog/2021-05-13-dev-docs-p4/featured.jpg" medium="image" type="image/jpeg"/>
+</item>
+<item>
+  <title>Naming the Things (Developer Documentation pt. 3)</title>
+  <link>https://simonpcouch.com/blog/2021-05-12-dev-docs-p3/index.html</link>
+  <description><![CDATA[ This is the third of four blog posts on the development process of the {stacks} package, excerpted from my Reed senior thesis project <em>Tidy Model Stacking with R</em>. ]]></description>
+  <guid>https://simonpcouch.com/blog/2021-05-12-dev-docs-p3/index.html</guid>
+  <pubDate>Wed, 12 May 2021 05:00:00 GMT</pubDate>
+  <media:content url="https://simonpcouch.com/blog/2021-05-12-dev-docs-p3/featured.jpg" medium="image" type="image/jpeg"/>
+</item>
+<item>
+  <title>Splitting Things Up (Developer Documentation pt. 2)</title>
+  <link>https://simonpcouch.com/blog/2021-05-11-dev-docs-p2/index.html</link>
+  <description><![CDATA[ This is the second of four blog posts on the development process of the {stacks} package, excerpted from my Reed senior thesis project <em>Tidy Model Stacking with R</em>. ]]></description>
+  <guid>https://simonpcouch.com/blog/2021-05-11-dev-docs-p2/index.html</guid>
+  <pubDate>Tue, 11 May 2021 05:00:00 GMT</pubDate>
+  <media:content url="https://simonpcouch.com/blog/2021-05-11-dev-docs-p2/featured.jpg" medium="image" type="image/jpeg"/>
+</item>
+<item>
+  <title>How {stacks} Came To Be (Developer Documentation pt. 1)</title>
+  <link>https://simonpcouch.com/blog/2021-05-10-dev-docs-p1/index.html</link>
+  <description><![CDATA[ This is the first of four blog posts on the development process of the {stacks} package, excerpted from my Reed senior thesis project <em>Tidy Model Stacking with R</em>. ]]></description>
+  <guid>https://simonpcouch.com/blog/2021-05-10-dev-docs-p1/index.html</guid>
+  <pubDate>Mon, 10 May 2021 05:00:00 GMT</pubDate>
+  <media:content url="https://simonpcouch.com/blog/2021-05-10-dev-docs-p1/featured.jpg" medium="image" type="image/jpeg"/>
+</item>
+<item>
+  <title>What’s Next For Me</title>
+  <link>https://simonpcouch.com/blog/2021-03-23-whats-next-s21/index.html</link>
+  <description><![CDATA[ I’ve been a bit unsure about how personal this blog ought to be, and what qualifies as “significant” enough to post. A lot of changes are coming up soon for me, though, and this feels like a good place to document. ]]></description>
+  <guid>https://simonpcouch.com/blog/2021-03-23-whats-next-s21/index.html</guid>
+  <pubDate>Tue, 23 Mar 2021 05:00:00 GMT</pubDate>
+  <media:content url="https://simonpcouch.com/blog/2021-03-23-whats-next-s21/featured.jpg" medium="image" type="image/jpeg"/>
+</item>
+<item>
+  <title>Applying to Graduate School in Statistics and Biostatistics</title>
+  <link>https://simonpcouch.com/blog/2021-03-15-apply-to-stats-grad-school/index.html</link>
+  <description><![CDATA[ Since last fall, I’ve been going through the process of applying to graduate school in (bio)statistics.<sup>1</sup> I found that I was only able to learn about some parts of the process through office hours, personal meetings, and Twitter DMs, and I thought it would be worth publicly compiling some lessons learned.<sup>2</sup>🐥 I’m far from an expert about how this all works, and can only speak to my personal experience. ]]></description>
+  <guid>https://simonpcouch.com/blog/2021-03-15-apply-to-stats-grad-school/index.html</guid>
+  <pubDate>Mon, 15 Mar 2021 05:00:00 GMT</pubDate>
+  <media:content url="https://simonpcouch.com/blog/2021-03-15-apply-to-stats-grad-school/featured.jpg" medium="image" type="image/jpeg"/>
+</item>
+<item>
+  <title>Running R Scripts on a Schedule with GitHub Actions</title>
+  <link>https://simonpcouch.com/blog/2020-12-27-r-github-actions-commit/index.html</link>
+  <description><![CDATA[ I have an R script that queries data from a server that only supplies live data, and I want to run it on a regular basis, saving the results with each run. This problem gets at the intersection of a few things that are often hard (for me) to get right: ]]></description>
+  <guid>https://simonpcouch.com/blog/2020-12-27-r-github-actions-commit/index.html</guid>
+  <pubDate>Sun, 27 Dec 2020 06:00:00 GMT</pubDate>
+  <media:content url="https://simonpcouch.com/blog/2020-12-27-r-github-actions-commit/featured.jpg" medium="image" type="image/jpeg"/>
+</item>
+<item>
+  <title>{stacks} v0.1.0 is on CRAN!</title>
+  <link>https://simonpcouch.com/blog/2020-11-30-stacks-0-1-0/index.html</link>
+  <description><![CDATA[ <img src="https://simonpcouch.com/blog/2020-11-30-stacks-0-1-0/https:/github.com/tidymodels/stacks/raw/main/man/figures/logo.png" class="img-fluid"> ]]></description>
+  <guid>https://simonpcouch.com/blog/2020-11-30-stacks-0-1-0/index.html</guid>
+  <pubDate>Mon, 30 Nov 2020 06:00:00 GMT</pubDate>
+  <media:content url="https://simonpcouch.com/blog/2020-11-30-stacks-0-1-0/featured.jpg" medium="image" type="image/jpeg"/>
+</item>
+<item>
+  <title>Programatically Generating PDF Reports with the Tidyverse</title>
+  <link>https://simonpcouch.com/blog/2020-11-12-pdfs-from-data/index.html</link>
+  <description><![CDATA[ Over the past few years, I’ve come across the problem of generating PDF reports programmatically from data in a few different settings. This is, of course, a really vaguely defined problem, and they’ve all varied slightly in what they entailed and how automated they needed to be, but my solutions for each shared a few common ideas that I think are worth putting down in writing. ]]></description>
+  <guid>https://simonpcouch.com/blog/2020-11-12-pdfs-from-data/index.html</guid>
+  <pubDate>Thu, 12 Nov 2020 06:00:00 GMT</pubDate>
+  <media:content url="https://simonpcouch.com/blog/2020-11-12-pdfs-from-data/featured.png" medium="image" type="image/png" height="109" width="144"/>
+</item>
+<item>
+  <title>A Gentle Introduction to Tidy Model Stacking</title>
+  <link>https://simonpcouch.com/blog/2020-10-27-gentle-intro-stacks/index.html</link>
+  <description><![CDATA[ A few months ago, the tidymodels team coordinated a <a href="https://connect.rstudioservices.com/tidymodels-priorities-survey/README.html">community survey</a> to get a sense for what users most wanted to see next in the tidymodels ecosystem. One resounding theme from responses was that tidymodels users wanted a framework for tidymodels-aligned model stacking. ]]></description>
+  <guid>https://simonpcouch.com/blog/2020-10-27-gentle-intro-stacks/index.html</guid>
+  <pubDate>Tue, 27 Oct 2020 05:00:00 GMT</pubDate>
+  <media:content url="https://simonpcouch.com/blog/2020-10-27-gentle-intro-stacks/featured.jpg" medium="image" type="image/jpeg"/>
+</item>
+</channel>
+</rss>
