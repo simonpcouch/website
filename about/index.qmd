@@ -1,0 +1,58 @@
+---
+title: "Simon P. Couch"
+subtitle: Statistical Software at Posit (née RStudio)
+image: sidebar/avatar.png
+image-alt: "A portrait of me, smiling while sitting beside a trail in the woods."
+about:
+  template: trestles
+  image-width: 14em
+  image-shape: rectangle
+  id: hero-heading
+  links:
+    - icon: mastodon
+      href: https://fosstodon.org/@simonpcouch
+    - icon: github
+      aria-label: GitHub
+      href: https://github.com/simonpcouch
+    - text: "{{< fa brands orcid >}}"
+      href: https://orcid.org/0000-0001-5676-5107
+    - icon: linkedin
+      aria-label: "LinkedIn"
+      href: https://linkedin.com/in/simonpcouch
+
+back-to-top-navigation: false
+
+listing: 
+- id: blog
+  contents: 
+    - "blog/*/index.qmd"
+    - "blog/*/index.markdown"
+  sort: date desc
+  type: grid
+  grid-columns: 1
+  categories: false
+  sort-ui: false
+  filter-ui: false
+  fields: [title, subtitle, image]
+  max-items: 1
+  image-height: "200"
+format: 
+  html: 
+    page-layout: full
+---
+
+<div class="quarto-title">
+<h1 class="title">I appreciate you dropping by.</h1>
+</div>
+
+  My name's Simon. I write software for statistical modeling at Posit (formerly called RStudio).
+  
+  I studied statistics and sociology at Reed College, and had a brief stint in a PhD program in Biostatistics at Johns Hopkins. Throughout my career so far, I've had a deep and enduring interest in statistical software development---I think, done well, statistical software has an incredible impact on our ability to think intuitively about statistics and data science.
+  
+  Most days, I'm working on maintaining R packages in the [tidymodels ecosystem](https://www.tidymodels.org/). My [GitHub profile](https://github.com/simonpcouch) links out to some of the projects I spend my time with.
+
+  I'm currently based out of Chicago, IL. When I'm not working, I enjoy cooking, hanging with my dog Millie, and playing American folk music.
+
+  This site is built with [Quarto](https://quarto.org/), and I've repo-dived on [Silvia Canelón](https://www.silviacanelon.com/), [Julia Silge](juliasilge.com), and [Emil Hvitfeldt](https://emilhvitfeldt.com/)'s personal websites while tweaking and troubleshooting. The site is deployed using [Netlify](https://www.netlify.com/). My blog posts are released under a [Creative Commons Attribution-ShareAlike 4.0 International License](https://creativecommons.org/licenses/by-sa/4.0/).
+
+

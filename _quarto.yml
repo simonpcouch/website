@@ -1,0 +1,40 @@
+project:
+  type: website
+  post-render: 
+    - "cp -rnv static/. _site" # source: https://github.com/quarto-dev/quarto-cli/discussions/4162#discussioncomment-4831352
+
+website:
+  title: "Simon P. Couch"
+  site-url: https://simonpcouch.com
+  description: "Building software for statistical modeling at Posit (née RStudio)."
+  favicon: assets/cabin.png
+  page-navigation: true
+  back-to-top-navigation: true
+  navbar:
+    logo: assets/cabin.png
+    tools:
+    - icon: github
+      href: https://www.github.com/simonpcouch/website
+    right:
+      - text: About
+        aria-label: "About Me"
+        href: about/index.qmd
+      - text: Blog
+        aria-label: "Some Pitter Patters With R"
+        href: blog/index.qmd
+  
+  page-footer:  
+    left: >-
+     &#169; 2023 Simon P. Couch &#8729; Made with [Quarto](https://quarto.org)
+
+format: 
+  html:
+    theme:
+      - cosmo
+      - assets/simon-light.scss
+      - assets/simon.scss
+    code-link: true
+    pagetitle: "{{< meta title >}} | Simon P. Couch"
+
+execute: 
+  freeze: auto

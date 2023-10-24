@@ -1,0 +1,65 @@
+/*-- scss:defaults --*/
+
+// Theme colors
+$primary: $siteBgColorCustom;
+$secondary: $textColorCustom;
+
+// Quarto colors
+$body-bg: $siteBgColorCustom;
+$body-color: $textColorCustom;
+$link-color: $bodyLinkColorCustom;
+$input-bg: $buttonTextColorCustom;
+$popover-bg: $buttonTextColorCustom;
+$navbar-bg: $siteBgColorCustom;
+$navbar-fg: $navLinkColorCustom;
+$code-block-bg: $buttonTextColorCustom;
+
+// Fonts
+@import 'https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,200&display=swap';
+@import 'https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,100;9..144,200&display=swap';
+
+// Misc. Edits
+div.quarto-about-jolla .quarto-title h1.title {
+  font-weight: 100;
+  font-size: 4rem;
+  color: $navLinkColorCustom;
+  font-family: Fraunces, serif;
+}
+
+h1, h2, h3, h4, h5, h1.title, .title.h1 {
+  color: $navLinkColorCustom;
+  font-family: Fraunces, serif;
+}
+
+
+#title-block-header.quarto-title-block.default .description {
+  color: $headlineColorCustom;
+  font-size: 1.25rem;
+}
+
+div.quarto-post .body h3.listing-title, div.quarto-post .body .listing-title.h3 {
+  font-family: Fraunces, serif;
+  color: $headingColorCustom;
+  text-decoration-line: underline;
+  font-weight: 100;
+}
+
+p {
+  font-size: 1.2rem;
+  font-weight: 300;
+}
+
+body {
+  font-size: 1.2rem !important;
+  font-weight: 300 !important;
+}
+
+.blockquote {
+  color: #1F3329 !important;
+}
+
+p code:not(.sourceCode), li code:not(.sourceCode), td code:not(.sourceCode) {
+  background-color: $siteBgColorCustom !important;
+  color: #1F3329;
+}
+

@@ -1,0 +1,119 @@
+---
+title: "Simon P. Couch"
+pagetitle: "Simon P. Couch"
+subtitle: "Building software for statistical modeling at Posit (née RStudio)"
+image: assets/avatar.png
+image-alt: "A portrait of me, smiling while sitting beside a trail in the woods."
+
+about:
+  template: jolla
+  image-width: 28em
+  id: hero-heading
+  links:
+    - icon: mastodon
+      href: https://fosstodon.org/@simonpcouch
+    - icon: github
+      aria-label: GitHub
+      href: https://github.com/simonpcouch
+    - text: "{{< fa brands orcid >}}"
+      href: https://orcid.org/0000-0001-5676-5107
+    - icon: linkedin
+      aria-label: "LinkedIn"
+      href: https://linkedin.com/in/simonpcouch
+page-layout: article
+
+back-to-top-navigation: false
+
+execute: 
+  freeze: false
+  echo: false
+  
+---
+
+
+<!-- hero-heading -->
+
+```{r import-manual-redirects}
+#| message: false
+# adapted from Silvia Canelón: https://github.com/spcanelon/silvia/blob/4c5bb1bd5573415d92e8a91a0d46ee8b91538a4f/index.qmd#L71-L74
+# who adapted from Tom Mock: https://github.com/jthomasmock/themockup-blog/blob/master/index.qmd#L27C1-L48C4
+# who adapted from Danielle Navarro: https://blog.djnavarro.net/porting-to-quarto/#netlify-redirects
+
+manual_redirects <-
+  readr::read_table(here::here("static", "_manualredirects.txt"),
+                    col_names = FALSE) |> 
+  dplyr::mutate(redirect = paste0(X1, " ", X2, " ", X3))
+
+manual_redirects <- manual_redirects$redirect
+```
+
+```{r rename-folders}
+#| eval: false
+# the problem that i have is similar to those from the folks above.
+# my posts currently live at URLs /blog/slug and folders are named
+# with only YYYY-MM-DD, so quarto will put them at the URL /blog/YYYY-MM-DD.
+#
+# i like Danielle's approach to naming the folder YYYY-MM-DD-slug,
+# and then will "clean" the date off of the slug for the URL redirect.
+#
+# so, first, just once, i need to extract the slugs from my existing posts
+# and then rename the folders they live in using them. then, i can use a
+# similar approach as Danielle & co.
+previous_post_paths <- 
+  list.files(
+    pattern = "index.markdown", 
+    recursive = TRUE, 
+    full.names = TRUE
+  )
+
+# definitely don't run this unless you intend to!
+if (FALSE) {
+  for (post in previous_post_paths) {
+    dir_path <- gsub("/index.markdown", "", post, fixed = TRUE)
+    post_lines <- readLines(post)
+    slug_loc <- grepl("slug: ", post_lines, fixed = TRUE)
+    slug <- gsub("slug: ", "", post_lines[slug_loc], fixed = TRUE)
+    new_dir_path <- paste0(dir_path, "-", slug)
+    file.rename(dir_path, new_dir_path)
+  }
+}
+```
+
+```{r}
+# function: obtain list of post paths
+list_paths <- function(folder) {
+  posts <-
+    list.dirs(
+    path = c(here::here(folder)),
+    full.names = FALSE,
+    recursive = FALSE
+    ) |> 
+    tibble::as_tibble_col(column_name = "path")  |>
+    dplyr::mutate(folder = folder)
+}
+
+# list post paths by folder
+posts <- list_paths("blog")
+
+# extract short paths and create redirects
+posts <- 
+  posts |> 
+  dplyr::mutate(
+    # extract the year-slugs
+    short_path = stringr::str_remove(path, "\\d{4}-\\d{2}-\\d{2}-(?!\\d)"),
+    # create short paths
+    short_path = paste0(folder, "/", short_path),
+    # create lines to insert to a netlify _redirect file
+    redirects = paste0("/", short_path, " ", "/", folder, "/", path)
+    )
+
+# extract redirects
+redirects <- posts$redirects
+
+# combine with manual redirects
+redirects_combined <- c(manual_redirects, redirects)
+
+# write the _redirect file
+writeLines(redirects_combined, here::here("_site", "_redirects"))
+```
+

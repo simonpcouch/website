@@ -1,0 +1,259 @@
+---
+title: "Optimizing model parameters faster with tidymodels"
+date: '2023-08-04'
+slug: parallel-racing
+tags:
+  - rstats
+  - tidymodels
+  - tune
+subtitle: ''
+summary: "A couple small changes can greatly speed up the hyperparameter tuning process with tidymodels."
+---
+
+```{r setup, echo = FALSE, warning = FALSE, message = FALSE}
+library(knitr)
+library(doMC)
+
+opts_chunk$set(
+  collapse = TRUE
+)
+
+registerDoMC(cores = 1)
+
+options(pillar.min_title_chars = Inf)
+```
+
+Especially for large amounts of data or large grids of parameters, the time and resources needed to tune statistical models can quickly become a barrier to getting machine learning models deployed. Many examples online demonstrating how to tune hyperparameters with tidymodels use `tune_grid()` on one CPU core. Making use of parallel processing and using a near-drop-in replacement for `tune_grid()` can speed up hyperparameter tuning by 20-30x!
+
+## Setup: grid search
+
+In many examples online demonstrating machine learning with tidymodels, [grid search](https://www.tidymodels.org/learn/work/tune-svm/) via [`tune_grid()`](https://tune.tidymodels.org/reference/tune_grid.html) is the workhorse behind tuning hyperparameters. `tune_grid()` computes a set of performance metrics for a set of candidate model parameters across resamples of data; the parameters that result in the most performant models can then be used to [train a model on the entire training set](https://tune.tidymodels.org/reference/fit_best.html). We'll quickly put together an example grid search with `tune_grid()` to benchmark how long it takes before introducing two strategies to speed the process up—parallel processing and racing via ANOVA.
+
+We'll make use of the [`ames` housing data](https://modeldata.tidymodels.org/reference/ames.html) included as part of the tidymodels meta-package to demonstrate hyperparameter tuning with grid search.
+
+```{r load-tidymodels, message = FALSE}
+library(tidymodels)
+
+ames
+```
+
+The data set contains information on 2,930 properties in Ames, Iowa. We'll model the [log home sale price](https://www.tmwr.org/ames#exploring-features-of-homes-in-ames) using predictors related a home's location, size, and condition.
+
+```{r ames-sale-price}
+ames <- ames %>% mutate(Sale_Price = log10(Sale_Price))
+```
+
+First, [splitting the data into training and testing sets](https://rsample.tidymodels.org/reference/initial_split.html) and then resampling the training set using [v-fold cross-validation](https://rsample.tidymodels.org/reference/vfold_cv.html):
+
+```{r split-ames}
+set.seed(1)
+ames_split <- initial_split(ames, strata = "Sale_Price")
+ames_train <- training(ames_split)
+ames_test <- testing(ames_split)
+
+set.seed(2)
+ames_folds <- vfold_cv(ames_train, v = 20)
+```
+
+Then, we'll define a [boosted tree](https://parsnip.tidymodels.org/reference/boost_tree.html) ensemble model. We first load the [bonsai](https://bonsai.tidymodels.org/) package, which defines parsnip wrappers for the gradient boosting framework [LightGBM](https://lightgbm.readthedocs.io/en/stable/) (among others), and then define a model specification using [parsnip](https://parsnip.tidymodels.org/).
+
+```{r bt-spec}
+library(bonsai)
+
+bt_spec <-
+  boost_tree(learn_rate = tune(), stop_iter = tune(), trees = 1000) %>%
+  set_engine("lightgbm", num_leaves = tune()) %>%
+  set_mode("regression")
+```
+
+We tune a number of [main model parameters](https://parsnip.tidymodels.org/reference/set_engine.html#details) as well as the [engine parameter](https://parsnip.tidymodels.org/reference/set_engine.html#details) `num_leaves`. [Rather than tuning the number of trees](https://stats.stackexchange.com/questions/348245/do-we-have-to-tune-the-number-of-trees-in-a-random-forest), we tune `stop_iter`, the number of boosting iterations without improvement before stopping training. 
+
+We'll also use a [recipe](https://recipes.tidymodels.org/) to pre-process the data. This one is adapted from the book [Tidy Modeling with R](https://www.tmwr.org/):
+
+```{r bt-rec}
+bt_rec <- 
+  recipe(Sale_Price ~ Neighborhood + Gr_Liv_Area + Year_Built + Bldg_Type + 
+           Latitude + Longitude, data = ames_train) %>%
+  step_log(Gr_Liv_Area, base = 10) %>% 
+  step_other(Neighborhood, threshold = 0.05) %>% 
+  step_dummy(all_nominal_predictors()) %>% 
+  step_interact( ~ Gr_Liv_Area:starts_with("Bldg_Type_")) %>% 
+  step_ns(Latitude, Longitude, deg_free = tune())
+```
+
+Note that we tune the degrees of freedom `deg_free` parameter of the [natural spline step](https://recipes.tidymodels.org/reference/step_ns.html).
+
+Bundling the model and preprocessing together into a [workflow](https://workflows.tidymodels.org/):
+
+```{r bt-wflow}
+bt_wflow <- workflow(bt_rec, bt_spec)
+```
+
+Each argument we've tagged to `tune()` is now represented in the workflow. We can summarize that set of parameters needing tuning by [extracting them](https://workflows.tidymodels.org/reference/extract-workflow.html) from the workflow:
+
+```{r extract-param-set}
+extract_parameter_set_dials(bt_wflow)
+```
+
+A grid search involves taking candidate values for each of these parameters and evaluating their resulting performance against resamples of the data. A _model configuration_ is a workflow with a specific value sampled for each tuning parameter; we're searching for the model configuration that results in the best possible performance. We'll carry out a grid search across 50 model configurations with tidymodels using `tune_grid()` and time how long it takes using `system.time()`. 
+
+```{r bt-res-grid, cache = TRUE}
+set.seed(3)
+
+bt_time_grid <- system.time(
+  bt_res_grid <- tune_grid(bt_wflow, ames_folds, grid = 50)
+)
+```
+
+`bt_res_grid` is an object that gives us insight into various aspects of the tuning process like resampling variation, performance metrics, and issues in model fitting.
+
+```{r print-grid}
+bt_res_grid
+```
+
+Various helper functions allow us to quickly learn from this output. For example, plotting the resampled performance for each tuning parameter:
+
+```{r autoplot-grid, fig.alt = "A faceted ggplot2 dot plot. Rows correspond to two different error metrics, root mean squared error and R squared, and four columns correspond to the different tuning parameters mentioned above. The learning rate seems to be a driving factor in performance; smaller learning rates seem to consistently result in smaller errors."}
+autoplot(bt_res_grid)
+```
+
+Or, picking out the best tuning parameter combination according to the [root mean squared error](https://yardstick.tidymodels.org/reference/rmse.html) (RMSE):
+
+```{r collect-metrics-grid}
+collect_metrics(bt_res_grid) %>%
+  filter(.metric == "rmse") %>%
+  arrange(mean)
+```
+
+```{r pull-best-rmse, echo = FALSE}
+bt_res_grid_rmse_best <- 
+  collect_metrics(bt_res_grid) %>%
+  filter(.metric == "rmse") %>%
+  arrange(mean) %>%
+  pull(mean) %>%
+  `[`(1)
+```
+
+Our best validation set RMSE averaged out to `r format(round(bt_res_grid_rmse_best, 3), scientific = FALSE)`.
+
+For each of the 50 model configurations, the configuration was fitted `r nrow(ames_folds)` (once for each fold) times. That's `r 50 * nrow(ames_folds)` model fits!
+
+In total, these results took `r round(bt_time_grid[["elapsed"]], 0)` seconds, or about `r round(bt_time_grid[["elapsed"]] / 60, 0)` minutes, to generate. This isn't terribly long, but our input data is quite small compared to that from many of the real-world applications of machine learning. 
+
+tidymodels includes support for two optimizations that will allow us to tune this model much more quickly!
+
+## Parallel processing
+
+The first optimization is [parallel processing](https://tune.tidymodels.org/articles/extras/optimizations.html). At the moment, I'm writing this blog post on a computer with 10 cores. Without any additional configuration, R will only make use of one of those cores to carry out computations. Parallel processing tools will allow me to allot all of the computations under the hood in `tune_grid()` to best make use of all of the cores available to me.
+
+tidymodels supports a variety of parallel processing backends. I'll set one up using the parallel and doParallel packages:
+
+```{r make-cluster, warning = FALSE, message = FALSE}
+library(doMC)
+registerDoMC(cores = 10)
+```
+
+Running the same tuning code as before, now, `tune_grid()` will pick up on our newly registered backend and distribute its computations across the available cores:
+
+```{r bt-time-par, cache = TRUE}
+set.seed(4)
+
+bt_time_par <- system.time(
+  bt_res_par <- tune_grid(bt_wflow, ames_folds, grid = 50)
+)
+```
+
+In total, these results took `r round(bt_time_par[["elapsed"]], 0)` seconds to generate! This is about `r round(bt_time_grid[["elapsed"]] / bt_time_par[["elapsed"]], 1)` times faster than the single-core approach. There's a bit of overhead associating with sending computations out to different cores and then compiling them back together, and some of the computations needed to tune hyperparameters can't be parallelized, so the factor of speedup when using parallel processing while tuning is slightly less than the factor increase in number of cores.
+
+Already, a `r round(bt_time_grid[["elapsed"]] / bt_time_par[["elapsed"]], 1)`x speedup is a gamechanger for many machine learning workflows! This optimization assumes you have access to unutilized computing resources, though, which may not be the case for you; this next one doesn't require any extra computing power.
+
+## Racing
+
+In these previous examples, we've evaluated 50 model configurations against 20 resamples, resulting in 1000 model fits. We can use an approach called _racing_ to cut down on that number of model fits.
+
+[Racing via ANOVA](https://arxiv.org/abs/1405.6974) models, implemented in the [`tune_race_anova()`](https://finetune.tidymodels.org/reference/tune_race_anova.html#details) function in finetune, works by fitting each model configuration to only a few of the resamples and then, at each additional resample, removing model configurations that are unlikely to be more performant than the others.
+
+```{r load-finetune}
+library(finetune)
+```
+
+Visualization helpers in the finetune package are super effective for developing intuition on this process, so let's go ahead and tune using racing and then use the output to learn more about the process. First, we'll bump the number of cores back to one so that we can observe the effect of only racing:
+
+```{r stop-cluster}
+registerDoMC(cores = 1)
+```
+
+Now, tuning using racing:
+
+```{r bt-time-race, cache = TRUE}
+set.seed(5)
+
+bt_time_race <- system.time(
+  bt_res_race <- tune_race_anova(bt_wflow, ames_folds, grid = 50)
+)
+```
+
+The resulting object `bt_res_race` looks quite similar to the typical grid search output:
+
+```{r print-race}
+bt_res_race
+```
+
+The `plot_race()` helper visualizes the racing process:
+
+```{r plot-race, fig.alt = "A ggplot2 line plot, with resample number on the x axis and root mean squared error on the y axis. For resamples 1 through 3, 50 lines show the distributions of error for each model configuration. After the 3rd resample, a vast majority of the lines disappear, and only the lines associated with the smallest error remain. Moving from left to right along the x axis, lines gradually disappear, until only one line is left, which stretches horizontally all the way to resample 20."}
+plot_race(bt_res_race) + labs(x = "Resample #")
+```
+
+In this plot, we see 50 differently colored lines, each corresponding to a model configuration. For a given resample, each model configuration has an associated RMSE, plotted on the y axis. 
+
+In racing, resamples are assigned a random order and then evaluated _in order_. The x axis in this case thus roughly corresponds to _time elapsed_.
+
+Moving from left to right, we initially see that every model configuration was evaluated with the first three resamples. After those first three resamples (called the "burn-in" period), the racing procedure stops and evaluates the distributions of RMSEs for each model configuration. Using a repeated measures ANOVA model, we can evaluate whether the distributions of RMSEs from some of the model configurations are _not_ statistically significantly different from the current "best" RMSE distribution. The model configurations resulting in distributions of RMSEs that are not statistically significantly different from the current best, as well as the one resulting in the best RMSE distribution, are resampled again; the rest are set aside and not evaluated against any more resamples.
+
+Intuitively, this makes sense; in the plot above, those upper-most lines are not horizontally centered in the same place as the lowest ones. Each point on that plot is a model fit, which takes lots of time to generate. If we feel confident that a model configuration defines a model that isn't as performant as the current best one, why continue fitting it to more and more resamples? We can instead reroute those computing resources to evaluating the models that seem like contenders with the current best one.
+
+So, after the burn-in period, we determine that many of the model configurations are no good, and evaluate only the remaining ones against the fourth resample. This adds a point to each of the distributions of errors corresponding to each model configuration, and those distributions are again passed to the repeated measures ANOVA model, which might find a couple more model configurations to remove. And so on. Ultimately, we end up only fully resampling (i.e. evaluating against all 20 resamples) a small fraction of the model configurations we initially started with.
+
+The analogous plot for a regular grid search, like that generating `bt_res_grid`, would just have 50 lines stretching all the way across the x axis. _Every_ model configuration is fully resampled:
+
+```{r plot-grid, echo = FALSE, fig.alt = "A ggplot2 line plot like the one above, except that all 50 lines stretch all the way across the x axis. The lines vary slightly as they move from left to right, and tend not to cross each other."}
+metric <- tune::.get_tune_metric_names(bt_res_grid)[1]
+rs <- bt_res_grid %>% dplyr::select(id, .metrics) %>% dplyr::mutate(.order = 1:nrow(.)) %>% tidyr::unnest(cols = .metrics) %>% 
+    dplyr::filter(.metric == metric)
+.order <- sort(unique(rs$.order))
+purrr::map_dfr(.order, ~finetune:::stage_results(.x, rs)) %>% ggplot2::ggplot(ggplot2::aes(x = stage, 
+    y = mean, group = .config, col = .config)) + ggplot2::geom_line(alpha = 0.5, 
+    show.legend = FALSE) + labs(x = "Resample #") + 
+    ggplot2::ylab(metric)
+```
+
+A little silly.
+
+Not having to carry out all of those additional model fits saves us a bunch of time! In total, these results took `r round(bt_time_race[["elapsed"]], 0)` seconds to generate, about `r round(bt_time_grid[["elapsed"]] / bt_time_race[["elapsed"]], 1)` times faster than the single-core, grid search approach. 
+
+Do we see any loss in performance, though? No free lunch, Simon! Well, kind of. With some probability (see the [racing control settings](https://finetune.tidymodels.org/reference/control_race.html)), the repeated measures ANOVA model will mistakenly boot a model configuration that was actually associated with performance comparable to the "best" model configuration. Note too, though, that evaluating all model configurations across all resamples doesn't mean we can guarantee we've associated the true "best" model with the most performant metric. Variation abounds! So, I don't lose sleep over it.
+
+Again, on its own, this method is really powerful in cutting down on time-to-tune. In combination with parallel processing, we see marked speedups.
+
+## All together, now!
+
+I'll quickly spin up that parallel cluster again and then run the same code:
+
+```{r bt-time-race-par, cache = TRUE}
+registerDoMC(cores = 10)
+
+set.seed(6)
+
+bt_time_race_par <- system.time(
+  bt_res_race_par <- tune_race_anova(bt_wflow, ames_folds, grid = 50)
+)
+```
+
+These results took `r round(bt_time_race_par[["elapsed"]], 0)` seconds to generate, `r round(bt_time_grid[["elapsed"]] / bt_time_race_par[["elapsed"]], 1)` times faster than the single-core, conventional grid search approach. Scootin'! As the [help-file for `tune_race_anova()`](https://finetune.tidymodels.org/reference/tune_race_anova.html) reads:
+
+> _There is a compounding effect of racing and parallel processing but its magnitude depends on the type of model, number of resamples, number of tuning parameters, and so on._
+
+This blog post is adapted from that help-file, which includes [benchmarks](https://finetune.tidymodels.org/reference/tune_race_anova.html#benchmarking-results) from tuning a different model on a different data set, resulting in a similarly impressive speedup. Check that page out for another example!
+
+Happy modeling. :)

@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2021-05-12">
+
+<title>Naming the Things (Developer Documentation pt.&nbsp;3) | Simon P. Couch</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../assets/cabin.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../assets/cabin.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Simon P. Couch</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about/index.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog/index.html" rel="" target="">
+ <span class="menu-text">Blog</span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+    <a href="https://www.github.com/simonpcouch/website" rel="" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Naming the Things (Developer Documentation pt.&nbsp;3)</h1>
+            <p class="subtitle lead">Weighing the pros and cons of several possible schemas for naming the core functions in {stacks}.</p>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">May 12, 2021</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<blockquote class="blockquote">
+<p>This is the third of four blog posts on the development process of the {stacks} package, excerpted from my Reed senior thesis project <em>Tidy Model Stacking with R</em>.</p>
+<p><strong>Part 1:</strong> <a href="https://blog.simonpcouch.com/blog/dev-docs-p1/"><em>Introduction</em></a></p>
+<p><strong>Part 2:</strong> <a href="https://blog.simonpcouch.com/blog/dev-docs-p2/"><em>Splitting Things Up</em></a></p>
+<p><strong>Part 4:</strong> <a href="https://blog.simonpcouch.com/blog/dev-docs-p4/"><em>Big Things</em></a></p>
+</blockquote>
+<p>Over the course of development of {stacks}, we considered many “trios” of names for the core functions.</p>
+<p>The core functions in the trio perform the following operations, respectively:</p>
+<ul>
+<li>Add candidate member models to a data stack, proposing them for inclusion in an ensemble model. This function was ultimately named <code>add_candidates()</code>.</li>
+<li>Fit a “meta-learner” that combines the predictions from each of the candidates members in the data stack. This function was ultimately named <code>blend_predictions()</code>.</li>
+<li>Fit each of the candidate members with nonzero stacking coefficients (i.e.&nbsp;coefficients from the meta-learner, one for each candidate member) on the whole training set. This function was ultimately named <code>fit_members()</code>.</li>
+</ul>
+<p>To learn more about how each of these functions are used in practice, check out the <a href="https://stacks.tidymodels.org/articles/basics.html">Getting Started vignette</a>.</p>
+<p>We felt relatively sure that each trio ought to share some sort of basic grammatical structure. For example, each function name could be composed of:</p>
+<ul>
+<li>only a verb, e.g.&nbsp;<code>add</code>, <code>blend</code>, &amp; <code>fit</code></li>
+<li>a verb and a direct object, e.g.&nbsp;<code>add_candidates</code>, <code>blend_predictions</code>, &amp; <code>fit_members</code></li>
+<li>a prefix and a verb, e.g.&nbsp;<code>stack_add</code>, <code>stack_blend</code>, &amp; <code>stack_fit</code></li>
+<li>all three, e.g.&nbsp;<code>stack_add_candidates</code>, <code>stack_blend_predictions</code>, &amp; <code>stack_fit_members</code></li>
+</ul>
+<p>The verbs and direct objects in question and the meanings they imply, as well, left us with many options to consider. (The name of the package itself going without saying.)</p>
+<p>I argue, though, that this question is not only an aesthetic one, but one whose answer implicates a number of technical challenges and implications for data pedagogy. To demonstrate, I will consider a few of the later iterations of these sets of function names. I refer to these sets as “grammars” rather than “syntaxes” (as in the <a href="https://blog.simonpcouch.com/blog/dev-docs-p2/">previous blog post</a>) in order to accentuate that I am no longer considering the coarseness with which the requisite operations for fitting an ensemble model are grouped into functions—there will always be three distinct functions in this section—but the <em>names</em> given to each function.</p>
+<section id="add-blend-fit" class="level3">
+<h3 class="anchored" data-anchor-id="add-blend-fit">add, blend, &amp; fit</h3>
+<p>For users of IDEs without auto-complete features (and non-IDE users), there’s much to say for a grammar as concise as <code>add</code>, <code>blend</code>, and <code>fit</code>.</p>
+<p>In RStudio, as well as many other popular IDEs, the full names of possible functions, methods, and other objects in the environment will be suggested at the tooltip after typing three or more letters. The extent to which such a feature is helpful, primarily, is a function of how many more keystrokes a function name will require than three.</p>
+<p>For R programmers who do not use such an IDE, though, minimizing the number of keystrokes necessary to write code using a given package is surely a helpful thing to keep in mind as a package developer. The number of {stacks} users who do not develop in RStudio may seem small, especially given that {stacks} is situated in the RStudio-funded {tidymodels} package ecosystem. However, I contend that {stacks} ought to be sensitive to the needs of these users, for several reasons. Namely,</p>
+<ul>
+<li>At the time of writing, a significant number of RStudio features are inaccessible for blind developers and data scientists. As such, many blind R developers are not RStudio users, making use of a wide array of alternative development environments. As Jooyoung Seo noted in his rstudio::global(2021) talk, “Data science requires insight, not sight” <a href="https://www.rstudio.com/resources/rstudioglobal-2021/accessible-data-science-beyond-visual-models-non-visual-interactions-with-r-and-rstudio-packages/">(Seo, 2021)</a>. A positive user experience with {stacks} ought not to require sight as well.</li>
+<li>RStudio-funded open source package developers ought to think carefully about the tension between their obligation to RStudio as a company and the spirit of open source. Is an R software package truly “free and open source” if a positive user experience is contingent upon the usage of a closed-source IDE built by a for-profit company? In reality, there are all sorts of complications to implying such a tension, and many potential conflicts of interest that one might deduce would follow from this relationship do not hold true in practice. (Said more plainly, it’s my experience that RStudio genuinely cares about supporting free and open source software users and developers.) That said, I generally feel R package design can anticipate the addition of RStudio Addins (user-contributed extensions to the IDE) for the improvement of user experience, but ought not admit itself to a poor user experience outside of RStudio due only to inconsiderate API design.</li>
+</ul>
+<p>In any case, the inputs to {stacks} functions are the culmination of often hundreds of lines of code. {stacks} is situated in a software ecosystem (the tidymodels) that prioritizes intentionality and decision-making over code brevity. Writing code in such an ecosystem thus relies heavily on IDE tools such as auto-complete (as well as the homegrown <a href="https://usemodels.tidymodels.org/">{usemodels}</a> tool for generating boilerplate code) to write code. The result is code that is, from one perspective, expressive and principled, and from the other, <em>long</em>. As such, the gains in truncating function names to as few characters as is proposed here might be more easily offset by the challenges such a grammar implies.</p>
+<p>Indeed, this grammar introduces several technical challenges. For one, such a grammar does little to clarify the distinction between the <code>blend</code> and <code>fit</code> steps. Fundamentally, both of these steps involve fitting a statistical model—the former step fits the meta-learner model that will combine predictions from each member, while the latter fits the member models whose predictions will be combined by the meta-learner.</p>
+<p>Thus, if only one of these methods were to be named <code>fit</code>, the distinction between which of these steps ought to be <code>fit</code> or <code>blend</code> would be arbitrary and likely misleading.</p>
+<p>Further, <code>add</code> and <code>fit</code> (and, arguably, any verb with five or fewer characters) are both function names that are useful in numerous data analysis and modeling settings beyond model stacking. Thus, functions with these names are exported in numerous widely used packages, in some cases introducing namespace conflicts. Namespace conflicts arise when two or more packages supply a function—say, <code>add</code>—of the same name, such that the behavior of calling <code>add</code> without explicitly specifying the namespace (i.e.&nbsp;<code>stacks::add</code>) ultimately depends on which package has been loaded more recently. In package development, namespace conflicts ought to be avoided as much as possible.</p>
+<p>However, while the behavior of a function likely ought not to depend on the order of recently loaded packages, it could very well be useful for the behavior of a function to depend on the structure of what is passed to it. This is the premise of object-orientated programming, for which the most mainstream implementation in R software is the S3 system.</p>
+<p>As an example, if I pass a <code>data_stack</code> object to a function called <code>fit</code>, the most sensical thing to do would probably be to fit the meta-learner that ultimately will inform how to best combine the predictions contained in the data stack. However, this is probably not also the case for a <code>model_stack</code> object. In the case of a model stack, the meta-learner has already been fitted, so a <code>fit</code> function applied to a <code>model_stack</code> probably ought to fit the member models whose predictions will be combined by the meta-learner.</p>
+<p>To implement this kind of framework, one could define a <em>generic</em> function, <code>fit</code>, which just looks at the class of what’s passed to it, and then <em>dispatches</em> to the correct <em>method</em>, or implementation of <code>fit</code> as applied to a specific object class. In the case of <code>fit</code>, specifically, the <a href="http://generics.r-lib.org/">{generics}</a> package supplies a number of helpful function generics, including <code>fit</code>. Thus, to implement this kind of framework in {stacks}, the package would re-export the {generics} package’s <code>fit</code> generic function and then implement <code>fit</code> methods for the <code>data_stack</code> and <code>model_stack</code> classes. Such an implementation would result in {stacks} pipelines appearing something like the following.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">stacks</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add</span>(candidate1) <span class="sc">%&gt;%</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add</span>(candidate2) <span class="sc">%&gt;%</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Understanding this code requires a strong understanding of S3 object-orientation, as well its application within the package specifically, in order for a practitioner to know how many times to she ought to call <code>fit</code> and which operations were happening with each call. This need not be a requisite for fitting ensemble models in R. Even then, though, this grammar results in the juxtaposition of an iterative <code>add</code> method, which does not alter the object class, and two <code>fit</code> methods, one of which alters the object class and neither of which can be called iteratively.</p>
+<p>One could use two non-<code>fit</code> verbs for these two steps, but our creativity failed us in coming up with appropriate names given that approach.</p>
+<!-- sharing help-files - sharing fit doc vs the length of the fit_members documentation -->
+</section>
+<section id="add_candidates-blend_predictions-fit_members" class="level3">
+<h3 class="anchored" data-anchor-id="add_candidates-blend_predictions-fit_members">add_candidates, blend_predictions, &amp; fit_members</h3>
+<p>While working with a grammar like <code>add_candidates</code>, <code>blend_predictions</code>, &amp; <code>fit_members</code> is surely made easier by an auto-complete feature, it only takes advantage of one of two notable benefits to auto-complete. If a practitioner remembers the name of the function she is planning on using, auto-complete is very much helpful here; after typing the first three characters, the large majority of keystrokes can then be eliminated through the use of the tooltip. However, this grammar does not make effective use of the tooltip in the case that the practitioner does not remember the name of the function she intends to use. Grammars making use of prefixing, where functions with shared functionality are prefixed with the same three (or more) characters, only ask that a practitioner can recall that one prefix in order to see the possible options suggested. In addition to saving keystrokes, then, such grammars can uniquely provide access to short-form, “fly-by” documentation—the grammars discussed in the following two subsections are such examples.</p>
+<p>This grammar also introduces a somewhat strange interface in regard to the first argument supplied by the practitioner. Per tidyverse design principles, core functions meant to be called in succession ought to be “pipable”—that is, the first argument (supplied via the <a href="https://magrittr.tidyverse.org/">{magrittr}</a> pipe <code>%&gt;%</code> operator) to each function ought to be the output of the function called previously. The grammar in consideration presents as such:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">stacks</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_candidates</span>(...) <span class="sc">%&gt;%</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ... %&gt;%</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">blend_predictions</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit_members</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Aligning with this convention results in inconsistent relationships between the direct object in the function name and the argument to which that direct object refers. Walking through the initialization function and three core verbs, consider:</p>
+<ul>
+<li><p>The <code>stacks</code> initialization function does not take arguments.</p></li>
+<li><p>The first input to <code>add_candidates</code> must then be the output of <code>stacks</code>, which is a <code>data_stack</code> object. Since <code>add_candidates</code> is called iteratively, the output of <code>add_candidates</code> can also be inputted to <code>add_candidates</code>. Thus, rather than the candidates, the first argument to <code>add_candidates</code> is the object to which the candidates are added, followed by the candidates themselves.</p></li>
+<li><p>The input to <code>blend_predictions</code> is the output of <code>add_candidates</code>, which is also a <code>data_stack</code> object. The function does not require any other arguments. Thus, in this case, the direct object (“predictions”) indeed refers to the data stack, which is passed through the pipe operator. Thus, the direct object in this function name refers to a different argument, by position. Further, to be internally consistent with <code>add_candidates</code>, the first argument is called <code>data_stack</code> rather than <code>predictions</code>, reflecting the internally defined class of the object supplied as the first argument.</p></li>
+<li><p>The input to <code>fit_members</code> is the output of <code>blend_predictions</code>, which is a <code>model_stack</code> object. The function does not accept any other arguments. Thus, in this case, the members referred to in the function name are an element of the first argument, named <code>model_stack</code>, but not the first argument itself. Thus, the direct object in this function name technically does not refer to an argument at all.</p></li>
+</ul>
+<p>One alternative to this set of direct objects would be to refer to the object class (reflected in the argument names) of the inputs, i.e.&nbsp;<code>add_data_stack</code>, <code>blend_data_stack</code>, <code>fit_model_stack</code>. This approach implicates a few challenges, though.</p>
+<ul>
+<li><p>The noted dissonance in argument order—notably, the data stack is not <em>the thing being added</em>—is more immediate.</p></li>
+<li><p>Suffixing the name of a function with an object class results in a function name that is confusingly similar to that which would result from defining an S3 method that would presumably serve the same purpose. For example, a <code>fit</code> method for a <code>model_stack</code> object would be written as <code>fit.model_stack</code>.</p></li>
+<li><p>This grammar could be confusing for a practitioner who does not yet know the underlying object classes (<code>data_stack</code> and <code>model_stack</code>) and the abstract object types they represent (data stacks and model stacks). Notably, it is unclear whether <code>_stack</code> is itself an independent suffix, possibly referring to a noun, verb, or some abstract package identifier. Does <code>add_data_stack</code> refer to adding data to a stack, adding a data stack, stacking data to add to something, or adding data to something in the context of {stacks}? Similar questions could be asked of the two fitting functions.</p></li>
+</ul>
+<p>The contradictions of this sort of grammar may not even occur to some practitioners. “Not that deep,” if you will. For others (including the authors), this grammar has been difficult.</p>
+</section>
+<section id="stack_add-stack_blend-stack_fit" class="level3">
+<h3 class="anchored" data-anchor-id="stack_add-stack_blend-stack_fit">stack_add, stack_blend, &amp; stack_fit</h3>
+<p>A grammar composed of <code>stack_add</code>, <code>stack_blend</code>, &amp; <code>stack_fit</code> is subject to many of the pitfalls noted for <code>add</code>, <code>blend</code>, &amp; <code>fit</code>. Notably, this grammar does not contribute to distinguishing a necessarily arbitrary delineation between two steps to fitting an ensemble model that are, in essence, model fitting steps.</p>
+<p>However, this grammar makes use of both of the potential benefits of auto-complete functionality noted in the above section; not only does the practitioner benefit from auto-complete through a decrease in the number of keystrokes, but she also need only remember one prefix in order to quickly see the names of all functions matching that prefix.</p>
+<p>To demonstrate, consider a package {beepbopboop} that implements three operations that can be carried out on two scalars: <code>beep</code>, <code>bop</code>, and <code>boop</code>. The figure below represents the effect of common prefixing and suffixing on the user experience of {beepbopboop} while working in RStudio.</p>
+<div class="figure">
+<img src="figs/beepbopboop_tooltip.png" alt="A screenshot of an R script loading alternate versions of a 'beepbopboop' package. In the first version, the package implements the beep, bop, and boop functions as prefix underscore beep, prefix underscore bop, and prefix underscore boop. in the second, they are implemented as beep underscore suffix, bop underscore suffix, boop underscore suffix. Resultantly, when the first version of the package is loaded, when one types 'prefix', the tooltip suggests all three functions.The second version of the package cannot take advantage of this functionality, for the tooltip can only complete the function name after typing the first three characters bee, bop, or boo." width="837">
+<p class="caption">
+Figure 1: Beginning function and method names with a common prefix allows for usage of auto-complete and the tooltip not only to decrease keystrokes, but also to jog the practitioners’ memory regarding each of the possible operations that can be carried out with a package.
+</p>
+</div>
+<p>In this more general example, too, we must consider that there are <em>many</em> operations which can be carried out on two scalars. Need a practitioner remember that the <code>beep</code>, <code>bop</code>, and <code>boop</code> methods come from the <code>beepbopboop</code> package specifically? If so, this sort of prefixing/suffixing could be helpful in clarifying the source of the <code>beep</code>, <code>bop</code>, and <code>boop</code> methods. If not, the introduction of package-specific prefixes or suffixes is unnecessarily verbose.</p>
+<p>In {stacks}, though, that prefixing comes at a cost. The prefix likely ought to be some iteration of “stack” in order to most memorable in combination with the name of the package. However, placing “stack” at the beginning of function names owes itself to misreading “stack” as a verb. Even then, “stack” is hypersaturated with meanings in the package already—between the name of the package itself, the initialization function, the object classes, and its colloquial usage in “model stacking” and “stacked ensemble learning,” assigning another specific meaning to the word would be ill-considered. This usage also fails to differentiate between model and data stacks, obfuscating the change in object classes after fitting the meta-learner.</p>
+<p>As for <code>stack_add_candidates</code> and friends, while this grammar lends itself to both of the benefits of auto-complete mentioned for the current names, it is vulnerable to the same pitfalls of those discussed in the current and prefixed names. For users in IDEs without auto-complete and non-IDE users, this grammar is quite cumbersome.</p>
+</section>
+<section id="where-we-landed" class="level3">
+<h3 class="anchored" data-anchor-id="where-we-landed">Where we landed</h3>
+<p>In short, the following considerations were relevant to ultimately determining the names of the core functions in {stacks}.</p>
+<ul>
+<li><p>How evocative are the function names of the tasks being performed by the functions?</p></li>
+<li><p>Does the grammar make use of auto-complete to improve access to documentation?</p></li>
+<li><p>For practitioners in IDEs without auto-complete and non-IDE practitioners, how cumbersome is the grammar to type?</p></li>
+<li><p>Does the grammar introduce namespace conflicts within relevant package ecosystems? If one or more functions must be S3 methods, are their meanings compatible with the common interpretation of the function?</p></li>
+<li><p>Is the grammar internally consistent in the manner in which it references function arguments?</p></li>
+<li><p>If the grammar includes some iteration or abbreviation of “stack,” what part of speech might it be interpreted as? What meanings of the word elsewhere in the package might it obfuscate?</p></li>
+</ul>
+<p>Only some of these questions are relevant to/well-defined for each of the four grammars considered above. Further, none of the grammars in question can provide each of the advantages described above. The table below outlines some of the considerations mentioned in this section.</p>
+<table class="table">
+<colgroup>
+<col style="width: 19%">
+<col style="width: 18%">
+<col style="width: 60%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td rowspan="2">Grammar =======================================================: <code>add</code>, <code>blend</code>, &amp; <code>fit</code></td>
+<td rowspan="2">Pros ====================================================: - Concise</td>
+<td rowspan="2">Cons | ==========================================================:+ - Does not make use of auto-complete/tooltip<br>- Namespace conflicts likely<br>- Obfuscates two distinct model fitting steps |</td>
+</tr>
+<tr class="even">
+</tr>
+<tr class="odd">
+<td><code>add_candidates</code>, <code>blend_predictions</code>, &amp; <code>fit_members</code></td>
+<td colspan="2"><ul>
+<li>Makes use of auto-complete<br>- Delineates between distinct model fitting steps | - Does not make use of tooltip<br>- Necessarily inconsistent in its grammatical structure</li>
+</ul></td>
+</tr>
+<tr class="even">
+<td><code>stack_add</code>, <code>stack_blend</code>, &amp; <code>stack_fit</code></td>
+<td><ul>
+<li>Makes use of auto-complete and tooltip</li>
+</ul></td>
+<td><ul>
+<li>Further overloads “stack” terminology<br>- Obfuscates two distinct model fitting steps |</li>
+</ul></td>
+</tr>
+</tbody>
+</table>
+<p>The grammar that we landed on is largely an artifact of the ecosystem in which the package is situated, surely with some elements of arbitrary personal preference and random chance.</p>
+
+
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a><div id="quarto-appendix" class="default"><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">Reuse</h2><div id="quarto-reuse" class="quarto-appendix-contents"><div><a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">https://creativecommons.org/licenses/by-sa/4.0/</a></div></div></section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">© 2023 Simon P. Couch ∙ Made with <a href="https://quarto.org">Quarto</a></div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+</body></html>

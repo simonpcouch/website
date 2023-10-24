@@ -1,0 +1,34 @@
+---
+title: "Some Pitters and Patters with R"
+description: |
+  <br><br>This is where I sometimes write about what I’m up to related to R, data science, and statistics. My dog, Millie, tags along in the thumbnails. I hope folks find some of these notes useful.
+listing: 
+  contents: 
+    - "**/index.qmd"
+    - "**/index.markdown"
+    - "**/index.md"
+  sort: "date desc"
+  type: default
+  categories: false
+  sort-ui: false
+  filter-ui: false
+  fields: [title, summary, author, categories, date, image]
+  image-placeholder: featured.png
+  image-align: right
+  page-size: 6
+appendix-cite-as: false
+toc: false
+comments: false
+format: 
+  html: 
+    page-layout: full
+title-block-banner: true
+
+back-to-top-navigation: false
+
+header-includes: >
+  <link rel="stylesheet" href="../assets/listing-default.css">
+resources:
+  - ../assets/listing-default.css 
+---
+

@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2021-05-11">
+
+<title>Splitting Things Up (Developer Documentation pt.&nbsp;2) | Simon P. Couch</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../assets/cabin.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  </head><body class="nav-fixed fullcontent">true
+
+
+
+
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../assets/cabin.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Simon P. Couch</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about/index.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog/index.html" rel="" target="">
+ <span class="menu-text">Blog</span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+    <a href="https://www.github.com/simonpcouch/website" rel="" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Splitting Things Up (Developer Documentation pt.&nbsp;2)</h1>
+            <p class="subtitle lead">Why {stacks} requires (at least) four separate functions to build an ensemble model rather than wrapping them all up into one.</p>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">May 11, 2021</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<blockquote class="blockquote">
+<p>This is the second of four blog posts on the development process of the {stacks} package, excerpted from my Reed senior thesis project <em>Tidy Model Stacking with R</em>.</p>
+<p><strong>Part 1:</strong> <a href="https://blog.simonpcouch.com/blog/dev-docs-p1/"><em>Introduction</em></a></p>
+<p><strong>Part 3:</strong> <a href="https://blog.simonpcouch.com/blog/dev-docs-p3/"><em>Naming Things</em></a></p>
+<p><strong>Part 4:</strong> <a href="https://blog.simonpcouch.com/blog/dev-docs-p4/"><em>Big Things</em></a></p>
+</blockquote>
+<p>Undoubtedly, one of the most challenging parts of developing {stacks} was determining what working with the package should “feel” like. The foremost challenge here is striking a balance between ease of use and statistical expressiveness. On one end of this spectrum, the package could encompass its operations within one function, accommodating many input types and obscuring statistical complexities for the benefit of code conciseness. On the other, each requisite statistical operation could require explicit code and only accommodate input types reflecting an opinionated statistical practice.</p>
+<p>While the latter end of this spectrum is a bit harder to conceptualize, and feels more ridiculous at its extremes, implementations closer to the former are rather common. How “magical” could the functionality in this package be? What does “model stacking made easy” look like? Perhaps the clearest illustration of the benefits of {stacks}’ approach—an initialization function and three “core verbs”—is to begin with an approach on the more magical end of this spectrum. Considering such an approach, I’ll identify some of the more major drawbacks to user understanding and the intermediate operations that are made inaccessible. Then, I’ll uncouple operations that thus ought to be distinct, iterating on this “conscious uncoupling” process until I’ve arrived at a happy medium between conciseness and verbosity <a href="https://www.youtube.com/watch?v=ZCeBnQBQ1h8">(Bryan, 2019)</a>. I use the word “syntax” to refer a set of functions, grouping some set of operations in more or less coarse grammars, that could encapsulate the functionality of a model ensembling package. For example, the syntax ultimately implemented in the package consists of <code>stacks</code>, <code>add_candidates</code>, <code>blend_predictions</code>, and <code>fit_members</code>. Generally, discussion of the <em>names</em> of these functions will be left to the next blog post.</p>
+<section id="super-auto-ml-ai-magic" class="level3">
+<h3 class="anchored" data-anchor-id="super-auto-ml-ai-magic">Super auto ML AI magic</h3>
+<p>To start, then, we’ll consider one function—we can call it <code>stack_models</code>—that simply calls the current core verbs in succession. Its definition might look something like the following. (This code is for the purpose of illustration only, and does not work as presented. See the <code>workflow_set</code> S3 method of <code>add_candidates</code> for an iterated implementation of <code>add_candidates</code> that could be utilized in this kind of construction.)</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># initializes a data stack, adds all candidate members,</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># fits the meta-learner on their predictions, and then</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># fits all members with non-zero stacking coefficients</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>stack_models <span class="ot">&lt;-</span> <span class="cf">function</span>(...) {</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stacks</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    purrr<span class="sc">::</span><span class="fu">reduce</span>(</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>      ...,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>      add_candidates</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">blend_predictions</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fit_members</span>()</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The <a href="https://purrr.tidyverse.org"><code>purrr::reduce</code></a> construction here iteratively passes each element of <code>...</code>, a sequence of model definitions, to <code>add_candidates</code>.</p>
+<p>The process of fitting an ensemble model with this code would be quite concise, to say the least. With the necessary model definitions created—say <code>model1</code> and <code>model2</code>—the API would present as such.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># fit an ensemble model with model1 and model2</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">stack_models</span>(</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  model1,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  model2</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>What sacrifice does this kind of abstraction implicate?</p>
+<p>To begin answering this question, we’ll start with the obfuscation of what were ultimately the last two core verbs of the package—<code>blend_predictions</code> and <code>fit_members</code>. The <code>blend_predictions</code> function fits the meta-learner (an elastic net model) on the predictions from each candidate member, determining how to best combine their outputs. Candidate members with non-zero meta-learner coefficients are model stack members, and need to be trained on the full training set rather than the resamples used to construct the data stack.</p>
+<p>In some cases, though, the step of training a member on the full training set is substantially more computationally intensive than training the analogous candidate on the resampled data used to construct the data stack.</p>
+<p>More concretely, consider a <span class="math inline">\(10\)</span>-fold cross-validation resampling scheme. The training data is partitioned into <span class="math inline">\(10\)</span> folds of equal size. Then, the candidate model configuration is trained on <span class="math inline">\(9\)</span> of the folds, producing <span class="math inline">\(9\)</span> resampled models. Each of these resampled models then predicts the values for the <span class="math inline">\(10\)</span>th fold—the validation set, or partition of the training folds used for model validation—and {stacks} summarizes those models’ predictions, forming that candidates’ predictions for the validation set.</p>
+<p>Note that each of these <span class="math inline">\(9\)</span> models is trained on a dataset with cardinality equal to a tenth of the cardinality of the full training set. The computational complexity of the training step for many statistical models is “worse” than linear as a function of the cardinality of the dataset; that is, training some statistical models on a dataset with <span class="math inline">\(100\)</span> rows takes much more than <span class="math inline">\(10\)</span> times as long to train that same model on a dataset with <span class="math inline">\(10\)</span> rows.</p>
+<p>Consider, for instance, a thin-plate spline model. The time to fit this model is proportional to the cube of the cardinality of the training set <a href="https://web.stanford.edu/~hastie/ElemStatLearn/">(Hastie, 2009)</a>. In our example, then, training on the <span class="math inline">\(10\)</span>-row training set takes <span class="math inline">\(10^3\)</span> time units, and training on the <span class="math inline">\(100\)</span>-row training set takes <span class="math inline">\(100^3 = 10^6\)</span> time units. Thus, training on the full <span class="math inline">\(100\)</span>-row training set takes <span class="math inline">\(10^6/10^3 = 1,000\)</span> times as long as training on the <span class="math inline">\(10\)</span>-row fold of the training set. Thus, training this model on our full <span class="math inline">\(100\)</span>-row training set would take over <span class="math inline">\(100\)</span> times as long as training <span class="math inline">\(9\)</span> models on the resampled <span class="math inline">\(10\)</span>-row folds and summarizing their outputs.</p>
+<p>Other examples of models that scale “worse” than linearly include many varieties of neural networks, K-nearest neighbors, and other discriminant analysis techniques like support vector machines (Hastie, 2009).</p>
+<p>In the context of {stacks}, this recognition of differences in runtime is crucial. After fitting the meta-learner on the candidates, one can evaluate the degree of penalization chosen and its effect on member selection. If the practitioner specifies a very small penalty, or the grid search specified results in a very small penalty, then most all of the candidate members will need to be fitted—a sometimes profoundly computationally intensive task. Delineating between the steps of training the meta-learner and <em>then</em> training the candidate members that it “selects” gives the practitioner a chance to evaluate her chosen degree of regularization and its impact on model selection. A critical choice of penalty value can often result in a much more parsimonious (and realistically trainable) set of selected member models, saving the practitioner valuable computing time.</p>
+<p>Minimally, then, the package ought to delineate between these two training steps.</p>
+</section>
+<section id="twenty-four-karat-magic-in-the-air" class="level3">
+<h3 class="anchored" data-anchor-id="twenty-four-karat-magic-in-the-air">Twenty four karat magic in the air</h3>
+<p>Instead, consider an approach that includes two functions: one that adds a set of candidate members and fits a meta-learner to them, and another that fits the candidates with non-zero stacking coefficients on the full training sets. That approach might look something like this:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># initializes a data stack, adds all candidate members,</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># and fits the meta-learner on their predictions</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>prepare_stack <span class="ot">&lt;-</span> <span class="cf">function</span>(...) {</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stacks</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    purrr<span class="sc">::</span><span class="fu">reduce</span>(</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>      ...,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>      add_candidates</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">blend_predictions</span>()</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co"># the current fit_members function is left as is</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>fit_members <span class="ot">&lt;-</span> fit_members</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The process of fitting an ensemble model with this approach would be still be a good bit more concise than the current syntax. This approach, as well, gives the practitioner a moment to consider the computational implications of the chosen penalty before fitting members on the full training set. With the same <code>model1</code> and <code>model2</code> model definitions, the syntax would present as such.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># fit an ensemble model with model1 and model2</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">prepare_stack</span>(</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  model1,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  model2</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># after evaluating computational considerations,</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># fit all members with non-zero stacking coefficients</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit_members</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>However, for one, this approach introduces yet another computational redundancy; the time to add candidates to a data stack, in some use cases, is not trivial.</p>
+<!-- Further, __ [something more about what goes wrong ] __ -->
+<!-- _Computational redundancy_:  -->
+<p>The obfuscation of <code>add_candidates</code> and <code>blend_predictions</code> in the <code>prepare_stack</code> syntax introduces a similar computational inconsideration that the <code>stack_models</code> approach did. The synthesis of operations introduced in <code>prepare_stack</code> means that if a practicioner fits the meta-learner and finds the grid search specified to be unsatisfactory, she must perform the <code>add_candidates</code> step again, even if the candidate models are the same.</p>
+<p>While <code>add_candidates</code> performs a number of operations, its runtime is roughly equivalent to the runtime for prediction for the supplied model definition(s); <code>add_candidates</code> collects predictions on the validation set from each resampled model and summarizes them to generate the vector of validation set predictions for the candidate member. As was the case in the section above, the computational complexity of this operation depends on the specific candidate model types in question. Even when a model’s time-to-predict scales linearly with the cardinality of a dataset, though, this runtime is not negligible, and ought not be carried out more than once if possible.</p>
+<p>To demonstrate this cost in computing time, we’ll turn example modeling objects used in an earlier part of the thesis. (The code to compute these objects is not currently publicly available; I’ll drop a link here when that’s no longer the case.) In that portion, we generated a k-nearest neighbors (<code>knn_res</code>), ordinary least squares (<code>lin_reg_res</code>), and support vector machine (<code>svm_res</code>) model to predict the sale price of homes in Ames, Iowa.</p>
+<p>Initially, we compute the time to collect the predictions from each of these model definitions using the <code>system.time</code> function.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>time_to_add <span class="ot">&lt;-</span> <span class="fu">system.time</span>(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  ames_st <span class="ot">&lt;-</span> </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stacks</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_candidates</span>(knn_res) <span class="sc">%&gt;%</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_candidates</span>(lin_reg_res) <span class="sc">%&gt;%</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_candidates</span>(svm_res)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>ames_st</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>## # A data stack with 3 model definitions and 11 candidate members:
+## #   knn_res: 4 model configurations
+## #   lin_reg_res: 1 model configuration
+## #   svm_res: 6 model configurations
+## # Outcome: Sale_Price (numeric)</code></pre>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>time_to_add[[<span class="st">"elapsed"</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>## [1] 2</code></pre>
+<p>The time to add these candidate members was 1.6 seconds. Now, evaluating the runtime for fitting the meta-learner for one possible penalty value:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>time_to_fit <span class="ot">&lt;-</span> <span class="fu">system.time</span>(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  ames_st <span class="ot">&lt;-</span> </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    ames_st <span class="sc">%&gt;%</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">blend_predictions</span>(<span class="at">penalty =</span> .<span class="dv">1</span>)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>ames_st</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>## ── A stacked ensemble model ─────────────────────────────────────</code></pre>
+<pre><code>## 
+## Out of 11 possible candidate members, the ensemble retained 1.
+## Penalty: 0.1.
+## Mixture: 1.</code></pre>
+<pre><code>## 
+## The 1 highest weighted members are:</code></pre>
+<pre><code>## # A tibble: 1 x 3
+##   member          type       weight
+##   &lt;chr&gt;           &lt;chr&gt;       &lt;dbl&gt;
+## 1 lin_reg_res_1_1 linear_reg  0.371</code></pre>
+<pre><code>## 
+## Members have not yet been fitted with `fit_members()`.</code></pre>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>time_to_fit[[<span class="st">"elapsed"</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>## [1] 10</code></pre>
+<p>The time to fit the meta-learner in this case was 9.5 seconds. At first glance, the time to add candidates may seem negligible in comparison, given that it took only 16.9% of the time needed to fit the meta-learner.</p>
+<p>However, note that the proposed model stack is being evaluated on only 11 potential members and cross-validation folds of roughly 450 rows. While the computational complexity of adding additional candidates depends on the computational complexity of prediction for a given candidate, the runtime to add <code>n</code> candidates can be reasonably assumed to scale roughly linearly with <code>n</code>. (That is, we assume that a “randomly chosen” statistical model will take just as long to compute predictions as the next.)</p>
+<p>On the other hand, in theory, the time to fit an elastic net model scales with the square of the number of predictors <a href="https://web.stanford.edu/~hastie/Papers/B67.2%20(2005)%20301-320%20Zou%20&amp;%20Hastie.pdf">(Zou, 2005)</a>. However, the implementation of cyclical coordinate descent in fitting the elastic net meta-learner with <a href="https://glmnet.stanford.edu/">{glmnet}</a> substantially impacts the computational complexity of this operation <a href="https://www.jstatsoft.org/v33/i01/paper">(Friedman, 2010)</a>. The figure below shows the reality of how {glmnet} fit times scale with the number of predictors. (The source code for generating this figure was originally in the thesis appendix, and will be posted when the full thesis is available.)</p>
+<div class="figure">
+<img src="figs/timings_plot.png" alt="A line plot with the number of predictors on the x axis, time to fit a model on the y axis, and number of rows in the training set mapped onto three colors. The time to fit a model appears to scale roughly linearly with the number of predictors, regardless of the number of rows in the training set." width="900">
+<p class="caption">
+Figure 1: A plot showing the time to fit an elastic net model in seconds, averaged across 30 simulations, as a function of the number of rows and predictors. While the relationship is surely not perflectly linear, it is near so; in most applied use cases, the time to fit the elastic net meta-learner can be reasonably estimated with a linear approximation on the number of predictors.
+</p>
+</div>
+<p>While the runtime of the elastic net fitting operation does not scale perfectly linearly with the number of predictors, in most applied model stacking settings, a linearity assumption is appropriate for estimating the time to fit such a model. The “predictors,” in the case of fitting the meta-learner, are the candidate model outputs. Thus, while a 16.9% increase seems negligible in the context of this example, that proportion roughly holds for significantly more computationally intensive ensembling use cases. For many applied use cases of model ensembling (i.e.&nbsp;on the scale of 10-100 candidate members being evaluated for training on much larger datasets than in this example), the need to redundantly add candidates each time a practitioner would like to refine her grid search in fitting the meta-learner becomes more cumbersome.</p>
+<p>Given this, then, {stacks}’ syntax ought to delineate between the steps of adding candidate models and blending their predictions.</p>
+</section>
+<section id="do-you-believe-in-magic" class="level3">
+<h3 class="anchored" data-anchor-id="do-you-believe-in-magic">Do you believe in magic?</h3>
+<p>As a result of the above considerations, we’ll instead consider a syntax with three distinct steps:</p>
+<ul>
+<li>Initialize a stack and add candidate members with <code>prepare_candidates</code></li>
+<li>Fit the meta-learner on those candidates’ predictions to generate stacking coefficients with <code>blend_predictions</code></li>
+<li>Fit the candidates with non-zero stacking coefficients on the full training set with <code>fit_members</code></li>
+</ul>
+<p>Working from the current syntax, such an approach might look something like this:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># initializes a data stack, adds all candidate members,</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co"># and fits the meta-learner on their predictions</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>prepare_candidates <span class="ot">&lt;-</span> <span class="cf">function</span>(...) {</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stacks</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    purrr<span class="sc">::</span><span class="fu">reduce</span>(</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>      ...,</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>      add_candidates</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a><span class="co"># the current blend_predictions function is left as is</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>blend_predictions <span class="ot">&lt;-</span> blend_predictions</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a><span class="co"># the current fit_members function is left as is</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>fit_members <span class="ot">&lt;-</span> fit_members</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>With the same <code>model1</code> and <code>model2</code> model definitions, the syntax would present as such.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># add model1 and model2 candidates</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">prepare_candidates</span>(</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  model1,</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  model2</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># fit the meta-learner</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">blend_predictions</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># after evaluating relevant computational considerations,</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># fit all members with non-zero stacking coefficients</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit_members</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>To recognize the problem(s) that such a syntax leaves unaddressed, we must look to the intersection of tidy design principles and data pedagogy.</p>
+<p>In many ways, the approach to add candidate members implemented in <code>prepare_candidates</code> presents like a “vectorized” alternative to <code>add_candidates</code>. In communities of statistical computing, vectorization is often used colloquially to communicate that a function is able to iteratively perform computations on an input if that input has length greater than one. More exactly, a function <span class="math inline">\(f\)</span> is vectorized over a vector input <span class="math inline">\(x\)</span> if and only if <span class="math inline">\(g_j(f(x)) = f(g_j(x))~\forall~j\)</span>, where <span class="math inline">\(g_j\)</span> takes in some subsettable object <span class="math inline">\(x\)</span> and outputs the <span class="math inline">\(j\)</span>-th element. It follows, then, that <span class="math inline">\(f\)</span> may be vectorized over <span class="math inline">\(x\)</span> if <span class="math inline">\(g_j\)</span> is well-defined for all <span class="math inline">\(~j~\in~ \{1,~2,~...,~\max(\vert x \vert,~ \vert f(x)\vert)\}\)</span>, where <span class="math inline">\(\vert \vert\)</span> denotes the number of subsettable elements indexed by <span class="math inline">\(j\)</span>.</p>
+<p>In R, if <span class="math inline">\(x\)</span> is an S3 object, <span class="math inline">\(g_j\)</span> can be written as <code>g_j &lt;- function(x) {x[[j]]}</code>. For context, I note some common objects subsettable with this syntax and the results of subsetting them.</p>
+<ul>
+<li><code>data.frame</code>: Subsetting the <code>j</code>th element of a data frame, or its subclasses, returns the <code>j</code>th column of the data frame. For this section, <code>tune_results</code> objects and <code>data_stack</code>s are notable subclasses of data frames. <code>tune_results</code> objects encapsulate model definitions and do not have a number of columns sensitive to the number of candidate members specified therein. <code>data_stack</code> objects collate validation set predictions from each candidate member and have a number of columns one greater than the number of candidates in the regression setting, or one greater than the <em>number of candidates</em> <span class="math inline">\(\times\)</span> <em>number of possible outcomes</em> in the classification setting.</li>
+<li><code>list</code>: Subsetting the <code>j</code>th element of a list returns the <code>j</code>th element of the list, which can be an R object with any number of dimensions or class structures. Note that <code>data.frame</code>s are a <code>list</code> subclass, though are usually not colloquially referred to as such.</li>
+<li>atomic <code>vector</code>: Subsetting the <code>j</code>th element of an atomic vector returns the <code>j</code>th element of the vector, which must be an atomic element. Note that (non-atomic) <code>list</code>s are vectors, though are usually not colloquially referred to as such.</li>
+</ul>
+<p>Addition to one is an example of a vectorized operation.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># construct a subsettable vector x</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co"># define a function f</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>add_one <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {<span class="dv">1</span> <span class="sc">+</span> x}</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co"># check the definition for j = 3</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="fu">add_one</span>(x[[<span class="dv">3</span>]]) <span class="sc">==</span> <span class="fu">add_one</span>(x)[[<span class="dv">3</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+<p>In the case of <code>prepare_candidates</code>, then, consider a vector <code>x</code> of two model definitions. <code>a</code> and <code>b</code> are abstracted representations of model definitions specifying one and two candidate members, respectively.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="st">"a model definition specifying one candidate member"</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="st">"a model definition specifying two candidate members"</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(a, b)</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>## [1] "a model definition specifying one candidate member" 
+## [2] "a model definition specifying two candidate members"</code></pre>
+<p>Thus, <span class="math inline">\(g_j\)</span> is well-defined only for <span class="math inline">\(j \in \{1,~2\}\)</span> where <span class="math inline">\(g_1(x) = a\)</span> and <span class="math inline">\(g_2(x) = b\)</span>. Note, though, that we can only subset <span class="math inline">\(x\)</span> to extract model definitions—candidate members themselves are not subsettable elements of <code>a</code> or <code>b</code>.</p>
+<p>This example may present as overly-simplistic, but encapsulates the principal issue with proposing that <code>add_candidates</code> may be vectorizable over model definitions. Regardless of how many candidate members a model definition specifies, its fundamental “elements” (i.e.&nbsp;the results of subsetting the <code>tune_results</code> object) are the same. That is, the length of an <code>tune_results</code> model definition object is not determined by the number of candidate members. In this way, there is no way to “subset out” a specific candidate member from neither <code>a</code> nor <code>b</code>.</p>
+<p>If the output of <code>prepare_candidates</code> was also subsettable by model definition, this may not be an issue. However, the output of any call to <code>prepare_candidates</code> is a <code>data_stack</code> object with a number of columns one greater than the number of candidates specified in <code>...</code>, where the first column always contains the true validation set outcomes from the shared resamples used to define each model definition. The “elements” of this object, then, are the candidate members in question. Model definitions may specify any number of candidate members.</p>
+<p>More concretely, let <span class="math inline">\(f\)</span> be <code>prepare_candidates</code> and <span class="math inline">\(g_j\)</span> be defined by <code>g_j &lt;- function(x) {x[[j]]}</code>. Then <span class="math inline">\(f(a)\)</span> is a data frame with two subsettable columns, where <span class="math inline">\(g_1(f(a))\)</span> returns the true validation set outcomes and <span class="math inline">\(g_2(f(a))\)</span> returns the validation set predictions for the candidate member specified by <code>a</code>. Similarly, <span class="math inline">\(g_1(f(b))\)</span> returns the true validation set outcomes, and <span class="math inline">\(g_2(f(b))\)</span> and <span class="math inline">\(g_3(f(b))\)</span> return the validation set predictions for the first and second candidate members specified by <code>b</code>, respectively. Finally, <span class="math inline">\(g_1(f(x))\)</span> again returns the true validation set outcomes, <span class="math inline">\(g_2(f(x))\)</span> returns the validation set predictions for the candidate member specified by <code>a</code>, and <span class="math inline">\(g_3(f(x))\)</span> and <span class="math inline">\(g_4(f(x))\)</span> return the validation set predictions for the first and second candidate members specified by <code>b</code>, respectively.</p>
+<p>The <code>prepare_candidates</code> approach, then, is only vectorized in the colloquial sense of the word. I argue, further, that not only is this pseudo-vectorization ultimately not helpful for user experience, but actively detracts from a practitioner’s ability to add candidates in context.</p>
+<p>To demonstrate, let’s do something wrong. In addition to the k-nearest neighbors (<code>knn_res</code>), ordinary least squares (<code>lin_reg_res</code>), and support vector machine (<code>svm_res</code>) models from earlier, let’s introduce a neural network model definition as <code>nn_res</code>, and suppose that it was somehow ill-specified for inclusion in an ensemble in its construction.</p>
+<p>Both the syntax in question and the current syntax would fail in attempting to add candidates.</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># the syntax in question</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">prepare_candidates</span>(</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  knn_res,</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  lin_reg_res,</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  nn_res,</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  svm_res</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a><span class="co"># the current syntax</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a><span class="fu">stacks</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_candidates</span>(knn_res) <span class="sc">%&gt;%</span></span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_candidates</span>(lin_reg_res) <span class="sc">%&gt;%</span></span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_candidates</span>(nn_res) <span class="sc">%&gt;%</span></span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_candidates</span>(svm_res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>{stacks} may or may not handle the error introduced while adding the neural network candidates gracefully. While it would be somewhat more painful to construct helpful errors from the developer’s perspective in a <code>prepare_candidates</code>-style implementation, this is not my point. Suppose that the clarity of the error—and {stacks}’ gracefulness in handling it—is the same between these two syntax options. What debugging strategies do these syntaxes accommodate?</p>
+<p>A notable strategy, and one which is common among many practitioners using tidy package ecosystems, owes itself to the composability design principle of tidy packages. In the current syntax, since discrete operations are separated into discrete calls, a practitioner may iteratively comment out a line of code (and its associated pipe), rerun the code, and check for an error until she has identified the source of the error.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># if an error arose somewhere in this pipeline...</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">stacks</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_candidates</span>(knn_res) <span class="sc">%&gt;%</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_candidates</span>(lin_reg_res) <span class="sc">%&gt;%</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_candidates</span>(nn_res) <span class="sc">%&gt;%</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_candidates</span>(svm_res)</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a><span class="co"># ... one could identify the source by commenting out</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a><span class="co"># calls to add_candidates in succession, like so</span></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a><span class="fu">stacks</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_candidates</span>(knn_res) <span class="sc">%&gt;%</span></span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_candidates</span>(lin_reg_res) <span class="sc">%&gt;%</span></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_candidates</span>(nn_res) <span class="co"># %&gt;%</span></span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add_candidates(svm_res)</span></span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a><span class="fu">stacks</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_candidates</span>(knn_res) <span class="sc">%&gt;%</span></span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_candidates</span>(lin_reg_res) <span class="co"># %&gt;%</span></span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add_candidates(nn_res) %&gt;%</span></span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add_candidates(svm_res)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Upon the realization that the last iteration of the pipeline runs correctly, the practitioner now knows that the <code>nn_res</code> model definition is the source of the relevant error, and can troubleshoot further.</p>
+<p>This debugging strategy is common enough among users of tidy ecosystems that several web extensions and RStudio Add-ins have been developed to accommodate and improve the effectiveness of the strategy, such as Miles McBain’s <a href="https://github.com/MilesMcBain/breakerofchains">{breakerofchains}</a> or Nischal Shrestha’s <a href="https://github.com/nischalshrestha/DataTutor">{DataTutor}</a>. Given that the generation of inputs to {stacks} functions requires intimate familiarity with both the <a href="https://www.tidyverse.org/">{tidyverse}</a> and <a href="https://www.tidymodels.org/">{tidymodels}</a> ecosystems, accommodating this strategy is surely helpful.</p>
+</section>
+<section id="now-that-the-magic-has-gone" class="level3">
+<h3 class="anchored" data-anchor-id="now-that-the-magic-has-gone">Now that the magic has gone</h3>
+<p>Given the above discussion, then, we arrive at a syntax that is not far from that ultimately implemented in the package. Transitioning <code>add_candidates</code> from its pseudo-vectorized alternative, we arrive at the following syntax.</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># an alternative formulation of add_candidates that can </span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="co"># initialize a data stack if one is not already present, </span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="co"># and otherwise performs the functionality of add_candidates</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>form_candidates <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">data_stack =</span> <span class="cn">NULL</span>, ...) {</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">is.null</span>(data_stack)) {</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>    data_stack <span class="ot">&lt;-</span> <span class="fu">stacks</span>()</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>  data_stack <span class="sc">%&gt;%</span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_candidates</span>(...)</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a><span class="co"># the current blend_predictions function is left as is</span></span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>blend_predictions <span class="ot">&lt;-</span> blend_predictions</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a><span class="co"># the current fit_members function is left as is</span></span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>fit_members <span class="ot">&lt;-</span> fit_members</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This syntax is nearly identical to that utilized in the package, with the exception of the coupling of the <code>stacks</code> initialization and <code>add_candidates</code> steps. I refer to this coupling as <code>form_candidates</code>, where the function can initialize a data stack if one is not supplied, and otherwise works in the same way that <code>add_candidates</code> does.</p>
+<p>With the same <code>model1</code> and <code>model2</code> model definitions, the syntax would present as such.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># add model1 and model2 candidates</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">form_candidates</span>(model1) <span class="sc">%&gt;%</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">form_candidates</span>(model2)</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># fit the meta-learner</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">blend_predictions</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># after evaluating relevant computational considerations,</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># fit all members with non-zero stacking coefficients</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit_members</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>A ready rebuttal one might have in reaction to my proposal that this syntax is not appropriate is “you chose a bad name for <code>form_candidates</code>!” This argument is correct, and leads to my reasoning well. To name a function, one must articulate what it does. What does <code>form_candidates</code>—or a function by a different name that does the same thing—do? Especially given the argument that <code>add_candidates</code> cannot be properly vectorized, the action that <code>form_candidates</code> performs is dependent on the form of its inputs. I don’t mean this technically, for there are formal mechanisms (that is, object orientation) to accommodate operations whose exact implementation must be sensitive to the form of its input. Rather, colloquially, <code>form_candidates</code> performs two distinct operations on two different types of things, and there are not verbs that can describe the action being carried out insensitively to the form of the input.</p>
+<ul>
+<li>If provided nothing as its first argument, <code>form_candidates</code> <em>creates a data stack</em> and then appends the second argument to the data stack.</li>
+<li>If provided a data stack as its first argument, <code>form_candidates</code> appends the second argument to the data stack provided.</li>
+</ul>
+<p>What word can describe creation from nothing and addition to something simultaneously? For this reason, I argue that the <code>form_candidates</code> approach is an overextension of object orientation.</p>
+<p>Instead, then, the package ought to delineate between these steps of creating and appending, assigning more appropriate and evocative names to each operation. This first step involves the creation of a minimal instance of a <code>data_stack</code> which can be later appended to and manipulated by other functions in the package. Luckily, users of the {stacks} package have a mental map, formed while learning the APIs of many of {stacks}’ dependencies and otherwise related packages, from which they can draw to understand the appearance and role of such a function. In numerous packages in the {tidyverse}, {tidymodels}, and adjacent ecosystems, a function by the same (or similar) name of the package returns a minimal instance of an object class defined in the package, serving as a starting point for code that will ultimately add to or modify that object. Notable examples include <a href="https://ggplot2.tidyverse.org/">{ggplot2}</a> and <a href="http://tibble.tidyverse.org/">{tibble}</a> from the tidyverse, <a href="http://workflows.tidymodels.org/">{workflows}</a> and <a href="https://recipes.tidymodels.org/">{recipes}</a> from the {tidymodels}, and <a href="https://rdatatable.gitlab.io/data.table/">{data.table}</a> and <a href="https://gt.rstudio.com/">{gt}</a> elsewhere.</p>
+</section>
+<section id="the-real-magic-was-the-friends-we-made-along-the-way" class="level3">
+<h3 class="anchored" data-anchor-id="the-real-magic-was-the-friends-we-made-along-the-way">The real magic was the friends we made along the way</h3>
+<p>And thus, here we are; we’ve landed at the syntax that we ultimately implemented in the package. Maybe you saw that coming. To construct an ensemble using our old friends <code>model1</code> and <code>model2</code>, we can use the following code.</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">stacks</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_candidates</span>(model1) <span class="sc">%&gt;%</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_candidates</span>(model2) <span class="sc">%&gt;%</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">blend_predictions</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit_members</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>While this syntax is surely less concise than those considered so far, it offers a number of advantages over the one-function <code>stack_models</code> approach:</p>
+<ul>
+<li>The syntax offers moments for pause to a practitioner who would like to evaluate her choice of grid search specification. She need not redundantly perform the steps of adding candidates to a data stack nor fitting candidates on the full training set, both of which are computationally intensive enough to warrant careful consideration.</li>
+<li>The syntax roughly reflects the way these operations would be explained colloquially, and thus owes itself to function and argument names that are coherent and comprehensive. It is for this reason that we did not consider more verbose syntaxes.</li>
+<li>The syntax takes seriously the technical and pedagogical implications of an implementation that presents as vectorized but ultimately promotes a misunderstanding of the form of its inputs.</li>
+</ul>
+<p>The real super auto AI machine learning magic truly was the friends we made along the way. Here’s to more keystrokes.</p>
+
+
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a><div id="quarto-appendix" class="default"><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">Reuse</h2><div id="quarto-reuse" class="quarto-appendix-contents"><div><a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">https://creativecommons.org/licenses/by-sa/4.0/</a></div></div></section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">© 2023 Simon P. Couch ∙ Made with <a href="https://quarto.org">Quarto</a></div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+</body></html>
