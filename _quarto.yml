@@ -11,6 +11,11 @@ website:
   page-navigation: true
   back-to-top-navigation: true
   google-analytics: "G-DDB8R0B1ZW"
+  comments: 
+    utterances:
+      repo: simonpcouch/website
+      label: utterances
+      theme: body-light
   navbar:
     logo: assets/cabin.png
     tools:
