@@ -1,7 +1,7 @@
 ---
 title: "Some Pitters and Patters with R"
 description: |
-  <br><br>This is where I sometimes write about what I’m up to related to R, data science, and statistics. My dog, Millie, tags along in the thumbnails. I hope folks find some of these notes useful.
+  <br><br>This is where I sometimes write about what I’m up to related to R, data science, and statistics. My dog, Millie, tags along in the thumbnails. I hope folks find some of these notes useful.<br>[Subscribe via RSS](/blog/index.xml)
 listing: 
   contents: 
     - "**/index.qmd"
