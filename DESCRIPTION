@@ -1,0 +1,18 @@
+Package: website
+Title: Website source code
+Version: 0.0.0.9000
+Authors@R: 
+    person("Simon", "Couch", , "simonpatrickcouch@gmail.com", role = c("aut", "cre"))
+Description: Website source code
+License: CC BY-SA 4.0 Deed
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
+Imports:
+    dplyr,
+    here,
+    readr,
+    rmarkdown,
+    knitr,
+    tibble
+    
