@@ -1,0 +1,14 @@
+{
+  "hash": "a4dc75a903736f355450f969cd078f32",
+  "result": {
+    "markdown": "---\ntitle: \"Simon P. Couch\"\npagetitle: \"Simon P. Couch\"\nsubtitle: \"Building software for statistical modeling at Posit (née RStudio)\"\nimage: assets/avatar.png\nimage-alt: \"A portrait of me, smiling while sitting beside a trail in the woods.\"\n\nabout:\n  template: jolla\n  image-width: 28em\n  id: hero-heading\n  links:\n    - icon: mastodon\n      href: https://fosstodon.org/@simonpcouch\n    - icon: github\n      aria-label: GitHub\n      href: https://github.com/simonpcouch\n    - text: \"{{< fa brands orcid >}}\"\n      href: https://orcid.org/0000-0001-5676-5107\n    - icon: linkedin\n      aria-label: \"LinkedIn\"\n      href: https://linkedin.com/in/simonpcouch\npage-layout: article\n\nback-to-top-navigation: false\n\nexecute: \n  echo: false\n  \n---\n\n\n\n<!-- hero-heading -->\n\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n\n:::\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

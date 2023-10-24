@@ -25,7 +25,6 @@ page-layout: article
 back-to-top-navigation: false
 
 execute: 
-  freeze: false
   echo: false
   
 ---

@@ -37,4 +37,4 @@ format:
     pagetitle: "{{< meta title >}} | Simon P. Couch"
 
 execute: 
-  freeze: auto
+  freeze: true
