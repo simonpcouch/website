@@ -1,0 +1,279 @@
+---
+title: "Pipe-esque Programming with {ggplot2}’s Plus Operator"
+date: '2021-06-10'
+slug: ggplot-pipe-plus
+tags:
+  - rstats
+  - tidyverse
+subtitle: "Writing iterative code with '+' rather than '%>%' was a tough transition my first time around."
+image: featured.jpg
+summary: ''
+---
+
+
+
+
+
+Writing iterative code with {ggplot2}'s plus (`+`) operator rather than {magrittr}'s pipe (`%>%`) was a tough transition my first time around.
+
+When working on a function---say, `boop()`---that takes the outputs of some other function---say, `beep()`:
+
+
+```r
+beep(1) %>%
+  boop()
+```
+
+...I usually take for granted that I'll have access to whatever `beep(1)` outputted, and will be able to modify that thing, inside of the `boop` function.
+
+With {ggplot2}'s plus operator, though, I wasn't sure whether this was the case. I thought that ggplot layers, added with `+`, had to be able to operate somewhat independently. e.g., if I'm making some function `super_fancy_layer` that adds a layer to a ggplot:
+
+
+```r
+super_fancy_layer <- function() {
+  list(theme_minimal())
+}
+
+ggplot(mtcars, aes(x = hp, y = mpg)) + 
+  geom_point() +
+  super_fancy_layer()
+```
+
+![A scatter plot with horsepower (range 0 to 350) on the x axis and miles per gallon (range 10 to 35) of cars, showing a nonlinear, negative association. The key insight here is that adding `super_fancy_layer()`, which just outputs a list containing `theme_minimal()`, applies that theme to the plot via the plus operator; rather than the default gray panel background, the plot now has a white one.](https://github.com/simonpcouch/website/blob/blog/content/blog/2021-06-10/index_files/figure-html/unnamed-chunk-3-1.png?raw=true)
+
+...I had never thought about how `super_fancy_layer()` might "access" information from the earlier lines. What if I want `super_fancy_layer()` to modify bits and pieces of the existing plot, depending on what's in the plot already, rather than adding a layer on top of the whole thing?[^1]
+
+It turns out, the maintainers of {ggplot2} have put together a pretty neat system that allows developers to access and modify previous {ggplot2} output in defining new layers.
+
+## The plan
+
+Before we get into the details, I should mention that this post assumes a solid background in R (specifically, functions) and some awareness of the S3 object system. I'll do my best to clarify the bits that are important here, but [here](https://r4ds.had.co.nz/functions.html)'s some more extensive writing on functions, and [here](http://adv-r.had.co.nz/S3.html)'s more on the S3 system.
+
+I'll start off highlighting the infrastructure that the {ggplot2} team has put together for developers to approach this challenge before writing a bit about how you can take advantage of it (with some additional pointers on integrating it in a package).
+
+## Wheee
+
+It starts with the `+` operator we all know and (maybe) love. The `+` you use in {ggplot2} code, like you see above, is actually a "method." That is, the meaning of `+` here is defined in the {ggplot2} source code, specifically in reference to `gg` objects. Here's the [current source code](https://github.com/tidyverse/ggplot2/blob/01fe5de937a1ec68a49cf2303161480e616b2ef9/R/plot-construction.r#L42-L56):
+
+
+```r
+"+.gg" <- function(e1, e2) {
+  if (missing(e2)) {
+    abort("Cannot use `+.gg()` with a single argument. Did you accidentally put + on a new line?")
+  }
+
+  # Get the name of what was passed in as e2, and pass along so that it
+  # can be displayed in error messages
+  e2name <- deparse(substitute(e2))
+
+  if      (is.theme(e1))  add_theme(e1, e2, e2name)
+  else if (is.ggplot(e1)) add_ggplot(e1, e2, e2name)
+  else if (is.ggproto(e1)) {
+    abort("Cannot add ggproto objects together. Did you forget to add this object to a ggplot object?")
+  }
+}
+```
+
+Here, `e1` is what's on the left-hand side of the `+` and `e2` is what's on the right-hand side. So, in the code:
+
+
+```r
+ggplot(mtcars, aes(x = hp, y = mpg)) + geom_point()
+```
+
+...`e1` is `ggplot(mtcars, aes(x = hp, y = mpg))` and `e2` is `geom_point()`. Another (goofy) way of writing the above code is:
+
+
+```r
+`+`(ggplot(mtcars, aes(x = hp, y = mpg)), geom_point())
+```
+
+In the definition of `+.gg`, you may notice that the function eventually returns the output of `add_ggplot(e1, e2, e2name)` if the thing on the left-hand side of the `+` is a ggplot. Okay, sure.
+
+Here's the [current definition of `add_ggplot()`](https://github.com/tidyverse/ggplot2/blob/01fe5de937a1ec68a49cf2303161480e616b2ef9/R/plot-construction.r#L63-L70).
+
+
+```r
+add_ggplot <- function(p, object, objectname) {
+  if (is.null(object)) return(p)
+
+  p <- plot_clone(p)
+  p <- ggplot_add(object, p, objectname)
+  set_last_plot(p)
+  p
+}
+```
+
+Okay, so--hmm. The part here doing the work of combining what used to be `e1` and `e2` is `ggplot_add(object, p, objectname)`. What's the [definition of `ggplot_add`](https://github.com/tidyverse/ggplot2/blob/01fe5de937a1ec68a49cf2303161480e616b2ef9/R/plot-construction.r#L84-L86)?
+
+
+
+```r
+ggplot_add <- function(object, plot, object_name) {
+  UseMethod("ggplot_add")
+}
+```
+
+Huzzah! Yippee!
+
+What this `UseMethod` means is that the definition of `ggplot_add` depends on _what kind of thing_ `object` is--the thing on the right-hand side of the `+`. When I say _what kind of thing_, I mean the output of `class(object)`. `ggplot_add` is exported with `ggplot2`, so, as developers on extensions of {ggplot2}, we get to decide what the class of our `super_fancy_layer()` function is, so we also get to decide how `ggplot_add` will work in our extensions!
+
+Also, notice that `plot` (what used to be `e1`, or the thing on the left-hand side of the `+`) is _also_ an input to `ggplot_add` and the output should be the result of adding those two things together. So, in implementing `super_fancy_layer()`,
+
+* we have access to what the plot previously "was"
+* we can modify that thing and output the whole plot rather than just a layer on top of it
+
+To use a custom `ggplot_add` method in your own package, you'll want to start with re-exporting the `ggplot_add` generic. ("Generic" is just a word for a function that uses this sort of `UseMethod` construction, "dispatching" to the method defined for the given input class.) To do so, add the following {roxygen2} lines somewhere in your R code and run `devtools::document()`:
+
+
+```r
+#' @importFrom ggplot2 ggplot_add
+#' @export
+ggplot2::ggplot_add
+```
+
+Now, define your `super_fancy_layer()` function. The idea here is that, since our contents of `super_fancy_layer()` need access to the underlying plot data, we won't actually define all of the function's logic inside of `super_fancy_layer()` (since requiring the underlying plot data as an explicit function argument for each layer is bad ggplot form). Instead, just store what the user inputted and _wait until they add the layer to a ggplot to actually do anything_.
+
+
+```r
+#' @export
+super_fancy_layer <- function(arg1 = 1, arg2 = 2) {
+  # store inputs in classed output that can 
+  # be passed to a `ggplot_add` method
+  structure(
+    "A super fancy layer.", 
+    class = "fancy_layer",
+    fn = "super_fancy_layer_",
+    arg1 = arg1,
+    arg2 = arg2
+  )
+}
+```
+
+So... pretty lame so far. If I call:
+
+
+```r
+super_fancy_layer()
+## [1] "A super fancy layer."
+## attr(,"class")
+## [1] "fancy_layer"
+## attr(,"fn")
+## [1] "super_fancy_layer_"
+## attr(,"arg1")
+## [1] 1
+## attr(,"arg2")
+## [1] 2
+```
+
+All that I've done is bundled up what the user passed to me into a little `fancy_layer` object. 
+
+
+```r
+class(super_fancy_layer())
+## [1] "fancy_layer"
+```
+
+I also added an attribute with the name `fn` set to `"super_fancy_layer_"`, an arbitrary function name for the internal code you will write that actually implements the addition--more on that in a sec.
+
+Now, think back to how that `+` operator works--it calls `add_ggplot`, which calls `ggplot_add`, and the code for `ggplot_add` depends on the class of what's on the right-hand side of the `+` in the original code. _We_ set the class of `super_fancy_layer()` output to `fancy_layer`, so all we need to do now is define the instructions for adding `fancy_layer`s to existing ggplots.
+
+Our definition for `ggplot_add.fancy_layer` will:
+
+* extract the `fn` attribute from `fancy_layer` output
+* extract arguments `arg1` and `arg2` from `fancy_layer` output
+* call `fn` with the arguments `plot`, `arg1`, and `arg2`
+
+
+```r
+#' @method ggplot_add fancy_layer
+#' @export
+ggplot_add.fancy_layer <- function(object, plot, object_name) {
+  # a method for the `+` operator for fancy_layer objects.
+  # - "object to add" (arguments to the RHS of the `+`)
+  # - plot is the existing plot (on the LHS of the `+`)
+  # - object_name is the unevaluated call on the RHS of the `+`
+  
+  # extract the `fn` attribute from `fancy_layer` output
+  fn <- attr(object, "fn")
+  
+  # extract arguments `arg1` and `arg2` from `fancy_layer` output
+  fancy_args <- attributes(object)[!names(attributes(object)) %in% 
+                                   c("class", "fn")]
+  
+  # call `fn` with the arguments `plot`, `arg1`, and `arg2`
+  new_plot <- do.call(
+    fn,
+    c(list(plot), fancy_args)
+  )
+  
+  # return the new plot
+  new_plot
+}
+```
+
+The `do.call` lines are a programmatic way of writing `super_fancy_layer_(plot, arg1 = 1, arg2 = 2)`. That `fn` attribute is really just a string, but if there's a function by the name of the string, `do.call` will call that function. The magic here is that `fn` (in our case, `"super_fancy_layer_"`) can reference a function containing code defining the result of adding the left and right hand sides of the `+` _based on both of them, rather than just the right-hand side_. That is, you can peek inside of---and modify---the existing plot inside of your layer function! So, define the function in that `fn` attribute as you will:
+
+
+```r
+super_fancy_layer_ <- function(plot, arg1, arg2) {
+  # fancy code that modifies `plot` based on
+  # arg1 and arg2...
+  
+  return(new_plot)
+}
+```
+
+...and you're good to go. Crazy.
+
+## Bonus points: a print method
+
+Getting the `ggplot_add` method working is the biggest leap here, but my first move after making that happen was to put together a print method for that new custom layer object. The default output will print out all of the attributes you attached to the object, which could be a bit overwhelming and confusing for the user.
+
+
+```r
+super_fancy_layer()
+## [1] "A super fancy layer."
+## attr(,"class")
+## [1] "fancy_layer"
+## attr(,"fn")
+## [1] "super_fancy_layer_"
+## attr(,"arg1")
+## [1] 1
+## attr(,"arg2")
+## [1] 2
+```
+
+Eep.
+
+To hide those internals from users, you can define your own print method--what gets printed out if a user calls `super_fancy_layer()` without adding it to an existing ggplot object with `+`?
+
+Here's what my print method looks like:
+
+
+```r
+#' @export
+print.fancy_layer <- function(x, ...) {
+  cat(x)
+}
+```
+
+With this loaded, printing `fancy_layer`s is a bit less overwhelming (if a bit underwhelming):
+
+
+```r
+super_fancy_layer()
+```
+
+
+```
+## A super fancy layer.
+```
+
+Woop woop. :-)
+
+## Wrapping up
+
+I hope this was helpful for those who are currently encountering this problem and interesting for those who may in the future. Thanks to the {ggplot2} maintainers for putting together this infrastructure (specifically, [Thomas Lin Pedersen in 2017](https://github.com/tidyverse/ggplot2/pull/2309)) and to [Hiroaki Yutani](https://yutani.rbind.io/) for writing the [blog post](https://yutani.rbind.io/post/2017-11-07-ggplot-add/) that initially tipped me off to this. To yall maintainers, my apologies if this post encourages some poor form.
+
+[^1]: I write this blog post assuming that the reader may have stumbled here already with a problem to solve. If you're curious when an issue like this may come up, my original use case for this kind of functionality was in a PR for {infer}, a package for {tidyverse}-aligned statistical inference. We had a [{patchwork}](https://patchwork.data-imaginist.com/) (a few ggplots smushed together) object and wanted the layer function to act on and modify each patch in the patchwork one-by-one rather than the whole plot. You can see that PR [here](https://github.com/tidymodels/infer/pull/391).

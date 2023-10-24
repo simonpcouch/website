@@ -1,0 +1,45 @@
+---
+title: "{stacks} v0.1.0 is on CRAN!"
+date: '2020-11-30'
+slug: stacks-0-1-0
+tags:
+  - rstats
+  - tidymodels
+  - stacks
+subtitle: ''
+summary: "Introducing ensemble learning to the tidymodels."
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+library(emo)
+```
+
+Yall! <div style= "float:right;position: relative; top: -35px; width: 200px; padding-left: 30px; padding-bottom: 10px;">
+![](https://github.com/tidymodels/stacks/raw/main/man/figures/logo.png)
+</div>
+
+
+Over the past few months, I've been focused on the development of {stacks}, an R package for tidymodels-aligned stacked ensemble modeling. This package began as an internship project at RStudio, and is now the focus of my undergraduate thesis. Today, the package was released on CRAN.
+
+You can install the package with the following code:
+
+```{r, eval = FALSE}
+install.packages("stacks")
+```
+
+To load the package:
+
+```{r, eval = FALSE}
+library(stacks)
+```
+
+To learn more:
+
+* The official release blog post can be found [here](https://www.tidyverse.org/blog/2020/11/stacks-0-1-0)
+* The package's website is [here](https://stacks.tidymodels.org)
+* I wrote up a blog post with an example of using the package to build an ensemble [here](https://blog.simonpcouch.com/blog/gentle-intro-stacks/) 
+
+Thank you to [Julie Jung](https://www.jungjulie.com/) for contributing the package's hex sticker as well as research data used in examples throughout the package. Also, thanks to those who have tested and provided feedback on the developmental versions of the package over the last few months!
+
+Happy modeling. `r emo::ji("slightly_smiling_face")`

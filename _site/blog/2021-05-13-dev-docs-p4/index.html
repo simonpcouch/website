@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2021-05-13">
+
+<title>Big Things (Developer Documentation pt.&nbsp;4) | Simon P. Couch</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../assets/cabin.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../assets/cabin.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Simon P. Couch</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about/index.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog/index.html" rel="" target="">
+ <span class="menu-text">Blog</span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+    <a href="https://www.github.com/simonpcouch/website" rel="" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Big Things (Developer Documentation pt.&nbsp;4)</h1>
+            <p class="subtitle lead">On the tension between documenting R packages exhaustively and maintainably.</p>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">May 13, 2021</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<blockquote class="blockquote">
+<p>This is the last of four blog posts on the development process of the {stacks} package, excerpted from my Reed senior thesis project <em>Tidy Model Stacking with R</em>.</p>
+<p><strong>Part 1:</strong> <a href="https://blog.simonpcouch.com/blog/dev-docs-p1/"><em>Introduction</em></a></p>
+<p><strong>Part 2:</strong> <a href="https://blog.simonpcouch.com/blog/dev-docs-p2/"><em>Splitting Things Up</em></a></p>
+<p><strong>Part 3:</strong> <a href="https://blog.simonpcouch.com/blog/dev-docs-p3/"><em>Naming Things</em></a></p>
+</blockquote>
+<p>The final blog post in this series is somewhat less argumentative than the first two, but speaks to Reiderer’s concept of “developer documentation” much the same. Rather than (explicitly) defending my API choices, I’d like to provide some context for some of the more wiggly elements of {stacks}’ infrastructure. That is, some components of the package’s implementation are weird—some may say hacky, if feeling particularly violent—and the reasoning for these choices often tracks back to the same issue; things are Big.</p>
+<p>Big things. I mean this both in the sense that many of the inputs to {stacks} functions are almost inevitably very large data objects requiring a non-negligible amount of computing time to generate and that {stacks} itself takes a long time to do its thing, returning data objects that are even larger than it was supplied. The tools of the R package development trade are varyingly equipped to accommodate such things—those of the Big variety—and thus, some wiggliness is required. I’ll continue using Big to evoke some intersection of these two qualities, both for notational convenience and goofiness.</p>
+<p>There are a few things I’m referring to when I say “tools of the R package development trade.” Initially, I mean R itself and the tools provided by the R core team to articulate what a proper package looks like and check that this is the case. Namely, the <code>R CMD check</code> set of checks exhaustively defines the bounds of a “valid” R package. Further, I also mean the Comprehensive R Archive Network (CRAN), a centralized repository that curates and hosts thousands of the most widely used packages in the R community, as well as the team of volunteers supporting it. The CRAN team also contributes and maintains its own extensions to <code>R CMD check</code> for packages hosted in its repositories, asserting guidelines that improve maintainability (and thus user experience) for both the CRAN team and contributed package maintainers <a href="https://www.researchgate.net/publication/271482576_On_the_maintainability_of_CRAN_packages">(Claes, 2014)</a>.</p>
+<p>Each of the tools mentioned above are tremendously positive forces in the R community. At the same time, they must make assertions (whether explicit or implicit) about the “smells and feels” of R packages that are one-size-fits-all, so to speak, in order to shepherd the homogeneity required to articulate coherent bounds on what an R package <em>is</em> <a href="https://www.rstudio.com/collections/additional-talks/code-smells-and-feels-user2018-brisbane/#:~:text=Jenny%20Bryan%20%7C&amp;text=%22Code%20smell%22%20is%20an%20evocative,be%20fiddly%20and%20bug%2Dprone.">(Bryan, 2018)</a>. In the case of {stacks}, some of these assertions introduce the need for particularly wiggly workarounds.</p>
+<p>The following bounds, excerpted from the CRAN repository policy, introduce the need for the vast majority of these wiggles:</p>
+<ul>
+<li>“Checking the package should take as little CPU time as possible”–in practice, this is a 10 minute threshold. Notably, the CRAN team places a bound on runtime of package examples: “Examples should run for no more than a few seconds each: they are intended to exemplify to the would-be user how to use the functions in the package.”</li>
+<li>“Packages should be of the minimum necessary size… neither data nor documentation should exceed 5MB.”</li>
+</ul>
+<p>Again, I contend that the above restrictions are justified and necessary given the scope of the CRAN team’s resources. Beyond making the maintenance of CRAN a more feasible task, too, these restrictions also provide expectations from which popular package development tools can draw from in determining functionality.</p>
+<p>I’ll begin this by demonstrating more precisely what I mean by Big. Then, in the following section, I will illustrate more clearly the tension between this Bigness and the aforementioned bounds. In the following sections, I describe three strategies for reckoning with this tension—wiggling thoughtfully, if you will.</p>
+<section id="big-a-demonstration" class="level3">
+<h3 class="anchored" data-anchor-id="big-a-demonstration">Big: a demonstration</h3>
+<p>Before I approach solutions, I want to make sure that I characterize the problem here concretely. I claim that, for one, the inputs to {stacks} functions are the culmination of computationally intensive processes and are themselves large data objects. Further, I claim that the operations carried out by {stacks} are computationally intensive and output large data objects. My definitions of “long running” and “large” here are relative to the 10 minute check time and 5MB bundled package size limits, respectively. In this subsection, I first demonstrate these two claims, and only consider their implications in the following subsections.</p>
+<p><em>The inputs</em>: The primary argument inputs to {stacks} functions are model definitions outputted from functions in the <a href="http://tune.tidymodels.org/">{tune}</a> package. Model definitions specify one or more candidate members, and supply the results of fitting each candidate member to resamples of the training data.</p>
+<p>To illustrate, lets return to the model objects mentioned in the second blog post. In that post, we made use of model objects specifying 11 candidate members trained on 2197 observations—a set of building blocks for an ensemble that is quite modest in comparison with many applications of stacked ensemble modeling. There are nearly 200 lines of code needed to generate those objects, elapsing around 45 seconds in runtime on a machine that generally outperforms CRAN check farms by a small but non-negligible amount.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> The code contained in this section does not include any of the <code>add_candidates</code>, <code>blend_predictions</code>, or <code>fit_members</code> steps, though its runtime already takes up a substantial portion of the time allotted for a CRAN package’s examples to run.</p>
+<p>An alternate approach (discussed later) would be to supply example results of these computations for use in examples and unit tests rather than generating them on <code>R CMD check</code>. However, the <code>svm-res</code>, <code>lin_reg_res</code>, and <code>knn_res</code> data objects to be inputted to <code>add_candidates</code> take up 13.2MB of memory, more than twice the amount of storage typically allotted to the entirety of a CRAN-published R package. This does not include any of the intermediate objects generated in the process of specifying these objects.</p>
+<p>Surely, then, {stacks}’ inputs are Big.</p>
+<p><em>{stacks}’ objects and computations</em>: In much the same way as the packages generating its inputs, the operations that {stacks} carries out are computationally intensive and generate large data objects.</p>
+<p>In contrast to the earlier section, with the necessary input objects generated, the code in the following sections demonstrating {stacks}’ functionality can be summarized in only a few lines of code.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>st <span class="ot">&lt;-</span> </span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stacks</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_candidates</span>(knn_res) <span class="sc">%&gt;%</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_candidates</span>(lin_reg_res) <span class="sc">%&gt;%</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_candidates</span>(svm_res) <span class="sc">%&gt;%</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">blend_predictions</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit_members</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>On the same machine mentioned earlier, the code to execute the {stacks} pipeline in full takes about half of the time required to generate its inputs. Thus, one start to finish example, assuming {stacks} doesn’t supply intermediate objects to reduce runtime, requires around a minute of compute time. Note that this runtime, taking up a tenth of the total allotted package check time on a machine that outperforms CRAN’s check farms, provides one minimal example demonstrating functionality in one help-file.</p>
+<p>Further, the <code>st</code> object specified above takes up 15.2MB in memory, over three times the amount of storage typically allotted to the entirety of a CRAN-published R package.</p>
+<p>Big things abound! Wiggliness follows.</p>
+</section>
+<section id="the-reason-for-the-squeezin-signal-for-the-wiggle" class="level3">
+<h3 class="anchored" data-anchor-id="the-reason-for-the-squeezin-signal-for-the-wiggle">The reason for the squeezin’, signal for the wiggle</h3>
+<p>In effect, a CRAN-published R package must take 10 or less minutes to pass <code>R CMD check</code>. <code>R CMD check</code> is a suite of tests ensuring that the form and function of an R package aligns with conventions. Most all of the steps require negligible computing time to run—for example, <code>R CMD check</code> ensures that all files included in the package build match some pre-specified dictionary of file names and checks that a file exists inside of the <code>R/</code> subdirectory. However, other checks are substantially more computationally intensive. Of note, <code>R CMD check</code>, by default, will run all examples in the package’s help-files as well as the package’s unit tests. This practice is surely justifiable, as failing examples or unit tests almost certainly indicate that a package is not functioning as intended. However, in light of the constraint that examples and unit tests must run in a set amount of time, this practice introduces a trade-off for packages with Big things. Package developers must strike a balance between, on one hand, documenting and unit testing their packages thoroughly enough to encourage a positive user experience, and on the other, documenting and unit testing sparingly enough to meet the check time limitations.</p>
+<p>In a similar vein, to be hosted on CRAN repositories, there is an effective 5MB bound on the size of a bundled R package. More specifically, “neither data nor documentation should exceed 5MB.” R packages, other than data and documentation, are largely (if not exclusively) plain text. Note, though, this bound is only relevant for the bundled package—files of any size can be stored in the source code as long as they are not included in the bundled version of the package sent to CRAN. Again, though, package developers must strike a balance between providing sufficient data and documentation to encourage a positive user experience and, on the other, minimizing bundled package size in order to come in under the 5MB limit.</p>
+<p>There are several strategies beyond abbreviating example usages and unit testing coverage to decrease package check time and bundled size. For one, packages with Big inputs can provide example input objects that are the culmination of long-running computations to use throughout package examples. Further, documentation can lean more heavily on other help-file sections to document concepts in repeated long-form explanations and syntax in argument descriptions. Finally, there are several techniques, some more wiggly than others, to conditionally run examples and unit tests. I’ll consider each of these strategies in the following three subsections, noting their implications for shortening package check times and reducing bundled package size.</p>
+</section>
+<section id="example-input-objects" class="level3">
+<h3 class="anchored" data-anchor-id="example-input-objects">Example input objects</h3>
+<p>An approach taken by several R packages in the {tidymodels} ecosystem to reduce package check time is to supply R data objects with an R package for use in examples and unit tests. As noted above, the inputs to {stacks}’ <code>add_candidates</code> are the culmination of a significant amount of runtime. Rather than regenerating these objects each time some functionality is to be demonstrated, the package can supply a set of R data objects with the package that can simply be loaded and passed to {stacks} functions as needed. In this way, the runtime of an example or unit test is limited only to the time required by {stacks} to carry out its functionality, eliminating the need to take up package check time carrying out operations implemented in other packages.</p>
+<p>To this end, the {stacks} package provides a collection of R data objects for use in examples and unit tests. The objects are based on <code>tree_frogs</code>, a subset of an experimental data set from a study of tree frog embryo hatching <a href="https://jeb.biologists.org/content/223/24/jeb236141">(Jung, 2020)</a>.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>tree_frogs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>## # A tibble: 1,212 x 7
+##    clutch treatment  reflex    age t_o_d     hatched latency
+##    &lt;fct&gt;  &lt;chr&gt;      &lt;fct&gt;   &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;     &lt;dbl&gt;
+##  1 168    control    full   466965 morning   yes          22
+##  2 145    gentamicin full   404310 afternoon no           NA
+##  3 149    gentamicin full   426220 night     no           NA
+##  4 100    control    mid    355360 night     no           NA
+##  5 230    gentamicin mid    356535 night     no           NA
+##  6 99     control    low    361180 night     yes         360
+##  7 145    gentamicin full   400070 afternoon no           NA
+##  8 133    control    full   401595 afternoon yes         106
+##  9 100    control    mid    357810 night     yes         180
+## 10 182    control    mid    358410 night     no           NA
+## # … with 1,202 more rows</code></pre>
+<p>In addition to the data set itself, the package provides a number of other example data objects. Excerpting from the documentation entry included in each of the package’s help-files:</p>
+<blockquote class="blockquote">
+<p>{stacks} provides some resampling objects and datasets for use in examples and vignettes derived from a study on 1212 red-eyed tree frog embryos!</p>
+<p>Red-eyed tree frog (RETF) embryos can hatch earlier than their normal 7ish days if they detect potential predator threat. Researchers wanted to determine how, and when, these tree frog embryos were able to detect stimulus from their environment. To do so, they subjected the embryos at varying developmental stages to “predator stimulus” by jiggling the embryos with a blunt probe. Beforehand, though some of the embryos were treated with gentamicin, a compound that knocks out their lateral line (a sensory organ). Researcher Julie Jung and her crew found that these factors inform whether an embryo hatches prematurely or not!</p>
+<p>Note that the data included with the stacks package is not necessarily a representative or unbiased subset of the complete dataset, and is only for demonstrative purposes.</p>
+<p><code>reg_folds</code> and <code>class_folds</code> are <code>rset</code> cross-fold validation objects from <code>rsample</code>, splitting the training data into for the regression and classification model objects, respectively. <code>tree_frogs_reg_test</code> and <code>tree_frogs_class_test</code> are the analogous testing sets.</p>
+<p><code>reg_res_lr</code>, <code>reg_res_svm</code>, and <code>reg_res_sp</code> contain regression tuning results for a linear regression, support vector machine, and spline model, respectively, fitting <code>latency</code> (i.e.&nbsp;how long the embryos took to hatch in response to the jiggle) in the <code>tree_frogs</code> data, using most all of the other variables as predictors. Note that the data underlying these models is filtered to include data only from embryos that hatched in response to the stimulus.</p>
+<p><code>class_res_rf</code> and <code>class_res_nn</code> contain multiclass classification tuning results for a random forest and neural network classification model, respectively, fitting <code>reflex</code> (a measure of ear function) in the data using most all of the other variables as predictors.</p>
+<p><code>log_res_rf</code> and <code>log_res_nn</code>, contain binary classification tuning results for a random forest and neural network classification model, respectively, fitting <code>hatched</code> (whether or not the embryos hatched in response to the stimulus) using most all of the other variables as predictors.</p>
+</blockquote>
+<p>This excerpt is included in help-files throughout the package where the example objects are used, and suffixed with the following:</p>
+<blockquote class="blockquote">
+<p>See <code>?example_data</code> to learn more about these objects, as well as browse the source code that generated them.</p>
+</blockquote>
+<p>The linked <code>?example_data</code> help-file (aliased by the names of each of the example objects) also includes the excerpt, and is suffixed with the source code used to generate the objects; an R Markdown document is appended to the documentation entry via the <a href="http://roxygen2.r-lib.org/">{roxygen2}</a> <code>@includeRmd</code> tag, providing the source code to regenerate the exported example objects or generate intermediate un-exported objects in the workflow. Only the raw data source and final <code>tune_results</code> data objects—suitable for input to {stacks} functions—are included in the bundled package, to minimize bundled package size.</p>
+<p>Then, in each example section throughout the package where the example objects are used, the following excerpt prefixes the section:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># see the "Example Data" section above for</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># clarification on the objects used in these examples!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This approach ensures that the source of the example objects is clear to the user. Further, including a fully worked example of appropriate usage of requisite model specification with other functionality from {tidymodels} clarifies specificities of using the ecosystem to generate {stacks}’ inputs.</p>
+<p>There are a few notable drawbacks to the approach of supplying example data objects with the package that are the result of {stacks}’ dependencies.</p>
+<p>Principally, these data objects are not automatically generated, and will not automatically update when a {stacks} dependency is updated. Thus, if a {tidymodels} package makes a breaking change for {stacks}, but {stacks} only checks its examples and unit tests relative to the stored data object, then the breaking change will be undetected until the example object is updated manually. This drawback is somewhat remedied by <a href="https://github.com/tidymodels/extratests"><em>extratests</em></a>, a repository running a more exhaustive set of checks on a regular schedule, developed and maintained by the {tidymodels} team in reaction to exactly this issue. Further, {tidymodels} developers work in close collaboration to ensure that functionality is tightly integrated across packages and thus likely anticipate which changes will break functionality in {stacks}. However, for breaking changes arising from outside of the {tidymodels} ecosystem, the package is unprotected.</p>
+<p>The other notable drawback here is that this approach is simply not well-adopted, and thus somewhat awkward for users and casual contributors. For users of the {tidymodels} ecosystem, and other ecosystems that are prone to run up against the same issue and thus adopt a similar strategy, this approach will be familiar. However, for users whose first exposure to the {tidymodels} is {stacks}, this approach is surely strange. Further, for potential contributors to the package, the need for understanding which changes would alter the structure of example data objects in order to submit an appropriate contribution is prohibitive.</p>
+<p>Altogether, supplying example input objects reduces the computational intensity of running examples and unit testing {stacks}. It also leads to more targeted documentation in that, for advanced {tidymodels} users, documentation for {stacks} functions need only document {stacks} functionality. For others, supplying example objects provides an applied example for more verbose help-files outlining the necessary steps to generate {stacks} inputs. Unfortunately, the approach also results in {stacks} being particularly vulnerable to unanticipated breaking changes in its dependencies, and is also awkward for some users.</p>
+</section>
+<section id="restructuring-help-files" class="level3">
+<h3 class="anchored" data-anchor-id="restructuring-help-files">Restructuring help-files</h3>
+<p>Another approach that {stacks} takes in attempting to both document functionality thoroughly and minimize package check time is to redistribute example code that is redundant with package unit tests to other help-file sections that are not executed at check time.</p>
+<p>A notable example is that outlined above; all code used to generate example objects exported with the package is included in the “Example Objects” sections of the core functions, and is only executed when manually called following relevant updates to {stacks} dependencies. All of the functionality in this section is unit tested and documented in the relevant {tidymodels} packages and thus need not be redundantly checked in {stacks} (even though {stacks} explicitly relies on its functionality.)</p>
+<p>Further, R packages often document the syntax to use function arguments within the example section. Since sensitivity to function arguments is tested extensively in the package unit tests, and each additional example provided in the help-files increases check time, {stacks} instead redistributes much of its argument-level documentation to the actual argument documentation and custom sections. In addition to plain text, the argument-level documentation provides several examples of code that could possibly be supplied to the argument. This approach also encourages a more granular level of documentation, focusing in on approaches to manipulating one specific argument. However, this approach may also obscure the relationships between arguments, and may feel awkward for users who are used to navigating help-files in a more example-centric manner.</p>
+<p>Finally, the package uses the <code>@inherits</code> tag from {roxygen2} in order to consolidate example code sections with shared functionality. As such, example code provided with the package help-files can appear in a number of help-files but only be executed once.</p>
+</section>
+<section id="running-conditionally" class="level3">
+<h3 class="anchored" data-anchor-id="running-conditionally">Running conditionally</h3>
+<p>The approach of using <code>if</code> statements to conditionally run examples and unit tests likely ought to have been forefronted, as its most straightforward implementations are the least wiggly of all of those mentioned throughout this section to reduce package check time. On the other hand, {stacks} makes use of some particularly wiggly approaches to run examples and unit tests conditionally.</p>
+<p>As for the more standard approaches, one can use a number of conditional clauses to skip examples and unit tests in some cases.</p>
+<p>As for examples, the <code>\donttest{}</code> example tag indicates that an example ought to run successfully, but should not be executed at check time. Nonetheless, check options exist to run such examples irrespective of the presence of this tag, and CRAN runs some checks with these options enabled. Examples tagged with <code>\donttest{}</code> present like any other example in built documentation. On the other hand, the <code>\dontrun{}</code> example tag indicates that an example should never be executed at check time, and is flagged with a <code>## Don't run:</code> tag in built documentation. Some packages will use this tag on code that should execute successfully and note to ignore the <code>## Don't run:</code> tag preceding the example in question.</p>
+<p>As for unit tests, <a href="https://testthat.r-lib.org/">{testthat}</a> offers an extensive suite of <code>skip_if_*</code>-style functions, allowing users to skip unit tests based on a number of relevant conditions, like <code>skip_if_offline</code>, <code>skip_on_ci</code> (as in, skip on continuous integration platforms), or <code>skip_on_cran</code>. When preceding a block of unit tests, these functions will halt execution of the unit tests in question and move on to others.</p>
+<p>{stacks} uses an approach that is inspired by these conditional skipping functions. In the spirit of the approach noted in the example objects section, the source of {stacks} supplies a <code>helper_data</code> data object including a number of compiled objects for use in unit testing. The <code>helper_data</code> serves two purposes. For one, it reduces package check time by storing the output of functions required to generate input to {stacks} functions. Additionally, the data object supplies reference objects to which objects generated on-the-fly during unit testing can be compared. If these reference objects, generated with the exact same code as the objects generated on-the-fly, differ from the objects generated during unit testing, then a unit test fails. If the structure of a {stacks} output is truly intended to change, the <code>helper_data</code> object is simply regenerated with the associated script in <code>man-roxygen/example_models.Rda</code>. Note that a small subset of the <code>helper_data</code> objects are actually exported as example data objects with the package, as discussed in the example objects section.</p>
+<p>However, the <code>helper_data</code> data object is large. At the time of writing, this object is 22 Mb, over four times the total allowed package size. Thus, the data object is not actually included in the bundled package, and unit tests running from the bundled version of the package do not have access to the <code>helper_data</code>. Wiggliness ensues.</p>
+<p>A suite of helper functions are defined preceding the execution of package unit tests. Rather than taking arguments, these functions are sensitive to the environment they’re executed in.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>get_current_branch <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  gh_ref <span class="ot">&lt;-</span> <span class="fu">Sys.getenv</span>(<span class="st">"GITHUB_REF"</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">identical</span>(gh_ref, <span class="st">""</span>)) {</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">gsub</span>(<span class="st">"refs/heads/"</span>, <span class="st">""</span>, gh_ref)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="cn">NA</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>on_github <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="sc">!</span><span class="fu">is.na</span>(<span class="fu">get_current_branch</span>())</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>on_cran <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  <span class="sc">!</span><span class="fu">identical</span>(<span class="fu">Sys.getenv</span>(<span class="st">"NOT_CRAN"</span>), <span class="st">"true"</span>)</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>These helpers help to construct an idiom that determines the following rules for running package unit tests:</p>
+<ul>
+<li>When running locally via <code>R CMD check</code> or interactively, utilize the local <code>helper_data</code> object in running the entire suite of unit tests.</li>
+<li>When running on a continuous integration platform (in this case, GitHub Actions), locate the <code>helper_data</code> object in the appropriate workspace environment and utilize it in running the entire suite of tests.</li>
+<li>When running on CRAN, only run unit tests that don’t require the <code>helper_data</code> object. This is a very small number of unit tests relative to the full suite included in the non-bundled version of the package, but serves to raise errors and warnings in light of breaking changes in {stacks}’ dependencies.</li>
+</ul>
+<p>The following code implements this idiom:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> ((<span class="sc">!</span><span class="fu">on_cran</span>()) <span class="sc">||</span> <span class="fu">interactive</span>()) {</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">on_github</span>()) {</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">load</span>(</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">paste0</span>(</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">Sys.getenv</span>(<span class="st">"GITHUB_WORKSPACE"</span>), </span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">"/tests/testthat/helper_data.Rda"</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">load</span>(<span class="st">"/tests/testthat/helper_data.Rda"</span>)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Tests requiring the <code>helper_data</code> are prefixed with a <code>skip_on_cran</code> call.</p>
+<p>This approach to conditionally running examples and unit tests allows {stacks} to fulfill CRAN’s check time requirements in the published version of the package while also exhaustively unit testing the developmental version of {stacks} via continuous integration on the package repository as well as the {tidymodels} team’s <em>extratests</em> repository.</p>
+</section>
+<section id="wiggling-thoughtfully" class="level3">
+<h3 class="anchored" data-anchor-id="wiggling-thoughtfully">Wiggling thoughtfully</h3>
+<p>Altogether, I’ve demonstrated some techniques that {stacks} makes use of to accommodate the package check time and bundled size limits. Again, these limitations from CRAN are necessary and helpful to ensure the maintainability of its ecosystem, and thus improve user experience in the end. At the same time, though, packages that pass around and manipulate large data objects must make compromises in their form and function to accommodate these limits. In this section, I’ve suggested some approaches to minimize negative impact on user experience while reckoning with these limits, perhaps even using this challenge as a prompt to examine one’s documentation and unit testing strategies critically.</p>
+
+
+</section>
+
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a><div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>The code mentioned here will be available when the full thesis is made available–I’ll make sure to note here when that’s the case!<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">Reuse</h2><div id="quarto-reuse" class="quarto-appendix-contents"><div><a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">https://creativecommons.org/licenses/by-sa/4.0/</a></div></div></section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">© 2023 Simon P. Couch ∙ Made with <a href="https://quarto.org">Quarto</a></div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+</body></html>

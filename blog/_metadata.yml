@@ -1,0 +1,13 @@
+# Freeze computed outputs
+execute: 
+  freeze: true
+
+# Enable banner style title blocks
+title-block-banner: true
+
+# Enable CC licence appendix
+license: "CC BY-SA"
+
+# Default fields for citation
+citation: false
+appendix-cite-as: false

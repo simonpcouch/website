@@ -1,0 +1,32 @@
+[
+  {
+    "listing": "/about/index.html",
+    "items": []
+  },
+  {
+    "listing": "/blog/index.html",
+    "items": [
+      "/blog/2023-10-11-submodels-rabbit-hole/index.html",
+      "/blog/2023-09-01-jmt-2023/index.html",
+      "/blog/2023-08-04-parallel-racing/index.html",
+      "/blog/2023-07-28-moving-on-s23/index.html",
+      "/blog/2023-03-24-speedups-2023/index.html",
+      "/blog/2022-12-01-listening-2022/index.html",
+      "/blog/2022-07-20-netlify-subdomain-redirect/index.html",
+      "/blog/2021-08-21-infer-v-1-0-0/index.html",
+      "/blog/2021-08-02-apply-to-nsf-grfp/index.html",
+      "/blog/2021-06-10-ggplot-pipe-plus/index.html",
+      "/blog/2021-05-13-dev-docs-p4/index.html",
+      "/blog/2021-05-12-dev-docs-p3/index.html",
+      "/blog/2021-05-11-dev-docs-p2/index.html",
+      "/blog/2021-05-10-dev-docs-p1/index.html",
+      "/blog/2021-03-23-whats-next-s21/index.html",
+      "/blog/2021-03-15-apply-to-stats-grad-school/index.html",
+      "/blog/2020-12-27-r-github-actions-commit/index.html",
+      "/blog/2020-11-30-stacks-0-1-0/index.html",
+      "/blog/2020-11-12-pdfs-from-data/index.html",
+      "/blog/2020-10-27-gentle-intro-stacks/index.html",
+      "/blog/2020-10-11-intro/index.html"
+    ]
+  }
+]

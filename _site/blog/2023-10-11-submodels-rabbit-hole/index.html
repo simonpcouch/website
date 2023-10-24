@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2023-10-11">
+
+<title>Down the submodels rabbit hole with tidymodels | Simon P. Couch</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../assets/cabin.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../assets/cabin.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Simon P. Couch</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about/index.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog/index.html" rel="" target="">
+ <span class="menu-text">Blog</span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+    <a href="https://www.github.com/simonpcouch/website" rel="" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Down the submodels rabbit hole with tidymodels</h1>
+            <p class="subtitle lead">Debugging something that turned out not to be a bug at all.</p>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">October 11, 2023</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidymodels)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="the-setup" class="level2">
+<h2 class="anchored" data-anchor-id="the-setup">The setup</h2>
+<p>A familiar pastime—plotting <code>mtcars</code>:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mtcars) <span class="sc">+</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x =</span> hp, <span class="at">y =</span> mpg, <span class="at">color =</span> <span class="fu">factor</span>(cyl)) <span class="sc">+</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><img src="index_files/figure-html/plot-mtcars-1.png" alt="A ggplot2 dot plot displaying horsepower, ranging from 0 to 350, on the x axis, and miles per gallon, ranging from 10 to 35, on the y axis. Points are colored by the number of cylinders in the car's engine, one of 4, 6, or 8." width="672"></p>
+<p>The fuel efficiency of a car tends to drop off as the horsepower increases, and more cylinders tend to be associated with higher horsepower. Cozy.</p>
+<p>Suppose we wanted to fit a machine learning model using all of the variables in mtcars to best predict the observed miles per gallon. I hear this is not a well-understood modeling problem.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>form <span class="ot">&lt;-</span> mpg <span class="sc">~</span> .</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>We can make use of a nearest neighbors model, evaluating multiple values of <code>neighbors</code> against resamples to see which one results in the best performance. For a given value of neighbors <code>n</code> and a given observation <code>i</code>, the model finds the <code>n</code> observations in the training data with predictor values closest to <code>i</code> and takes their average to come up with a prediction for the <code>mpg</code> of <code>i</code>. A tidymodels model specification for this model looks like:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>spec <span class="ot">&lt;-</span> <span class="fu">nearest_neighbor</span>(<span class="st">"regression"</span>, <span class="at">neighbors =</span> <span class="fu">tune</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Marking the <code>neighbors</code> argument <code>tune()</code> tells the tune package to try out different values for <code>n</code> and see what happens.</p>
+<p>We can pass these objects to tune to evaluate several values of <code>n</code> against resamples of the <code>mtcars</code> data:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tune_grid</span>(</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">workflow</span>(form, spec),</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">resamples =</span> <span class="fu">vfold_cv</span>(mtcars, <span class="at">v =</span> <span class="dv">3</span>),</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">control =</span> <span class="fu">control_grid</span>(<span class="at">extract =</span> extract_fit_engine)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>We’ve passed <code>tune_grid()</code> three arguments:</p>
+<ol type="1">
+<li><p>The first argument is a workflow, combining the formula preprocessor <code>form</code> with the model specification <code>spec</code>.</p></li>
+<li><p>The second argument, <code>resamples</code>, defines a resampling scheme for <code>mtcars</code>.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p></li>
+<li><p>The third, <code>control</code>, is sprinkled in for funsies. You wouldn’t need to include that argument in many tuning problems, but I’m doing so here to demonstrate something wacky later on. <code>extract = extract_fit_engine</code> tells tune to run the <code>extract_fit_engine()</code> function each time it fits a new model and return that along with the outputted results. For each fitted workflow—presumably, generated from fixing <code>n</code> and training the model—we want to extract the underlying engine fit. tidymodels doesn’t implement training routines for models ourselves, instead relying on modeling <em>engines</em> (in this case, the kknn package) to do so.</p></li>
+</ol>
+<p>Okay.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>res</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>## # Tuning results
+## # 3-fold cross-validation 
+## # A tibble: 3 × 5
+##   splits          id    .metrics          .notes           .extracts       
+##   &lt;list&gt;          &lt;chr&gt; &lt;list&gt;            &lt;list&gt;           &lt;list&gt;          
+## 1 &lt;split [21/11]&gt; Fold1 &lt;tibble [16 × 5]&gt; &lt;tibble [0 × 3]&gt; &lt;tibble [8 × 3]&gt;
+## 2 &lt;split [21/11]&gt; Fold2 &lt;tibble [16 × 5]&gt; &lt;tibble [0 × 3]&gt; &lt;tibble [8 × 3]&gt;
+## 3 &lt;split [22/10]&gt; Fold3 &lt;tibble [16 × 5]&gt; &lt;tibble [0 × 3]&gt; &lt;tibble [8 × 3]&gt;</code></pre>
+<p>We gave a go at tuning this model! We can look at the metrics associated with each model fit to see how different values of numbers performed. Each column in <code>res</code> prefixed with a <code>.</code> has a collection function associated with it that binds together results in a convenient way. So, for <code>.metrics</code>, that’s <code>collect_metrics()</code>:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">collect_metrics</span>(res) <span class="sc">%&gt;%</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>.estimator)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>## # A tibble: 16 × 6
+##    neighbors .metric  mean     n std_err .config             
+##        &lt;int&gt; &lt;chr&gt;   &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;               
+##  1         2 rmse    2.89      3  0.240  Preprocessor1_Model1
+##  2         2 rsq     0.776     3  0.109  Preprocessor1_Model1
+##  3         5 rmse    3.01      3  0.396  Preprocessor1_Model2
+##  4         5 rsq     0.802     3  0.0782 Preprocessor1_Model2
+##  5         6 rmse    3.02      3  0.382  Preprocessor1_Model3
+##  6         6 rsq     0.804     3  0.0796 Preprocessor1_Model3
+##  7         8 rmse    3.06      3  0.402  Preprocessor1_Model4
+##  8         8 rsq     0.802     3  0.0831 Preprocessor1_Model4
+##  9         9 rmse    3.09      3  0.431  Preprocessor1_Model5
+## 10         9 rsq     0.799     3  0.0853 Preprocessor1_Model5
+## 11        11 rmse    3.17      3  0.495  Preprocessor1_Model6
+## 12        11 rsq     0.793     3  0.0871 Preprocessor1_Model6
+## 13        13 rmse    3.23      3  0.562  Preprocessor1_Model7
+## 14        13 rsq     0.789     3  0.0866 Preprocessor1_Model7
+## 15        14 rmse    3.27      3  0.596  Preprocessor1_Model8
+## 16        14 rsq     0.787     3  0.0864 Preprocessor1_Model8</code></pre>
+<p>Each row describes the results for a model configuration, <code>.config</code>. The thing that determines a model configuration in our example is the number of neighbors <code>n</code>. Each neighbor is associated with an out-of-sample error metric. Two different metrics, actually, because tidymodels is 😇👼😇.</p>
+<p>A plot might be a bit more illustrative:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><img src="index_files/figure-html/autoplot-1.png" alt="A ggplot2 line plot. The number of neighbors, from 1 to 14, is on the x axis, and the error metric is on the y axis. The plot is faceted by error metric, with root mean squared error showing consistently higher error with more neighbors, and the R squared showing an optimal number of neighbors near 6." width="672"></p>
+<p>We tried out values for <code>n</code> ranging from 2 to 14. With respect to root mean squared error, at least, more neighbors meant more error.</p>
+<p>Nice! Maybe a bit less cozy, but moderately so.</p>
+<p>Off the deep end we go! Let’s use another collection function, <code>collect_extracts()</code>, to bind together the extracted objects:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">collect_extracts</span>(res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>## # A tibble: 24 × 4
+##    id    neighbors .extracts  .config             
+##    &lt;chr&gt;     &lt;int&gt; &lt;list&gt;     &lt;chr&gt;               
+##  1 Fold1        14 &lt;trn.kknn&gt; Preprocessor1_Model1
+##  2 Fold1        14 &lt;trn.kknn&gt; Preprocessor1_Model2
+##  3 Fold1        14 &lt;trn.kknn&gt; Preprocessor1_Model3
+##  4 Fold1        14 &lt;trn.kknn&gt; Preprocessor1_Model4
+##  5 Fold1        14 &lt;trn.kknn&gt; Preprocessor1_Model5
+##  6 Fold1        14 &lt;trn.kknn&gt; Preprocessor1_Model6
+##  7 Fold1        14 &lt;trn.kknn&gt; Preprocessor1_Model7
+##  8 Fold1        14 &lt;trn.kknn&gt; Preprocessor1_Model8
+##  9 Fold2        14 &lt;trn.kknn&gt; Preprocessor1_Model1
+## 10 Fold2        14 &lt;trn.kknn&gt; Preprocessor1_Model2
+## # ℹ 14 more rows</code></pre>
+<p>Um… not cozy! This output recycles the same <code>neighbors</code> value for every <code>config</code>. Buggy!🐛</p>
+<p>For a while, we thought so too. This comment lived inside of our source code for <em>years</em>:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/fixme.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">A screenshot of a code snippet in tidymodels source code. A comment, reading: “FIXME: I think this might be wrong?”</figcaption>
+</figure>
+</div>
+<p>Embarrassing. I promise we don’t let bugs hang around that long, usually.</p>
+<p>Except!!! Except… the feller need not be fixed. This output is right, kind of.</p>
+</section>
+<section id="submodels" class="level2">
+<h2 class="anchored" data-anchor-id="submodels">Submodels</h2>
+<p>In machine learning, on the way to fitting one model, we often end up training many.</p>
+<p>For example, when training a nearest neighbors model with 5 neighbors, we need to take the average of the outcomes from the 5 closest points to the one we’re trying to predict. One way we could go about that is:</p>
+<ol type="1">
+<li>calculating the distance of all the points in the training set to the one we want to predict,</li>
+<li>sorting by the distance, and then</li>
+<li>taking the average of the 5 points with the smallest distance.</li>
+</ol>
+<p>&nbsp;1. and 2. are the hard parts. Note that 1. and 2., though, don’t care about the value of <code>n</code>. In the process of training that model for the 5 closest points, we did all of the work we’d need to do to find the 4 closest, or 2 closest, or 10 closest.</p>
+<p>tidymodels takes advantage of this trick to quickly evaluate many models at once. Under the hood, <code>tune_grid()</code> just trains one model, with the value of neighbors with the highest <code>n</code>. Then, using that one model, we can easily generate predictions from all of the models with fewer neighbors and calculate metrics using those predictions. So, the <em>submodel</em> is a model configuration that we haven’t trained, per se, but are still able to generate predictions from. In <code>res</code>, we only trained the model configuration with 14 neighbors, and the rest are submodels.</p>
+</section>
+<section id="tuning-with-submodels" class="level2">
+<h2 class="anchored" data-anchor-id="tuning-with-submodels">Tuning with submodels</h2>
+<p>Okay, back to <code>res</code>. <code>collect_metrics()</code> associates each value of <code>neighbors</code> with a <code>.config</code> entry:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">collect_metrics</span>(res) <span class="sc">%&gt;%</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>.estimator)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>## # A tibble: 16 × 6
+##    neighbors .metric  mean     n std_err .config             
+##        &lt;int&gt; &lt;chr&gt;   &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;               
+##  1         2 rmse    2.89      3  0.240  Preprocessor1_Model1
+##  2         2 rsq     0.776     3  0.109  Preprocessor1_Model1
+##  3         5 rmse    3.01      3  0.396  Preprocessor1_Model2
+##  4         5 rsq     0.802     3  0.0782 Preprocessor1_Model2
+##  5         6 rmse    3.02      3  0.382  Preprocessor1_Model3
+##  6         6 rsq     0.804     3  0.0796 Preprocessor1_Model3
+##  7         8 rmse    3.06      3  0.402  Preprocessor1_Model4
+##  8         8 rsq     0.802     3  0.0831 Preprocessor1_Model4
+##  9         9 rmse    3.09      3  0.431  Preprocessor1_Model5
+## 10         9 rsq     0.799     3  0.0853 Preprocessor1_Model5
+## 11        11 rmse    3.17      3  0.495  Preprocessor1_Model6
+## 12        11 rsq     0.793     3  0.0871 Preprocessor1_Model6
+## 13        13 rmse    3.23      3  0.562  Preprocessor1_Model7
+## 14        13 rsq     0.789     3  0.0866 Preprocessor1_Model7
+## 15        14 rmse    3.27      3  0.596  Preprocessor1_Model8
+## 16        14 rsq     0.787     3  0.0864 Preprocessor1_Model8</code></pre>
+<p>…and yet <code>collect_extracts()</code> associates all of those <code>.config</code>s with the same <code>neighbors</code> value:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">collect_extracts</span>(res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>## # A tibble: 24 × 4
+##    id    neighbors .extracts  .config             
+##    &lt;chr&gt;     &lt;int&gt; &lt;list&gt;     &lt;chr&gt;               
+##  1 Fold1        14 &lt;trn.kknn&gt; Preprocessor1_Model1
+##  2 Fold1        14 &lt;trn.kknn&gt; Preprocessor1_Model2
+##  3 Fold1        14 &lt;trn.kknn&gt; Preprocessor1_Model3
+##  4 Fold1        14 &lt;trn.kknn&gt; Preprocessor1_Model4
+##  5 Fold1        14 &lt;trn.kknn&gt; Preprocessor1_Model5
+##  6 Fold1        14 &lt;trn.kknn&gt; Preprocessor1_Model6
+##  7 Fold1        14 &lt;trn.kknn&gt; Preprocessor1_Model7
+##  8 Fold1        14 &lt;trn.kknn&gt; Preprocessor1_Model8
+##  9 Fold2        14 &lt;trn.kknn&gt; Preprocessor1_Model1
+## 10 Fold2        14 &lt;trn.kknn&gt; Preprocessor1_Model2
+## # ℹ 14 more rows</code></pre>
+<p>Both of these are <em>right</em>, the second one maybe a bit more opinionated.</p>
+<p>Remember that, to evaluate this model, tune only had to fit it once per resample. <code>n = 14</code> was the largest value of <code>n</code> that we evaluated, so we just fit <em>that</em> model, then generate predictions for all of the models using that one fit, and then calculate metrics from those predictions. We thus have honest-to-god predictions and metrics from several models that we didn’t actually fit, directly at least. The <code>.config</code> entries in this case are associated with <em>predictions</em>.</p>
+<p>How about the extracted objects, though? Since we only fitted one workflow, we call <code>extract_fit_engine(x)</code> on that one workflow, and that result applies to every model configuration. The <code>.config</code> entries in this case are associated with <em>fits</em>.</p>
+<p><em>Metrics come from predictions, of which there are many. Extracts come from fitted models, of which there is only one.</em></p>
+<p>Once we put a finger to what was going on here, the tidymodels team ultimately decided this is probably the right way to go about it, UI-wise. The output raises an eyebrow, though it really <em>ought</em> to. If a user extracts values from the fitted workflows assuming there really are several models fitted with different values of <code>n</code>, they may erroneously make conclusions about those extracted values. If a user does notice this effect, though, and concludes that it’s okay that the extracted values arise from the same models, the output looks exactly the way it would (other than hyperparameter values) if there were no submodel trick at play; all of the benefits of type stability apply.</p>
+</section>
+<section id="other-options" class="level2">
+<h2 class="anchored" data-anchor-id="other-options">Other Options</h2>
+<p>So, we ultimately <a href="https://github.com/tidymodels/tune/pull/743">opted not to make any changes to functionality</a> here, just improving the documentation we have. Some other options we considered, labeled with the conclusions we ultimately came to about each of them:</p>
+<section id="misleading" class="level3">
+<h3 class="anchored" data-anchor-id="misleading">Misleading</h3>
+<p>We could backtrack in the source code and make sure that every <code>neighbors</code> entry is paired with the <code>.config</code> entry it’s associated with elsewhere in the output. For example, the <code>collect_extracts(res)</code> results from above might look something like:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">collect_extracts</span>(res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>## # A tibble: 24 × 4
+##    id    neighbors .extracts  .config             
+##    &lt;chr&gt;     &lt;int&gt; &lt;list&gt;     &lt;chr&gt;               
+##  1 Fold1         2 &lt;trn.kknn&gt; Preprocessor1_Model1
+##  2 Fold1         5 &lt;trn.kknn&gt; Preprocessor1_Model2
+##  3 Fold1         6 &lt;trn.kknn&gt; Preprocessor1_Model3
+##  4 Fold1         8 &lt;trn.kknn&gt; Preprocessor1_Model4
+##  5 Fold1         9 &lt;trn.kknn&gt; Preprocessor1_Model5
+##  6 Fold1        11 &lt;trn.kknn&gt; Preprocessor1_Model6
+##  7 Fold1        13 &lt;trn.kknn&gt; Preprocessor1_Model7
+##  8 Fold1        14 &lt;trn.kknn&gt; Preprocessor1_Model8
+##  9 Fold2         2 &lt;trn.kknn&gt; Preprocessor1_Model1
+## 10 Fold2         4 &lt;trn.kknn&gt; Preprocessor1_Model2
+## # ℹ 14 more rows</code></pre>
+<p>This would help the user in not needing to raise an eyebrow early on, but might obscure that there’s a little bit of tomfoolery going on here. If that user then goes on to process the extracted objects in some way, assuming that they really are fitted with the number of neighbors listed in the output, they might be led to incorrect conclusions.</p>
+</section>
+<section id="pain-in-the-ass" class="level3">
+<h3 class="anchored" data-anchor-id="pain-in-the-ass">Pain In The Ass</h3>
+<p>We could also backtrack and only return rows with the <code>.config</code> indicating the one model that was <em>actually</em> fit. For example:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">collect_extracts</span>(res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>## # A tibble: 24 × 4
+##    id    neighbors .extracts  .config             
+##    &lt;chr&gt;     &lt;int&gt; &lt;list&gt;     &lt;chr&gt;               
+##  1 Fold1        14 &lt;trn.kknn&gt; Preprocessor1_Model8
+##  2 Fold2        14 &lt;trn.kknn&gt; Preprocessor1_Model8
+##  3 Fold3        14 &lt;trn.kknn&gt; Preprocessor1_Model1</code></pre>
+<p>This would probably raise a user’s eyebrow as quickly as our actual approach, and would be a reasonable way to go about this. At the same time, though, for an analyst who may then go on to join this output to other objects from the tuning results (like the <code>collect_metrics()</code> output), the specification of those joins changes depending on whether there are submodels present or not. Also, if that analyst determines that it <em>is</em> fine that the extracted object for a given <code>.config</code> arose from a different model fit, re-associating that extracted object with all of the configurations that it’s predictions are associated with elsewhere in output is a headache.</p>
+</section>
+<section id="slow" class="level3">
+<h3 class="anchored" data-anchor-id="slow">Slow</h3>
+<p>We could also, whenever a user indicates that they want to extract objects when using a tuning approach that involves submodels, ignore the submodel trick and move forward with “re-fitting” models we don’t necessarily need to. This would allow for <em>totally</em> type-stable output! Every row of extracted output does indeed correspond to a unique fitted workflow, and can be associated with the same <code>.config</code> and hyperparameters it would be elsewhere. This would be <em>slooow</em> though, and we like to go fast.</p>
+</section>
+<section id="cumbersome-and-buggy" class="level3">
+<h3 class="anchored" data-anchor-id="cumbersome-and-buggy">Cumbersome and buggy</h3>
+<p>We could also tamper with the fitted workflow to <em>look</em> like it’s a model fit that arose from a different set of hyperparameters, so that when users extract things from it, it walks and talks like output that would have arisen from approach 3. The trouble here, though, is that users can extract whatever they want from extracted objects, and there’s no way we could anticipate all the things they might want to extract and thus the “patches” we’d need to make to the object. Those patches could very well be as computationally expensive as re-fitting the workflow and extracting from it.</p>
+<hr>
+<p>So, option zero it is. Raise the curious-looking thing, document it well, and become excited enough about software to write a blog post.</p>
+<p>Happy modeling.🙂</p>
+
+
+</section>
+</section>
+
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a><div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>It is a silly one! 3 folds is quite few—in practice, we’d recommend at least 5, and more if your data allows.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">Reuse</h2><div id="quarto-reuse" class="quarto-appendix-contents"><div><a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">https://creativecommons.org/licenses/by-sa/4.0/</a></div></div></section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">© 2023 Simon P. Couch ∙ Made with <a href="https://quarto.org">Quarto</a></div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+</body></html>
