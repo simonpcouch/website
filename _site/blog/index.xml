@@ -10,7 +10,15 @@
 <atom:link href="https://simonpcouch.com/blog/index.xml" rel="self" type="application/rss+xml"/>
 <description>A data science blog</description>
 <generator>quarto-1.3.450</generator>
-<lastBuildDate>Wed, 11 Oct 2023 05:00:00 GMT</lastBuildDate>
+<lastBuildDate>Fri, 24 Nov 2023 06:00:00 GMT</lastBuildDate>
+<item>
+  <title>Quarto!</title>
+  <link>https://simonpcouch.com/blog/2023-11-24-quarto-site/index.html</link>
+  <description><![CDATA[ When I was in college, a coworker at one of my jobs did web development gigs on the side. His personal website was a super slick single-page site, built with Flask. I had no idea how it worked, but I really liked it, so I asked if it was okay to fork his repository and took that site on as my own. Editing the site was painful, and I borked it at least hourly whenever I worked on it. It mostly functioned like a high-gloss CV, and didn’t have any sort of blogging component. It looked something like this: ]]></description>
+  <guid>https://simonpcouch.com/blog/2023-11-24-quarto-site/index.html</guid>
+  <pubDate>Fri, 24 Nov 2023 06:00:00 GMT</pubDate>
+  <media:content url="https://simonpcouch.com/blog/2023-11-24-quarto-site/featured.jpg" medium="image" type="image/jpeg"/>
+</item>
 <item>
   <title>Down the submodels rabbit hole with tidymodels</title>
   <link>https://simonpcouch.com/blog/2023-10-11-submodels-rabbit-hole/index.html</link>
@@ -162,14 +170,6 @@
   <guid>https://simonpcouch.com/blog/2020-11-12-pdfs-from-data/index.html</guid>
   <pubDate>Thu, 12 Nov 2020 06:00:00 GMT</pubDate>
   <media:content url="https://simonpcouch.com/blog/2020-11-12-pdfs-from-data/featured.png" medium="image" type="image/png" height="109" width="144"/>
-</item>
-<item>
-  <title>A Gentle Introduction to Tidy Model Stacking</title>
-  <link>https://simonpcouch.com/blog/2020-10-27-gentle-intro-stacks/index.html</link>
-  <description><![CDATA[ A few months ago, the tidymodels team coordinated a <a href="https://connect.rstudioservices.com/tidymodels-priorities-survey/README.html">community survey</a> to get a sense for what users most wanted to see next in the tidymodels ecosystem. One resounding theme from responses was that tidymodels users wanted a framework for tidymodels-aligned model stacking. ]]></description>
-  <guid>https://simonpcouch.com/blog/2020-10-27-gentle-intro-stacks/index.html</guid>
-  <pubDate>Tue, 27 Oct 2020 05:00:00 GMT</pubDate>
-  <media:content url="https://simonpcouch.com/blog/2020-10-27-gentle-intro-stacks/featured.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>

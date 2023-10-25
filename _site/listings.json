@@ -1,11 +1,8 @@
 [
   {
-    "listing": "/about/index.html",
-    "items": []
-  },
-  {
     "listing": "/blog/index.html",
     "items": [
+      "/blog/2023-11-24-quarto-site/index.html",
       "/blog/2023-10-11-submodels-rabbit-hole/index.html",
       "/blog/2023-09-01-jmt-2023/index.html",
       "/blog/2023-08-04-parallel-racing/index.html",
@@ -28,5 +25,9 @@
       "/blog/2020-10-27-gentle-intro-stacks/index.html",
       "/blog/2020-10-11-intro/index.html"
     ]
+  },
+  {
+    "listing": "/about/index.html",
+    "items": []
   }
 ]
