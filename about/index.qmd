@@ -3,6 +3,7 @@ title: "Simon P. Couch"
 subtitle: Statistical Software at Posit (née RStudio)
 image: sidebar/avatar.png
 image-alt: "A portrait of me, smiling while sitting beside a trail in the woods."
+comments: false
 about:
   template: trestles
   image-width: 14em
