@@ -13,9 +13,8 @@ website:
   google-analytics: "G-DDB8R0B1ZW"
   comments: 
     utterances:
-      repo: simonpcouch/website
-      label: utterances
-      theme: body-light
+      repo: "simonpcouch/website"
+      theme: "github-light"
   navbar:
     logo: assets/cabin.png
     tools:
