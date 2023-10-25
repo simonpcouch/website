@@ -21,7 +21,6 @@ listing:
   page-size: 6
 appendix-cite-as: false
 toc: false
-comments: false
 format: 
   html: 
     page-layout: full
