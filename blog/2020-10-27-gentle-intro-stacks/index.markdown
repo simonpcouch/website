@@ -433,7 +433,7 @@ I appreciate yall checking out this tutorial, and hope you're stoked to give `st
 
 If it's helpful, this is a completed version of the diagram we were putting together throughout this tutorial!
 
-![](https://raw.githubusercontent.com/tidymodels/stacks/main/man/figures/outline.png)<!-- -->
+![](https://github.com/tidymodels/stacks/blob/main/inst/figs/outline.png?raw=true)<!-- -->
 
 ### Session Info
 
