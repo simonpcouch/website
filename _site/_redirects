@@ -1,6 +1,7 @@
 https://blog--simonpcouch.netlify.app https://simonpcouch.com/blog 301!
 https://blog--simonpcouch.netlify.app/post/* https://simonpcouch.com/blog/:splat 301!
 https://blog--simonpcouch.netlify.app/blog/* https://simonpcouch.com/blog/:splat 301!
+https://blog.simonpcouch.com/* https://simonpcouch.com/blog/:splat 301!
 https://simonpcouch.netlify.app/* https://simonpcouch.com/:splat 301!
 /blog/intro /blog/2020-10-11-intro
 /blog/gentle-intro-stacks /blog/2020-10-27-gentle-intro-stacks
