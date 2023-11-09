@@ -3,6 +3,4 @@ https://blog--simonpcouch.netlify.app                            https://simonpc
 https://blog--simonpcouch.netlify.app/post/*                      https://simonpcouch.com/blog/:splat 301!
 https://blog--simonpcouch.netlify.app/blog/*                      https://simonpcouch.com/blog/:splat 301!
 
-https://blog.simonpcouch.com/*    https://simonpcouch.com/blog/:splat 301!   
-
 https://simonpcouch.netlify.app/*                      https://simonpcouch.com/:splat 301!
