@@ -26,6 +26,10 @@ div.quarto-about-jolla .quarto-title h1.title {
   font-family: Fraunces, serif;
 }
 
+.callout {
+  background-color: $buttonTextColorCustom !important;
+}
+
 h1, h2, h3, h4, h5, h1.title, .title.h1 {
   color: $navLinkColorCustom;
   font-family: Fraunces, serif;
