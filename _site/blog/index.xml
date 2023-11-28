@@ -10,7 +10,15 @@
 <atom:link href="https://simonpcouch.com/blog/index.xml" rel="self" type="application/rss+xml"/>
 <description>A data science blog</description>
 <generator>quarto-1.3.450</generator>
-<lastBuildDate>Tue, 24 Oct 2023 05:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 28 Nov 2023 06:00:00 GMT</lastBuildDate>
+<item>
+  <title>Predicting flight delays with tidymodels🛩</title>
+  <link>https://simonpcouch.com/blog/2023-11-28-flights/index.html</link>
+  <description><![CDATA[ <em>Last week, I virtually dropped by University of Wisconsin-Madison for a webinar on tidymodels. Heading into the holidays, I thought a fun example problem might be to try and predict flight delays using flights data from Madison’s airport. This is a very, very difficult modeling problem, and the results aren’t very impressive, but it’s a fun one nonetheless.</em> ]]></description>
+  <guid>https://simonpcouch.com/blog/2023-11-28-flights/index.html</guid>
+  <pubDate>Tue, 28 Nov 2023 06:00:00 GMT</pubDate>
+  <media:content url="https://simonpcouch.com/blog/2023-11-28-flights/featured.png" medium="image" type="image/png" height="144" width="144"/>
+</item>
 <item>
   <title>Quarto!</title>
   <link>https://simonpcouch.com/blog/2023-10-24-quarto-site/index.html</link>
@@ -162,14 +170,6 @@
   <guid>https://simonpcouch.com/blog/2020-11-30-stacks-0-1-0/index.html</guid>
   <pubDate>Mon, 30 Nov 2020 06:00:00 GMT</pubDate>
   <media:content url="https://simonpcouch.com/blog/2020-11-30-stacks-0-1-0/featured.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
-  <title>Programatically Generating PDF Reports with the Tidyverse</title>
-  <link>https://simonpcouch.com/blog/2020-11-12-pdfs-from-data/index.html</link>
-  <description><![CDATA[ Over the past few years, I’ve come across the problem of generating PDF reports programmatically from data in a few different settings. This is, of course, a really vaguely defined problem, and they’ve all varied slightly in what they entailed and how automated they needed to be, but my solutions for each shared a few common ideas that I think are worth putting down in writing. ]]></description>
-  <guid>https://simonpcouch.com/blog/2020-11-12-pdfs-from-data/index.html</guid>
-  <pubDate>Thu, 12 Nov 2020 06:00:00 GMT</pubDate>
-  <media:content url="https://simonpcouch.com/blog/2020-11-12-pdfs-from-data/featured.png" medium="image" type="image/png" height="109" width="144"/>
 </item>
 </channel>
 </rss>

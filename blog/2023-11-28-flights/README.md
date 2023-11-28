@@ -1,0 +1,1 @@
+This folder contains the source code for a demo applied analysis on modeling flight delays out of Madison, WI. The main content, deployed [here](https://simonpcouch.github.io/tidymodels-uw-2023/example/), is in `index.qmd`. The code to generate the flights data is in [`query_data.R`](example/query_data.R). Intermediate outputs live in the `/data` subdirectory.
