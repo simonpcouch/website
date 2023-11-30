@@ -1,0 +1,171 @@
+---
+title: "Analyzing my own music listening data with R and the tidyverse (2023)"
+date: '2023-11-30'
+tags:
+  - personal
+subtitle: "All of my friends are posting their Spotify Wrapped, and I'm jealous."
+image: featured.png
+summary: ''
+---
+
+
+```{r setup}
+#| include: false
+library(ggplot2)
+theme_set(theme_bw())
+
+options(
+  ggplot2.discrete.fill = c("#ccb118", "#4A7862"),
+  ggplot2.discrete.colour = c("#ccb118", "#4A7862")
+)
+```
+
+Aside from exchanging playlists with my partner every once in a while, I'm not much of a Spotify user. Around this time every year, though, all of my friends start posting their Spotify Wrapped, and I get jealous, as the platform that I listen to music on doesn't have anything like it. Of course, though, it collects data about me (it's 2023!); [last year](https://www.simonpcouch.com/blog/2022-12-01-listening-2022/), I got to wondering whether I could make a lo-fi knockoff of wrapped using R, the tidyverse, and the data that I have access to. You already know:
+
+```{r, message = FALSE, warning = FALSE}
+library(tidyverse)
+```
+
+If you're an R user and a listener of local files on the Mac Music app, this post is for you.`r emo::ji("present")`
+
+## Importing the data
+
+In the Mac music app, navigate to:
+
+```
+Music app > File > Library > Export Library
+```
+
+...to export a `.xml` file. [Last year](https://www.simonpcouch.com/blog/2022-12-01-listening-2022/), I griped about how much of a pain in the ass it was to tidy the resulting output. This year, we can all just install [the package I wrote last year](https://github.com/simonpcouch/wrapped) and forget about our woes:
+
+```{r, eval = FALSE}
+pak::pak("simonpcouch/wrapped")
+```
+
+The wrapped package contains a function, `wrap_library()`, to tidy that .xml file into a tabular data frame.
+
+```{r}
+library(wrapped)
+
+wrapped <- wrap_library("data/Library.xml", 2022:2023)
+
+wrapped
+```
+
+After that, Spotify Wrapped is just `group_by() %>% summarize() %>% arrange()` in a trench coat.`r emo::ji("coat")`
+
+For easier printing in this blog post, I'll rearrange this data to show the most commonly noted output:
+
+```{r}
+wrapped <- 
+  wrapped %>%
+  select(-id) %>%
+  relocate(date_added, skip_count, .after = everything()) %>%
+  relocate(play_count, .before = everything())
+
+wrapped
+```
+
+## Analyzing it
+
+### Top songs
+
+The output is already arranged in descending order by play count, so we can just print the first few rows:
+
+```{r}
+wrapped %>%
+  select(track_title, artist, play_count) %>%
+  head()
+```
+
+Medium! Build!
+
+### Top artists
+
+```{r}
+wrapped %>%
+  group_by(artist) %>%
+  summarize(play_count = sum(play_count, na.rm = TRUE)) %>%
+  arrange(desc(play_count)) %>%
+  head()
+```
+
+`group_by() %>% summarize()`! I told you!
+
+I will fly to Australia to see Matt Corby play live if I have to.
+
+### Top genres
+
+One of my first steps after buying a new record is to edit it's metadata to fit into one of a few pre-defined genres. Many of these categorizations are sort of silly as a result, but it _does_ make for a nice summary:
+
+```{r}
+wrapped %>%
+  group_by(genre) %>%
+  summarize(play_count = sum(play_count, na.rm = TRUE)) %>%
+  arrange(desc(play_count)) %>%
+  head(5)
+```
+
+Sort of confused by the existence of the "Indie Pop" category.`r `emo::ji("confused")` Definitely need to clean up some of those entries.
+
+:::callout-tip
+You can selectively use the `n` argument to `head()` to hide things that you're embarrassed about.
+:::
+
+### Top albums
+
+```{r}
+wrapped %>%
+  group_by(album, artist) %>%
+  summarize(play_count = sum(play_count, na.rm = TRUE), .groups = "drop") %>%
+  arrange(desc(play_count)) %>%
+  head()
+```
+
+## Bonus points
+
+There are a couple summarizations that Wrapped doesn't do that I'm curious about.
+
+### Top song by month
+
+I don't have the right level of observation to see which songs I listened to the most every month, but I _do_ have a variable giving the data I added a given song. We can use that information to find the top songs by month _added_:
+
+```{r}
+wrapped %>%
+  mutate(month = month(date_added)) %>%
+  group_by(month) %>%
+  summarize(
+    track_title = track_title[which.max(play_count)], 
+    artist = artist[which.max(play_count)]
+  ) %>%
+  head(11)
+```
+
+### Top artist by genre
+
+```{r}
+wrapped %>%
+  group_by(genre, artist) %>%
+  summarize(play_count = sum(play_count, na.rm = TRUE), .groups = "drop") %>%
+  group_by(genre) %>%
+  summarize(
+    artist = artist[which.max(play_count)],
+    play_count = play_count[which.max(play_count)]
+  ) %>%
+  arrange(desc(play_count)) %>%
+  head()
+```
+
+### Moved on
+
+How many albums in my library did I not listen to at all this year? (I reset the play count for all of my library to zero each time I do this analysis.)
+
+```{r}
+wrapped %>%
+  group_by(album, artist) %>%
+  summarize(play_count = sum(play_count, na.rm = TRUE), .groups = "drop") %>%
+  filter(play_count == 0) %>%
+  count()
+```
+
+That number is a _lot_ bigger than I thought.`r emo::ji("grimace")`

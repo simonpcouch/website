@@ -10,7 +10,15 @@
 <atom:link href="https://simonpcouch.com/blog/index.xml" rel="self" type="application/rss+xml"/>
 <description>A data science blog</description>
 <generator>quarto-1.3.450</generator>
-<lastBuildDate>Tue, 28 Nov 2023 06:00:00 GMT</lastBuildDate>
+<lastBuildDate>Thu, 30 Nov 2023 06:00:00 GMT</lastBuildDate>
+<item>
+  <title>Analyzing my own music listening data with R and the tidyverse (2023)</title>
+  <link>https://simonpcouch.com/blog/2023-11-30-listening-2023/index.html</link>
+  <description><![CDATA[ Aside from exchanging playlists with my partner every once in a while, I’m not much of a Spotify user. Around this time every year, though, all of my friends start posting their Spotify Wrapped, and I get jealous, as the platform that I listen to music on doesn’t have anything like it. Of course, though, it collects data about me (it’s 2023!); <a href="https://www.simonpcouch.com/blog/2022-12-01-listening-2022/">last year</a>, I got to wondering whether I could make a lo-fi knockoff of wrapped using R, the tidyverse, and the data that I have access to. You already know: ]]></description>
+  <guid>https://simonpcouch.com/blog/2023-11-30-listening-2023/index.html</guid>
+  <pubDate>Thu, 30 Nov 2023 06:00:00 GMT</pubDate>
+  <media:content url="https://simonpcouch.com/blog/2023-11-30-listening-2023/featured.png" medium="image" type="image/png" height="156" width="144"/>
+</item>
 <item>
   <title>Predicting flight delays with tidymodels🛩</title>
   <link>https://simonpcouch.com/blog/2023-11-28-flights/index.html</link>
@@ -162,14 +170,6 @@
   <guid>https://simonpcouch.com/blog/2020-12-27-r-github-actions-commit/index.html</guid>
   <pubDate>Sun, 27 Dec 2020 06:00:00 GMT</pubDate>
   <media:content url="https://simonpcouch.com/blog/2020-12-27-r-github-actions-commit/featured.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
-  <title>{stacks} v0.1.0 is on CRAN!</title>
-  <link>https://simonpcouch.com/blog/2020-11-30-stacks-0-1-0/index.html</link>
-  <description><![CDATA[ <img src="https://simonpcouch.com/blog/2020-11-30-stacks-0-1-0/https:/github.com/tidymodels/stacks/raw/main/man/figures/logo.png" class="img-fluid"> ]]></description>
-  <guid>https://simonpcouch.com/blog/2020-11-30-stacks-0-1-0/index.html</guid>
-  <pubDate>Mon, 30 Nov 2020 06:00:00 GMT</pubDate>
-  <media:content url="https://simonpcouch.com/blog/2020-11-30-stacks-0-1-0/featured.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>
