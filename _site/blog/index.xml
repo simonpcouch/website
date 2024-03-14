@@ -10,7 +10,15 @@
 <atom:link href="https://simonpcouch.com/blog/index.xml" rel="self" type="application/rss+xml"/>
 <description>A data science blog</description>
 <generator>quarto-1.3.450</generator>
-<lastBuildDate>Thu, 30 Nov 2023 06:00:00 GMT</lastBuildDate>
+<lastBuildDate>Thu, 14 Mar 2024 05:00:00 GMT</lastBuildDate>
+<item>
+  <title>Run an Oracle Database with Docker Desktop on ARM (M1, M2, M3) MacOS</title>
+  <link>https://simonpcouch.com/blog/2024-03-14-oracle/index.html</link>
+  <description><![CDATA[ I recently sunk a few days into getting an Oracle database deployed on MacOS with an M1 chip in a docker container via Docker Desktop. The few solutions that I found recommended using the Docker Desktop alternative Colima and/or using publicly available, community-contributed images; I had various troubles getting these solutions to work, and found myself missing the bells and whistles of Docker Desktop along the way. This morning, I finally got this database deployed by building the image myself from the official Oracle source, in Docker Desktop rather than Colima, and thought it’d be worth writing up how I did so, especially given the countless GitHub issue comments, StackOverflow posts, and forum discussion I came across from others in my situation. ]]></description>
+  <guid>https://simonpcouch.com/blog/2024-03-14-oracle/index.html</guid>
+  <pubDate>Thu, 14 Mar 2024 05:00:00 GMT</pubDate>
+  <media:content url="https://simonpcouch.com/blog/2024-03-14-oracle/featured.png" medium="image" type="image/png" height="144" width="144"/>
+</item>
 <item>
   <title>Analyzing my own music listening data with R and the tidyverse (2023)</title>
   <link>https://simonpcouch.com/blog/2023-11-30-listening-2023/index.html</link>
@@ -162,14 +170,6 @@
   <guid>https://simonpcouch.com/blog/2021-03-15-apply-to-stats-grad-school/index.html</guid>
   <pubDate>Mon, 15 Mar 2021 05:00:00 GMT</pubDate>
   <media:content url="https://simonpcouch.com/blog/2021-03-15-apply-to-stats-grad-school/featured.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
-  <title>Running R Scripts on a Schedule with GitHub Actions</title>
-  <link>https://simonpcouch.com/blog/2020-12-27-r-github-actions-commit/index.html</link>
-  <description><![CDATA[ I have an R script that queries data from a server that only supplies live data, and I want to run it on a regular basis, saving the results with each run. This problem gets at the intersection of a few things that are often hard (for me) to get right: ]]></description>
-  <guid>https://simonpcouch.com/blog/2020-12-27-r-github-actions-commit/index.html</guid>
-  <pubDate>Sun, 27 Dec 2020 06:00:00 GMT</pubDate>
-  <media:content url="https://simonpcouch.com/blog/2020-12-27-r-github-actions-commit/featured.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>

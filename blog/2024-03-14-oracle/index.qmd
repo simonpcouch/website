@@ -1,0 +1,90 @@
+---
+title: "Run an Oracle Database with Docker Desktop on ARM (M1, M2, M3) MacOS"
+date: '2024-03-14'
+tags:
+  - odbc
+  - databases
+subtitle: "Starting a containerized Oracle database on an Apple Silicon Mac."
+image: featured.png
+summary: ''
+---
+
+I recently sunk a few days into getting an Oracle database deployed on MacOS with an M1 chip in a docker container via Docker Desktop. The few solutions that I found recommended using the Docker Desktop alternative Colima and/or using publicly available, community-contributed images; I had various troubles getting these solutions to work, and found myself missing the bells and whistles of Docker Desktop along the way. This morning, I finally got this database deployed by building the image myself from the official Oracle source, in Docker Desktop rather than Colima, and thought it'd be worth writing up how I did so, especially given the countless GitHub issue comments, StackOverflow posts, and forum discussion I came across from others in my situation.
+
+What ended up sending me down the right path was this FAQ answer on the [official Oracle source repository](https://github.com/oracle/docker-images/blob/caea5ad84617051b180cf4d5352207ad92f3f834/OracleDatabase/SingleInstance/FAQ.md):
+
+> **Can I run Oracle Database containers on Apple M1 (Arm) devices?**
+>
+> _Oracle Database 19c Enterprise Edition is now supported on ARM64 platforms. You will have to provide the installation binaries of [Oracle Database 19c](https://www.oracle.com/database/technologies/oracle19c-linux-arm64-downloads.html) and put them into the dockerfiles/19.3.0 folder before running the buildContainerImage.sh script._
+
+If this is enough information to get you going, then off you go! It took me a couple hours to iron out the details, and I documented my steps as I went.
+
+## Download Oracle Database
+
+Download [Oracle Database 19c](https://www.oracle.com/database/technologies/oracle19c-linux-arm64-downloads.html), listed as **Oracle Database 19c (19.19) for LINUX ARM (aarch64)**. No need to unzip the result `.zip` file. You'll need a (free) Oracle account to do so.
+
+From what I understand, this is the only version of Oracle Database supported on Apple Silicon chips.
+
+## Clone Oracle's docker image source
+
+Then, clone the [`oracle/docker-images`](https://github.com/oracle/docker-images) repository. The repository contains Dockerfiles and samples to build Docker images for a bunch of Oracle's products, but we're specifically interested in Oracle Database. 
+
+If you're an R user, you can run the following to do so:
+
+``` r
+usethis::create_from_github("oracle/docker-images")
+```
+
+In your favorite IDE, navigate to your cloned repository. (In RStudio, usethis will do this automatically.)
+
+In the repository folder, navigate to `OracleDatabase/SingleInstance/dockerfiles/19.3.0` and paste the `.zip` file you just downloaded there. The install script expects that `.zip` file to be named `LINUX.ARM64_1919000_db_home.zip`, as it should be by default. 
+
+## Build the image
+
+Change your working directory to `OracleDatabase/SingleInstance/dockerfiles/`, using `cd OracleDatabase/SingleInstance/dockerfiles/` if you have the `docker-images` repository as your current working directory. Then, run the following in Terminal:
+
+```shell
+./buildContainerImage.sh -v 19.3.0 -e
+```
+
+* `-v 19.3.0` specifies that we're building the image for version 19.3.0, the version of Oracle Database we've downloaded.
+* `-e` specifies that we want to build the image for the Enterprise Edition, which is the only release that's currently supported.
+
+If you encounter errors, you can check logs in the `Builds` tab of Docker Desktop. A relatively thorough FAQ on debugging this build can be found [here](https://github.com/oracle/docker-images/blob/caea5ad84617051b180cf4d5352207ad92f3f834/OracleDatabase/SingleInstance/FAQ.md).
+
+Once the build script completes, you should see something like the following in your terminal:
+
+```
+  Oracle Database container image for 'ee' version 19.3.0 is ready to be extended: 
+    
+    --> oracle/database:19.3.0-ee
+
+  Build completed in 127 seconds.
+```
+
+## Running the image
+
+You can run the built image by navigating to `Images` in `Docker Desktop` and clicking the run button on the `oracle/database` entry. Set the `ORACLE_PWD` environmental variable to any value to set the default  `SYS`, `SYSTEM`, and `PDBADMIN` passwords. To do so using `docker run`, write:
+
+```shell
+docker run -d --name oracle -e ORACLE_PWD=YourPass321 oracle/database:19.3.0-ee
+```
+
+* `-d` indicates that you'll run in `detached` mode so that you have access to your terminal.
+* `--name` indicates that the container will be named `oracle`. 
+* `-e` indicates that the following `key=value` will be set as an environmental variable.
+* `oracle/database:19.3.0-ee` is the name of your image. If you see a `pull access denied for ...` error, check the output of `docker images` in Shell to find the correct ID for your image.
+
+The container will then be visible in the `Containers` tab of Docker Desktop. After a few minutes, you should see the following in your container's logs:
+
+```
+#########################
+DATABASE IS READY TO USE!
+#########################
+```
+
+At this point, you're ready to go. :)
+
+:::callout-note
+At the time of writing, you will not be able to connect to this database through ODBC, as Oracle Instant Client [does not support macOS aarch64](https://github.com/oracle/python-cx_Oracle/issues/617).
+:::

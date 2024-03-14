@@ -1,7 +1,12 @@
 [
   {
+    "listing": "/about/index.html",
+    "items": []
+  },
+  {
     "listing": "/blog/index.html",
     "items": [
+      "/blog/2024-03-14-oracle/index.html",
       "/blog/2023-11-30-listening-2023/index.html",
       "/blog/2023-11-28-flights/index.html",
       "/blog/2023-10-24-quarto-site/index.html",
@@ -27,9 +32,5 @@
       "/blog/2020-10-27-gentle-intro-stacks/index.html",
       "/blog/2020-10-11-intro/index.html"
     ]
-  },
-  {
-    "listing": "/about/index.html",
-    "items": []
   }
 ]
