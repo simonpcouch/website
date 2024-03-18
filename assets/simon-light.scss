@@ -17,6 +17,7 @@ $code-block-bg: $buttonTextColorCustom;
 // Fonts
 @import 'https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,200&display=swap';
 @import 'https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,100;9..144,200&display=swap';
+@import 'https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap';
 
 // Misc. Edits
 div.quarto-about-jolla .quarto-title h1.title {
@@ -49,13 +50,15 @@ div.quarto-post .body h3.listing-title, div.quarto-post .body .listing-title.h3 
 }
 
 p {
-  font-size: 1.2rem;
-  font-weight: 300;
+  font-size: 1.2rem !important;
+  font-weight: 330 !important;
+  font-family: "Source Sans 3" !important;
 }
 
 body {
   font-size: 1.2rem !important;
-  font-weight: 300 !important;
+  font-weight: 330 !important;
+  font-family: "Source Sans 3" !important;
 }
 
 .blockquote {
