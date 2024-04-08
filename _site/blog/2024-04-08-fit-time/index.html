@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta name="dcterms.date" content="2024-04-08">
+<title>Measuring elapsed time to fit with tidymodels | Simon P. Couch</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../assets/cabin.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script><script async="" src="https://www.googletagmanager.com/gtag/js?id=G-DDB8R0B1ZW"></script><script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
+</script>
+</head>
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg navbar-dark "><div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../assets/cabin.png" alt="" class="navbar-logo"></a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Simon P. Couch</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+<li class="nav-item">
+    <a class="nav-link" href="../../about/index.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog/index.html" rel="" target="">
+ <span class="menu-text">Blog</span></a>
+  </li>  
+</ul>
+<div class="quarto-navbar-tools">
+    <a href="https://www.github.com/simonpcouch/website" rel="" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav></header><!-- content --><header id="title-block-header" class="quarto-title-block default page-columns page-full"><div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Measuring elapsed time to fit with tidymodels</h1>
+            <p class="subtitle lead">The development versions of tidymodels packages now include tools to benchmark training time.</p>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">April 8, 2024</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content"><blockquote class="blockquote">
+<p><strong>tl;dr</strong>: The development versions of tidymodels packages include methods for a <a href="https://workflows.tidymodels.org/dev/reference/extract-workflow.html">new extract function</a>, <code>extract_fit_time()</code>, that returns the time required to train a workflow. Pass <code>extract_fit_time()</code> as a control option while tuning and run <code>collect_extracts()</code> to see training times for resampled workflows. In this example, we can identify a modeling workflow that trains more than 10x faster than the most performant model with very little decrease in predictive performance.</p>
+</blockquote>
+<p>A year ago, <a href="https://emilhvitfeldt.com/">Emil</a> put together <a href="https://github.com/tidymodels/workflows/pull/191">a</a> <a href="https://github.com/tidymodels/recipes/pull/1071">proof</a> <a href="https://github.com/tidymodels/parsnip/pull/853">of</a> <a href="https://github.com/tidymodels/hardhat/pull/218">concept</a> for a function that would return measurements of how long it took for different tidymodels objects to fit. This had been a longstanding feature request across many of our repositories. Then, we got pretty busy implementing <a href="https://tidyverse.org/blog/2024/04/tidymodels-survival-analysis/">survival analysis</a> and <a href="https://www.tidyverse.org/blog/2024/03/tidymodels-fairness/">fairness metrics</a> and only recently picked these changes back up to polish off the rough edges. We just merged them into the main developmental versions of the packages and are interested in hearing what folks think before they head off to CRAN!</p>
+<p>To install the packages with these changes, use the following code:</p>
+<div class="cell">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html">pak</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span></span>
+<span>    <span class="st">"tidymodels/"</span>, </span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"workflows"</span>, <span class="st">"recipes"</span>, <span class="st">"parsnip"</span>, <span class="st">"hardhat"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now, loading the tidymodels packages:</p>
+<div class="cell">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidymodels.tidymodels.org">tidymodels</a></span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="getting-started" class="level2"><h2 class="anchored" data-anchor-id="getting-started">Getting started</h2>
+<p>For a simpler example, let’s start off with just fitting a parsnip model. We’ll use the <code>taxi</code> data from modeldata as an example, predicting whether a trip will result in a <code>tip</code> or not:</p>
+<div class="cell">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">taxi</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10,000 × 7
+   tip   distance company                      local dow   month  hour
+   &lt;fct&gt;    &lt;dbl&gt; &lt;fct&gt;                        &lt;fct&gt; &lt;fct&gt; &lt;fct&gt; &lt;int&gt;
+ 1 yes      17.2  Chicago Independents         no    Thu   Feb      16
+ 2 yes       0.88 City Service                 yes   Thu   Mar       8
+ 3 yes      18.1  other                        no    Mon   Feb      18
+ 4 yes      20.7  Chicago Independents         no    Mon   Apr       8
+ 5 yes      12.2  Chicago Independents         no    Sun   Mar      21
+ 6 yes       0.94 Sun Taxi                     yes   Sat   Apr      23
+ 7 yes      17.5  Flash Cab                    no    Fri   Mar      12
+ 8 yes      17.7  other                        no    Sun   Jan       6
+ 9 yes       1.85 Taxicab Insurance Agency Llc no    Fri   Apr      12
+10 yes       1.47 City Service                 no    Tue   Mar      14
+# ℹ 9,990 more rows</code></pre>
+</div>
+</div>
+<p>The following code fits an XGBoost boosted tree with parsnip:</p>
+<div class="cell">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">taxi_fit</span> <span class="op">&lt;-</span> <span class="fu">fit</span><span class="op">(</span><span class="fu">boost_tree</span><span class="op">(</span>mode <span class="op">=</span> <span class="st">"classification"</span><span class="op">)</span>, <span class="va">tip</span> <span class="op">~</span> <span class="va">.</span>, <span class="va">taxi</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>With these new package versions, we now have access to a function called <code>extract_fit_time()</code> that will return the elapsed time to fit the model:</p>
+<div class="cell">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">extract_fit_time</span><span class="op">(</span><span class="va">taxi_fit</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 2
+  stage_id   elapsed
+  &lt;chr&gt;        &lt;dbl&gt;
+1 boost_tree   0.120</code></pre>
+</div>
+</div>
+<p>Couldn’t we just wrap that whole <code>fit()</code> expression in <code><a href="https://rdrr.io/r/base/system.time.html">system.time()</a></code> and get the same thing, though?</p>
+<p>Actually, no! <code>extract_fit_time()</code> returns the elapsed time to evaluate the <em>engine</em> fit, without tidymodels’ overhead on top. The differences between <code><a href="https://rdrr.io/r/base/system.time.html">system.time()</a></code> and the value of <code>extract_fit_time()</code> are exactly where this new function will come in handy.</p>
+<p>tidymodels doesn’t actually implement it’s own training algorithms for boosted trees. Instead, the framework takes in code with a common input interface, translates that code to pass off to modeling <em>engines</em> which take care of the actual training, and then translates the output back to a common output interface. That process can be visualized something like this:</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="figures/translate_diagram.png" class="img-fluid" alt="A graphic representing the parsnip interface. In order, step 1 'translate', step 2 'call', and step 3 'translate', outline the process of translating from the standardized tidymodels interface to an engine's specific interface, calling the modeling engine, and translating back to the standardized tidymodels interface. Step 1 and step 3 are in green, while step 2 is in orange." width="986"></p>
+</div>
+</div>
+<p>When viewed through the lens of elapsed time, the portion of the diagram in orange, labeled <strong>Step 2)</strong>, is what is measured by <code>extract_fit_time()</code>. The portions of the elapsed time shown in green, labeled <strong>Steps 1)</strong> and <strong>3)</strong>, are tidymodels’ “overhead.” That could be measured as the difference between <code><a href="https://rdrr.io/r/base/system.time.html">system.time()</a></code> and <code>extract_fit_time()</code>. Let’s calculate that difference exactly:</p>
+<div class="cell">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">taxi_elapsed</span> <span class="op">&lt;-</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="op">{</span></span>
+<span>    <span class="va">taxi_fit</span> <span class="op">&lt;-</span> <span class="fu">fit</span><span class="op">(</span><span class="fu">boost_tree</span><span class="op">(</span>mode <span class="op">=</span> <span class="st">"classification"</span><span class="op">)</span>, <span class="va">tip</span> <span class="op">~</span> <span class="va">.</span>, <span class="va">taxi</span><span class="op">)</span></span>
+<span>  <span class="op">}</span><span class="op">)</span><span class="op">[[</span><span class="st">"elapsed"</span><span class="op">]</span><span class="op">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Juxtaposing those two values:</p>
+<div class="cell">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">taxi_elapsed</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.119</code></pre>
+</div>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">extract_fit_time</span><span class="op">(</span><span class="va">taxi_fit</span><span class="op">)</span><span class="op">$</span><span class="va">elapsed</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.113</code></pre>
+</div>
+</div>
+<p>The total elapsed time of the fit is 0.119 seconds, and the portion of that elapsed time spent inside of XGBoost is 0.113 seconds. Said another way, the XGBoost fit itself accounts for 95% of the total time of this model fit.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The story is a bit more complicated for recipes, which also now have <code>extract_fit_time()</code> methods. We <em>do</em> implement the training routines for many of those ourselves, so the concept of “overhead” isn’t so straightforward there. For those methods, fit times refer to the elapsed times of <code>prep()</code> and <code>bake()</code> while each step is trained.</p>
+</div>
+</div>
+<p>Measuring the relative overhead of tidymodels is of interest to us as the developers, of course. More importantly, though, these tools can also be used to get a sense for how long different parts of a larger ML pipeline take compared to each other and choose models that fit and predict more quickly (as long as predictions are similarly performant).</p>
+</section><section id="resampling-a-model" class="level2"><h2 class="anchored" data-anchor-id="resampling-a-model">Resampling a model</h2>
+<p>As an example, let’s tune this XGBoost model using cross-validation. First, we’ll split the taxi data up into training and testing sets, resampling the training set:</p>
+<div class="cell">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
+<span><span class="va">taxi_split</span> <span class="op">&lt;-</span> <span class="fu">initial_split</span><span class="op">(</span><span class="va">taxi</span>, prop <span class="op">=</span> <span class="fl">0.8</span>, strata <span class="op">=</span> <span class="va">tip</span><span class="op">)</span></span>
+<span><span class="va">taxi_train</span> <span class="op">&lt;-</span> <span class="fu">training</span><span class="op">(</span><span class="va">taxi_split</span><span class="op">)</span></span>
+<span><span class="va">taxi_test</span> <span class="op">&lt;-</span> <span class="fu">testing</span><span class="op">(</span><span class="va">taxi_split</span><span class="op">)</span></span>
+<span><span class="va">taxi_folds</span> <span class="op">&lt;-</span> <span class="fu">vfold_cv</span><span class="op">(</span><span class="va">taxi_train</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Then, defining a boosted tree model that tunes <code>learn_rate</code> and <code>trees</code>; boosted tree ensembles with higher <code>learn_rate</code>s might not perform as effectively, but they require fewer <code>trees</code> in the ensemble and thus train faster. We’d like to find the “sweet spot” of combinations of these parameters.</p>
+<div class="cell">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">bt</span> <span class="op">&lt;-</span> </span>
+<span>  <span class="fu">boost_tree</span><span class="op">(</span></span>
+<span>    mode <span class="op">=</span> <span class="st">"classification"</span>, </span>
+<span>    learn_rate <span class="op">=</span> <span class="fu">tune</span><span class="op">(</span><span class="op">)</span>, </span>
+<span>    trees <span class="op">=</span> <span class="fu">tune</span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now, we’ll conduct a grid search for the best values of <code>learn_rate</code> and <code>trees</code>, passing the new <code>extract_fit_time()</code> function to the <a href="https://tune.tidymodels.org/reference/control_grid.html">control function <code>control_grid()</code></a>. Every time we fit a model when resampling (<code>nrow(taxi_folds) * grid = 10 * 10 = 100</code> times!), we’ll extract how long it took the engine to fit.</p>
+<div class="cell" data-hash="index_cache/html/bt_res_6a1a2ffcc08f16634532e53fb7e53eca">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">bt_res</span> <span class="op">&lt;-</span> </span>
+<span>  <span class="fu">tune_grid</span><span class="op">(</span></span>
+<span>    <span class="va">bt</span>, </span>
+<span>    <span class="va">tip</span> <span class="op">~</span> <span class="va">.</span>, </span>
+<span>    <span class="va">taxi_folds</span>, </span>
+<span>    control <span class="op">=</span> <span class="fu">control_grid</span><span class="op">(</span>extract <span class="op">=</span> <span class="va">extract_fit_time</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This is what the <code>bt_res</code> object looks like:</p>
+<div class="cell">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">bt_res</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Tuning results
+# 10-fold cross-validation 
+# A tibble: 10 × 5
+   splits             id     .metrics          .notes           .extracts
+   &lt;list&gt;             &lt;chr&gt;  &lt;list&gt;            &lt;list&gt;           &lt;list&gt;   
+ 1 &lt;split [7200/800]&gt; Fold01 &lt;tibble [30 × 6]&gt; &lt;tibble [0 × 4]&gt; &lt;tibble&gt; 
+ 2 &lt;split [7200/800]&gt; Fold02 &lt;tibble [30 × 6]&gt; &lt;tibble [0 × 4]&gt; &lt;tibble&gt; 
+ 3 &lt;split [7200/800]&gt; Fold03 &lt;tibble [30 × 6]&gt; &lt;tibble [0 × 4]&gt; &lt;tibble&gt; 
+ 4 &lt;split [7200/800]&gt; Fold04 &lt;tibble [30 × 6]&gt; &lt;tibble [0 × 4]&gt; &lt;tibble&gt; 
+ 5 &lt;split [7200/800]&gt; Fold05 &lt;tibble [30 × 6]&gt; &lt;tibble [0 × 4]&gt; &lt;tibble&gt; 
+ 6 &lt;split [7200/800]&gt; Fold06 &lt;tibble [30 × 6]&gt; &lt;tibble [0 × 4]&gt; &lt;tibble&gt; 
+ 7 &lt;split [7200/800]&gt; Fold07 &lt;tibble [30 × 6]&gt; &lt;tibble [0 × 4]&gt; &lt;tibble&gt; 
+ 8 &lt;split [7200/800]&gt; Fold08 &lt;tibble [30 × 6]&gt; &lt;tibble [0 × 4]&gt; &lt;tibble&gt; 
+ 9 &lt;split [7200/800]&gt; Fold09 &lt;tibble [30 × 6]&gt; &lt;tibble [0 × 4]&gt; &lt;tibble&gt; 
+10 &lt;split [7200/800]&gt; Fold10 &lt;tibble [30 × 6]&gt; &lt;tibble [0 × 4]&gt; &lt;tibble&gt; </code></pre>
+</div>
+</div>
+</section><section id="understanding-fit-time-and-performance" class="level2"><h2 class="anchored" data-anchor-id="understanding-fit-time-and-performance">Understanding fit time and performance</h2>
+<p>Every column in a tuning result that’s prefixed with a <code>.</code> has a <code>collect_*()</code> function associated with it that helps to summarize that column. We’ll use <code>collect_extracts()</code> to collect information on the extracts which are, in this case, elapsed fit times:</p>
+<div class="cell">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">bt_extracts</span> <span class="op">&lt;-</span> <span class="fu">collect_extracts</span><span class="op">(</span><span class="va">bt_res</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">bt_extracts</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 100 × 5
+   id     trees learn_rate .extracts        .config              
+   &lt;chr&gt;  &lt;int&gt;      &lt;dbl&gt; &lt;list&gt;           &lt;chr&gt;                
+ 1 Fold01   922    0.00161 &lt;tibble [1 × 3]&gt; Preprocessor1_Model01
+ 2 Fold01  1804    0.00293 &lt;tibble [1 × 3]&gt; Preprocessor1_Model02
+ 3 Fold01    81    0.00394 &lt;tibble [1 × 3]&gt; Preprocessor1_Model03
+ 4 Fold01   445    0.00886 &lt;tibble [1 × 3]&gt; Preprocessor1_Model04
+ 5 Fold01  1074    0.0171  &lt;tibble [1 × 3]&gt; Preprocessor1_Model05
+ 6 Fold01   347    0.0218  &lt;tibble [1 × 3]&gt; Preprocessor1_Model06
+ 7 Fold01  1486    0.0393  &lt;tibble [1 × 3]&gt; Preprocessor1_Model07
+ 8 Fold01  1391    0.0604  &lt;tibble [1 × 3]&gt; Preprocessor1_Model08
+ 9 Fold01   788    0.111   &lt;tibble [1 × 3]&gt; Preprocessor1_Model09
+10 Fold01  1609    0.203   &lt;tibble [1 × 3]&gt; Preprocessor1_Model10
+# ℹ 90 more rows</code></pre>
+</div>
+</div>
+<p>Unnesting on <code>.extracts</code> so we can see some of those timings:</p>
+<div class="cell">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">bt_extracts_unnested</span> <span class="op">&lt;-</span> <span class="va">bt_extracts</span> <span class="op">%&gt;%</span> <span class="fu">unnest</span><span class="op">(</span>cols <span class="op">=</span> <span class="st">".extracts"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">bt_extracts_unnested</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 100 × 7
+   id     trees learn_rate stage    process_id elapsed .config              
+   &lt;chr&gt;  &lt;int&gt;      &lt;dbl&gt; &lt;chr&gt;    &lt;chr&gt;        &lt;dbl&gt; &lt;chr&gt;                
+ 1 Fold01   922    0.00161 workflow workflow     4.94  Preprocessor1_Model01
+ 2 Fold01  1804    0.00293 workflow workflow     9.54  Preprocessor1_Model02
+ 3 Fold01    81    0.00394 workflow workflow     0.444 Preprocessor1_Model03
+ 4 Fold01   445    0.00886 workflow workflow     2.36  Preprocessor1_Model04
+ 5 Fold01  1074    0.0171  workflow workflow     5.40  Preprocessor1_Model05
+ 6 Fold01   347    0.0218  workflow workflow     1.8   Preprocessor1_Model06
+ 7 Fold01  1486    0.0393  workflow workflow     7.34  Preprocessor1_Model07
+ 8 Fold01  1391    0.0604  workflow workflow     6.99  Preprocessor1_Model08
+ 9 Fold01   788    0.111   workflow workflow     3.87  Preprocessor1_Model09
+10 Fold01  1609    0.203   workflow workflow     7.99  Preprocessor1_Model10
+# ℹ 90 more rows</code></pre>
+</div>
+</div>
+<p>The times to fit vary quite a bit between workflows, to say the least:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="va">bt_extracts_unnested</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">elapsed</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_histogram</span><span class="op">(</span>binwidth <span class="op">=</span> <span class="fl">1</span>, boundary <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">scale_x_continuous</span><span class="op">(</span></span>
+<span>    breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">bt_extracts_unnested</span><span class="op">$</span><span class="va">elapsed</span><span class="op">)</span> <span class="op">+</span> <span class="fl">1</span>, <span class="fl">1L</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">labs</span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Elapsed fit time"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="index_files/figure-html/plot-un-1.png" class="img-fluid figure-img" alt="A ggplot histogram showing elapsed fit times varying from almost 0 to around 10. The distribution is uniform; each bin contains nearly the same count of values." width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Almost all of this variation in elapsed time is explained by the value of <code>trees</code>:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="va">bt_extracts_unnested</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">elapsed</span>, y <span class="op">=</span> <span class="va">trees</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_jitter</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">labs</span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Elapsed fit time"</span>, y <span class="op">=</span> <span class="st">"# of trees"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="index_files/figure-html/plot-bi-1.png" class="img-fluid figure-img" alt="A ggplot dotplot showing a very strong, linear, positive correlation between elapsed fit time and number of trees." width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The “clumps” of points are the 10 different unique combinations of <code>trees</code> and <code>learn_rate</code>s that are fitted on 10 different resamples; identical hyperparameters lead to very similar fit times, in this case.</p>
+<p>In use cases where we will go on to resample/train this model many times (such as in iterative search or continuous training) it may be advantageous for us to pick a model that fits as quickly as possible as long as it has comparable performance with the overall most performant model. We can integrate the information from <code>collect_metrics()</code> with <code>collect_extracts()</code> to see if there any quick-fitting models with comparable performance. First, collecting metrics:</p>
+<div class="cell">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">bt_metrics</span> <span class="op">&lt;-</span> <span class="fu">collect_metrics</span><span class="op">(</span><span class="va">bt_res</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">bt_metrics</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 30 × 8
+   trees learn_rate .metric     .estimator   mean     n  std_err .config        
+   &lt;int&gt;      &lt;dbl&gt; &lt;chr&gt;       &lt;chr&gt;       &lt;dbl&gt; &lt;int&gt;    &lt;dbl&gt; &lt;chr&gt;          
+ 1   922    0.00161 accuracy    binary     0.924     10 0.00214  Preprocessor1_…
+ 2   922    0.00161 brier_class binary     0.0784    10 0.00128  Preprocessor1_…
+ 3   922    0.00161 roc_auc     binary     0.639     10 0.0112   Preprocessor1_…
+ 4  1804    0.00293 accuracy    binary     0.924     10 0.00218  Preprocessor1_…
+ 5  1804    0.00293 brier_class binary     0.0693    10 0.00160  Preprocessor1_…
+ 6  1804    0.00293 roc_auc     binary     0.628     10 0.0126   Preprocessor1_…
+ 7    81    0.00394 accuracy    binary     0.924     10 0.00212  Preprocessor1_…
+ 8    81    0.00394 brier_class binary     0.165     10 0.000467 Preprocessor1_…
+ 9    81    0.00394 roc_auc     binary     0.636     10 0.0110   Preprocessor1_…
+10   445    0.00886 accuracy    binary     0.923     10 0.00211  Preprocessor1_…
+# ℹ 20 more rows</code></pre>
+</div>
+</div>
+<p>Joining this output:</p>
+<div class="cell">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">bt_metrics_extracts</span> <span class="op">&lt;-</span></span>
+<span>  <span class="fu">left_join</span><span class="op">(</span></span>
+<span>    <span class="co"># metrics, summarized across resamples</span></span>
+<span>    <span class="va">bt_metrics</span>,</span>
+<span>    <span class="co"># summarize fit times across resamples</span></span>
+<span>    <span class="fu">summarize</span><span class="op">(</span></span>
+<span>      <span class="va">bt_extracts_unnested</span>, </span>
+<span>      elapsed <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">elapsed</span><span class="op">)</span>,</span>
+<span>      .by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">trees</span>, <span class="va">learn_rate</span>, <span class="va">.config</span><span class="op">)</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"trees"</span>, <span class="st">"learn_rate"</span>, <span class="st">".config"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span>  <span class="fu">relocate</span><span class="op">(</span><span class="va">elapsed</span>, .before <span class="op">=</span> <span class="fu">everything</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">bt_metrics_extracts</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 30 × 9
+   elapsed trees learn_rate .metric     .estimator   mean     n  std_err .config
+     &lt;dbl&gt; &lt;int&gt;      &lt;dbl&gt; &lt;chr&gt;       &lt;chr&gt;       &lt;dbl&gt; &lt;int&gt;    &lt;dbl&gt; &lt;chr&gt;  
+ 1   4.95    922    0.00161 accuracy    binary     0.924     10 0.00214  Prepro…
+ 2   4.95    922    0.00161 brier_class binary     0.0784    10 0.00128  Prepro…
+ 3   4.95    922    0.00161 roc_auc     binary     0.639     10 0.0112   Prepro…
+ 4   9.55   1804    0.00293 accuracy    binary     0.924     10 0.00218  Prepro…
+ 5   9.55   1804    0.00293 brier_class binary     0.0693    10 0.00160  Prepro…
+ 6   9.55   1804    0.00293 roc_auc     binary     0.628     10 0.0126   Prepro…
+ 7   0.441    81    0.00394 accuracy    binary     0.924     10 0.00212  Prepro…
+ 8   0.441    81    0.00394 brier_class binary     0.165     10 0.000467 Prepro…
+ 9   0.441    81    0.00394 roc_auc     binary     0.636     10 0.0110   Prepro…
+10   2.37    445    0.00886 accuracy    binary     0.923     10 0.00211  Prepro…
+# ℹ 20 more rows</code></pre>
+</div>
+</div>
+<p>Now, plotting:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="va">bt_metrics_extracts</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">elapsed</span>, y <span class="op">=</span> <span class="va">mean</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">facet_wrap</span><span class="op">(</span><span class="op">~</span><span class="va">.metric</span>, scales <span class="op">=</span> <span class="st">"free"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">labs</span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Elapsed fit time"</span>, y <span class="op">=</span> <span class="st">"Metric value"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="index_files/figure-html/plot-perf-vs-time-1.png" class="img-fluid figure-img" alt="Three faceted ggplot dotplots, with different performance metrics in each plot, show that metric values don't correlate well with elapsed time to fit in this case." width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>In this context, we see that w.r.t <code>accuracy()</code> and <code>brier_class()</code>, there’s not a clear relationship between the elapsed fit time and model performance. w.r.t. <code>roc_auc()</code>, longer-fitting models seem <em>less</em> performant.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>By most measures, none of these models are particularly performant. Alas.🙂</p>
+</div>
+</div>
+</section><section id="model-selection" class="level2"><h2 class="anchored" data-anchor-id="model-selection">Model selection</h2>
+<p>We can use the <code>select_best()</code> function from tune to pick the most performant model, without regard for elapsed fit time:</p>
+<div class="cell">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">bt_most_performant</span> <span class="op">&lt;-</span> <span class="fu">select_best</span><span class="op">(</span><span class="va">bt_res</span>, metric <span class="op">=</span> <span class="st">"roc_auc"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">bt_most_performant</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+  trees learn_rate .config              
+  &lt;int&gt;      &lt;dbl&gt; &lt;chr&gt;                
+1   922    0.00161 Preprocessor1_Model01</code></pre>
+</div>
+</div>
+<p>Using <code>roc_auc()</code>, ignoring fit time, we’d choose the model configuration Preprocessor1_Model01, corresponding to an <code>roc_auc()</code> of 0.639.</p>
+<p>Instead, we could choose the quickest-fitting model with a performance value within one standard error of the most performant model.</p>
+<div class="cell">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">best_fit</span> <span class="op">&lt;-</span></span>
+<span>  <span class="va">bt_metrics_extracts</span> <span class="op">%&gt;%</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">.metric</span> <span class="op">==</span> <span class="st">"roc_auc"</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span>  <span class="fu">arrange</span><span class="op">(</span><span class="fu">desc</span><span class="op">(</span><span class="va">mean</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span>  <span class="fu">select</span><span class="op">(</span><span class="va">mean</span>, <span class="va">std_err</span>, <span class="va">elapsed</span>, <span class="va">.config</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">best_speedy_fit</span> <span class="op">&lt;-</span> </span>
+<span>  <span class="va">bt_metrics_extracts</span> <span class="op">%&gt;%</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">.metric</span> <span class="op">==</span> <span class="st">"roc_auc"</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">mean</span> <span class="op">&gt;=</span> <span class="va">best_fit</span><span class="op">$</span><span class="va">mean</span> <span class="op">-</span> <span class="va">best_fit</span><span class="op">$</span><span class="va">std_err</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span>  <span class="fu">arrange</span><span class="op">(</span><span class="va">elapsed</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span>  <span class="fu">slice</span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">best_speedy_fit</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 9
+  elapsed trees learn_rate .metric .estimator  mean     n std_err .config       
+    &lt;dbl&gt; &lt;int&gt;      &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;         
+1   0.441    81    0.00394 roc_auc binary     0.636    10  0.0110 Preprocessor1…</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Existing tidymodels users may recognize this selection workflow as an ad-hoc version of <code>select_by_one_std_err()</code>.</p>
+</div>
+</div>
+<p>Now, integrating our knowledge of fit time, we’d choose the model configuration Preprocessor1_Model03, corresponding to an <code>roc_auc()</code> of 0.636. The mean elapsed fit time for this model is 0.441 seconds, compared a mean elapsed fit time for the most performant model of 4.951 seconds, <strong>a speedup of 11.2x!</strong> Of course, this isn’t as much of an issue when model fits are as quick as they are here, but for more complex fits on larger datasets, an order of magnitude is a gamechanger.</p>
+</section><section id="what-do-you-think" class="level2"><h2 class="anchored" data-anchor-id="what-do-you-think">What do you think?</h2>
+<p>These changes haven’t yet made it to the CRAN versions of tidymodels packages (and likely won’t for a good bit). Before they hit CRAN, we’d love to hear your thoughts on the interface and take any suggestions on how we might improve the interface.</p>
+
+
+</section><a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a><div id="quarto-appendix" class="default"><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">Reuse</h2><div id="quarto-reuse" class="quarto-appendix-contents"><div><a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">https://creativecommons.org/licenses/by-sa/4.0/</a></div></div></section></div></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><script src="https://utteranc.es/client.js" repo="simonpcouch/website" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script>
+</div> <!-- /content -->
+<footer class="footer"><div class="nav-footer">
+    <div class="nav-footer-left">© 2023 Simon P. Couch ∙ Made with <a href="https://quarto.org">Quarto</a></div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+</body></html>

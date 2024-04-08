@@ -10,7 +10,15 @@
 <atom:link href="https://simonpcouch.com/blog/index.xml" rel="self" type="application/rss+xml"/>
 <description>A data science blog</description>
 <generator>quarto-1.3.450</generator>
-<lastBuildDate>Thu, 14 Mar 2024 05:00:00 GMT</lastBuildDate>
+<lastBuildDate>Mon, 08 Apr 2024 05:00:00 GMT</lastBuildDate>
+<item>
+  <title>Measuring elapsed time to fit with tidymodels</title>
+  <link>https://simonpcouch.com/blog/2024-04-08-fit-time/index.html</link>
+  <description><![CDATA[ <strong>tl;dr</strong>: The development versions of tidymodels packages include methods for a <a href="https://workflows.tidymodels.org/dev/reference/extract-workflow.html">new extract function</a>, <code>extract_fit_time()</code>, that returns the time required to train a workflow. Pass <code>extract_fit_time()</code> as a control option while tuning and run <code>collect_extracts()</code> to see training times for resampled workflows. In this example, we can identify a modeling workflow that trains more than 10x faster than the most performant model with very little decrease in predictive performance. ]]></description>
+  <guid>https://simonpcouch.com/blog/2024-04-08-fit-time/index.html</guid>
+  <pubDate>Mon, 08 Apr 2024 05:00:00 GMT</pubDate>
+  <media:content url="https://simonpcouch.com/blog/2024-04-08-fit-time/featured.png" medium="image" type="image/png" height="144" width="144"/>
+</item>
 <item>
   <title>Run an Oracle Database with Docker Desktop on ARM (M1, M2, M3) MacOS</title>
   <link>https://simonpcouch.com/blog/2024-03-14-oracle/index.html</link>
@@ -162,14 +170,6 @@
   <guid>https://simonpcouch.com/blog/2021-03-23-whats-next-s21/index.html</guid>
   <pubDate>Tue, 23 Mar 2021 05:00:00 GMT</pubDate>
   <media:content url="https://simonpcouch.com/blog/2021-03-23-whats-next-s21/featured.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
-  <title>Applying to Graduate School in Statistics and Biostatistics</title>
-  <link>https://simonpcouch.com/blog/2021-03-15-apply-to-stats-grad-school/index.html</link>
-  <description><![CDATA[ Since last fall, I’ve been going through the process of applying to graduate school in (bio)statistics.<sup>1</sup> I found that I was only able to learn about some parts of the process through office hours, personal meetings, and Twitter DMs, and I thought it would be worth publicly compiling some lessons learned.<sup>2</sup>🐥 I’m far from an expert about how this all works, and can only speak to my personal experience. ]]></description>
-  <guid>https://simonpcouch.com/blog/2021-03-15-apply-to-stats-grad-school/index.html</guid>
-  <pubDate>Mon, 15 Mar 2021 05:00:00 GMT</pubDate>
-  <media:content url="https://simonpcouch.com/blog/2021-03-15-apply-to-stats-grad-school/featured.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>

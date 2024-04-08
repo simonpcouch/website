@@ -1,0 +1,309 @@
+---
+title: "Measuring elapsed time to fit with tidymodels"
+date: '2024-04-08'
+tags:
+  - tidymodels
+  - parsnip
+  - rstats
+subtitle: "The development versions of tidymodels packages now include tools to benchmark training time."
+image: featured.png
+summary: ''
+---
+
+> **tl;dr**: The development versions of tidymodels packages include methods for a [new extract function](https://workflows.tidymodels.org/dev/reference/extract-workflow.html), `extract_fit_time()`, that returns the time required to train a workflow. Pass `extract_fit_time()` as a control option while tuning and run `collect_extracts()` to see training times for resampled workflows. In this example, we can identify a modeling workflow that trains more than 10x faster than the most performant model with very little decrease in predictive performance.
+
+
+A year ago, [Emil](https://emilhvitfeldt.com/) put together [a](https://github.com/tidymodels/workflows/pull/191) [proof](https://github.com/tidymodels/recipes/pull/1071) [of](https://github.com/tidymodels/parsnip/pull/853) [concept](https://github.com/tidymodels/hardhat/pull/218) for a function that would return measurements of how long it took for different tidymodels objects to fit. This had been a longstanding feature request across many of our repositories. Then, we got pretty busy implementing [survival analysis](https://tidyverse.org/blog/2024/04/tidymodels-survival-analysis/) and [fairness metrics](https://www.tidyverse.org/blog/2024/03/tidymodels-fairness/) and only recently picked these changes back up to polish off the rough edges. We just merged them into the main developmental versions of the packages and are interested in hearing what folks think before they head off to CRAN!
+
+To install the packages with these changes, use the following code:
+
+```{r}
+#| label: install
+#| eval: false
+pak::pak(
+  paste0(
+    "tidymodels/", 
+    c("workflows", "recipes", "parsnip", "hardhat")
+  )
+)
+```
+
+Now, loading the tidymodels packages:
+
+```{r}
+#| label: load-tidymodels
+#| message: false
+#| warning: false
+library(tidymodels)
+```
+
+```{r}
+#| label: set-style
+#| echo: false
+theme_set(
+  theme_bw() +
+  theme(
+    panel.background = element_rect(fill = "#f8f8f1", color = "#f8f8f1"),
+    plot.background = element_rect(fill = "#f8f8f1"))
+)
+
+options(
+  ggplot2.discrete.fill = c("#ccb118", "#4A7862"),
+  ggplot2.discrete.colour = c("#ccb118", "#4A7862")
+)
+
+
+```
+
+## Getting started
+
+For a simpler example, let's start off with just fitting a parsnip model. We'll use the `taxi` data from modeldata as an example, predicting whether a trip will result in a `tip` or not:
+
+```{r}
+#| label: print-taxi
+taxi
+```
+
+The following code fits an XGBoost boosted tree with parsnip:
+
+```{r}
+#| label: taxi-fit
+taxi_fit <- fit(boost_tree(mode = "classification"), tip ~ ., taxi)
+```
+
+With these new package versions, we now have access to a function called `extract_fit_time()` that will return the elapsed time to fit the model:
+
+```{r}
+#| label: extract-time-taxi
+extract_fit_time(taxi_fit)
+```
+
+Couldn't we just wrap that whole `fit()` expression in `system.time()` and get the same thing, though?
+
+Actually, no! `extract_fit_time()` returns the elapsed time to evaluate the *engine* fit, without tidymodels' overhead on top. The differences between `system.time()` and the value of `extract_fit_time()` are exactly where this new function will come in handy.
+
+tidymodels doesn't actually implement it's own training algorithms for boosted trees. Instead, the framework takes in code with a common input interface, translates that code to pass off to modeling *engines* which take care of the actual training, and then translates the output back to a common output interface. That process can be visualized something like this:
+
+```{r}
+#| label: translate-diagram
+#| echo: false
+#| fig-alt: "A graphic representing the parsnip interface. In order, step 1 'translate', step 2 'call', and step 3 'translate', outline the process of translating from the standardized tidymodels interface to an engine's specific interface, calling the modeling engine, and translating back to the standardized tidymodels interface. Step 1 and step 3 are in green, while step 2 is in orange."
+knitr::include_graphics("figures/translate_diagram.png")
+```
+
+When viewed through the lens of elapsed time, the portion of the diagram in orange, labeled **Step 2)**, is what is measured by `extract_fit_time()`. The portions of the elapsed time shown in green, labeled **Steps 1)** and **3)**, are tidymodels' "overhead." That could be measured as the difference between `system.time()` and `extract_fit_time()`. Let's calculate that difference exactly:
+
+```{r}
+#| label: taxi-fit-2
+taxi_elapsed <- 
+  system.time({
+    taxi_fit <- fit(boost_tree(mode = "classification"), tip ~ ., taxi)
+  })[["elapsed"]]
+
+```
+
+Juxtaposing those two values:
+
+```{r}
+#| label: taxi-elapsed
+taxi_elapsed
+
+extract_fit_time(taxi_fit)$elapsed
+```
+
+The total elapsed time of the fit is `r taxi_elapsed` seconds, and the portion of that elapsed time spent inside of XGBoost is `r extract_fit_time(taxi_fit)$elapsed` seconds. Said another way, the XGBoost fit itself accounts for `r round(100 * extract_fit_time(taxi_fit)$elapsed / taxi_elapsed, 1)`% of the total time of this model fit.
+
+::: callout-note
+The story is a bit more complicated for recipes, which also now have `extract_fit_time()` methods. We *do* implement the training routines for many of those ourselves, so the concept of "overhead" isn't so straightforward there. For those methods, fit times refer to the elapsed times of `prep()` and `bake()` while each step is trained.
+:::
+
+Measuring the relative overhead of tidymodels is of interest to us as the developers, of course. More importantly, though, these tools can also be used to get a sense for how long different parts of a larger ML pipeline take compared to each other and choose models that fit and predict more quickly (as long as predictions are similarly performant).
+
+## Resampling a model
+
+As an example, let's tune this XGBoost model using cross-validation. First, we'll split the taxi data up into training and testing sets, resampling the training set:
+
+```{r}
+#| label: taxi-folds
+set.seed(123)
+taxi_split <- initial_split(taxi, prop = 0.8, strata = tip)
+taxi_train <- training(taxi_split)
+taxi_test <- testing(taxi_split)
+taxi_folds <- vfold_cv(taxi_train)
+```
+
+Then, defining a boosted tree model that tunes `learn_rate` and `trees`; boosted tree ensembles with higher `learn_rate`s might not perform as effectively, but they require fewer `trees` in the ensemble and thus train faster. We'd like to find the "sweet spot" of combinations of these parameters.
+
+```{r}
+#| label: bt
+bt <- 
+  boost_tree(
+    mode = "classification", 
+    learn_rate = tune(), 
+    trees = tune()
+  )
+```
+
+Now, we'll conduct a grid search for the best values of `learn_rate` and `trees`, passing the new `extract_fit_time()` function to the [control function `control_grid()`](https://tune.tidymodels.org/reference/control_grid.html). Every time we fit a model when resampling (`nrow(taxi_folds) * grid = 10 * 10 = 100` times!), we'll extract how long it took the engine to fit.
+
+```{r}
+#| label: bt_res
+#| cache: true
+bt_res <- 
+  tune_grid(
+    bt, 
+    tip ~ ., 
+    taxi_folds, 
+    control = control_grid(extract = extract_fit_time)
+  )
+```
+
+This is what the `bt_res` object looks like:
+
+```{r}
+#| label: bt-res-print
+bt_res
+```
+
+## Understanding fit time and performance
+
+Every column in a tuning result that's prefixed with a `.` has a `collect_*()` function associated with it that helps to summarize that column. We'll use `collect_extracts()` to collect information on the extracts which are, in this case, elapsed fit times:
+
+```{r}
+#| label: bt-res-extracts
+bt_extracts <- collect_extracts(bt_res)
+
+bt_extracts
+```
+
+Unnesting on `.extracts` so we can see some of those timings:
+
+```{r}
+#| label: unnest-extracts
+bt_extracts_unnested <- bt_extracts %>% unnest(cols = ".extracts")
+
+bt_extracts_unnested
+```
+
+The times to fit vary quite a bit between workflows, to say the least:
+
+```{r}
+#| label: plot-un
+#| warning: false
+#| fig-align: center
+#| fig-alt: "A ggplot histogram showing elapsed fit times varying from almost 0 to around 10. The distribution is uniform; each bin contains nearly the same count of values."
+ggplot(bt_extracts_unnested) +
+  aes(x = elapsed) +
+  geom_histogram(binwidth = 1, boundary = 0) +
+  scale_x_continuous(
+    breaks = seq(0, max(bt_extracts_unnested$elapsed) + 1, 1L)
+  ) +
+  labs(x = "Elapsed fit time")
+```
+
+Almost all of this variation in elapsed time is explained by the value of `trees`:
+
+```{r}
+#| label: plot-bi
+#| warning: false
+#| fig-align: center
+#| fig-alt: "A ggplot dotplot showing a very strong, linear, positive correlation between elapsed fit time and number of trees."
+ggplot(bt_extracts_unnested) +
+  aes(x = elapsed, y = trees) +
+  geom_jitter() +
+  labs(x = "Elapsed fit time", y = "# of trees")
+```
+
+The "clumps" of points are the 10 different unique combinations of `trees` and `learn_rate`s that are fitted on 10 different resamples; identical hyperparameters lead to very similar fit times, in this case.
+
+In use cases where we will go on to resample/train this model many times (such as in iterative search or continuous training) it may be advantageous for us to pick a model that fits as quickly as possible as long as it has comparable performance with the overall most performant model. We can integrate the information from `collect_metrics()` with `collect_extracts()` to see if there any quick-fitting models with comparable performance. First, collecting metrics:
+
+```{r}
+#| label: bt-metrics
+bt_metrics <- collect_metrics(bt_res)
+
+bt_metrics
+```
+
+Joining this output:
+
+```{r}
+#| label: bt-metrics-extracts
+bt_metrics_extracts <-
+  left_join(
+    # metrics, summarized across resamples
+    bt_metrics,
+    # summarize fit times across resamples
+    summarize(
+      bt_extracts_unnested, 
+      elapsed = mean(elapsed),
+      .by = c(trees, learn_rate, .config)
+    ),
+    by = c("trees", "learn_rate", ".config")
+  ) %>%
+  relocate(elapsed, .before = everything())
+
+bt_metrics_extracts
+```
+
+Now, plotting:
+
+```{r}
+#| label: plot-perf-vs-time
+#| fig-align: center
+#| fig-alt: "Three faceted ggplot dotplots, with different performance metrics in each plot, show that metric values don't correlate well with elapsed time to fit in this case."
+ggplot(bt_metrics_extracts) +
+  aes(x = elapsed, y = mean) +
+  geom_point() +
+  facet_wrap(~.metric, scales = "free") +
+  labs(x = "Elapsed fit time", y = "Metric value")
+```
+
+In this context, we see that w.r.t `accuracy()` and `brier_class()`, there's not a clear relationship between the elapsed fit time and model performance. w.r.t. `roc_auc()`, longer-fitting models seem *less* performant.
+
+::: callout-note
+By most measures, none of these models are particularly performant. Alas.🙂
+:::
+
+## Model selection
+
+We can use the `select_best()` function from tune to pick the most performant model, without regard for elapsed fit time:
+
+```{r}
+#| label: bt-most-performant
+bt_most_performant <- select_best(bt_res, metric = "roc_auc")
+
+bt_most_performant
+```
+
+Using `roc_auc()`, ignoring fit time, we'd choose the model configuration `r bt_most_performant$.config`, corresponding to an `roc_auc()` of `r bt_metrics %>% filter(.metric == "roc_auc" & .config == bt_most_performant$.config) %>% pull(mean) %>% round(3)`.
+
+Instead, we could choose the quickest-fitting model with a performance value within one standard error of the most performant model.
+
+```{r}
+#| label: best-speedy-fit
+best_fit <-
+  bt_metrics_extracts %>%
+  filter(.metric == "roc_auc") %>%
+  arrange(desc(mean)) %>%
+  select(mean, std_err, elapsed, .config)
+
+best_speedy_fit <- 
+  bt_metrics_extracts %>%
+  filter(.metric == "roc_auc") %>%
+  filter(mean >= best_fit$mean - best_fit$std_err) %>%
+  arrange(elapsed) %>%
+  slice(1)
+
+best_speedy_fit
+```
+
+::: callout-note
+Existing tidymodels users may recognize this selection workflow as an ad-hoc version of `select_by_one_std_err()`.
+:::
+
+Now, integrating our knowledge of fit time, we'd choose the model configuration `r best_speedy_fit$.config`, corresponding to an `roc_auc()` of `r best_speedy_fit %>% pull(mean) %>% round(3)`. The mean elapsed fit time for this model is `r round(best_speedy_fit$elapsed, 3)` seconds, compared a mean elapsed fit time for the most performant model of `r round(best_fit$elapsed[1], 3)` seconds, **a speedup of `r round(best_fit$elapsed[1] / best_speedy_fit$elapsed, 1)`x!** Of course, this isn't as much of an issue when model fits are as quick as they are here, but for more complex fits on larger datasets, an order of magnitude is a gamechanger.
+
+## What do you think?
+
+These changes haven't yet made it to the CRAN versions of tidymodels packages (and likely won't for a good bit). Before they hit CRAN, we'd love to hear your thoughts on the interface and take any suggestions on how we might improve the interface.
