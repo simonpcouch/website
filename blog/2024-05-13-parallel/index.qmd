@@ -1,0 +1,324 @@
+---
+title: "How to best parallelize boosted tree model fits with tidymodels"
+date: '2024-05-13'
+tags:
+  - tidymodels
+  - parsnip
+  - rstats
+subtitle: "Should tidymodels users use the parallelism implementations from XGBoost and LightGBM?"
+image: featured.png
+summary: ''
+---
+
+```{r}
+#| echo: false
+if (file.exists("fit_timings.rda")) {
+  eval_fits <- FALSE
+  # read outputs in from source:
+  load("fit_timings.rda")
+} else {
+  eval_fits <- TRUE
+}
+```
+
+The [XGBoost](https://xgboost.readthedocs.io/) and [LightGBM](https://lightgbm.readthedocs.io/en/stable/) modeling engines both enable distributing the computations needed to train a single boosted tree model across several CPU cores. Similarly, the [tidymodels framework](https://tidymodels.org) enables distributing model fits across cores. The natural question, then, is whether tidymodels users ought to make use of the engine's parallelism implementation, tidymodels' implementation, or both at the same time. This blog post is a scrappy attempt at finding which of those approaches will lead to the smallest elapsed time when fitting many models.
+
+## The problem
+
+For example, imagine the case where we evaluate a single model against 10 resamples. Doing so sequentially might look something like this, where each dotted orange segment indicates a model fit:
+
+```{r}
+#| label: basic_resample
+#| echo: false
+#| fig-alt: "A horizontal line segment. The left- and right-most tips are colored in green, and the majority of the line segment, on the inside, is orange. 10 dots are evenly interspersed among the orange portion of the segment."
+knitr::include_graphics("figures/basic_resample.png")
+```
+
+The x-axis here depicts time. The short green segments on either side of the orange segments indicate the portions of the elapsed time allotted to tidymodels "overhead," like checking arguments and combining results. This graphic depicts a *sequential* series of model fits, where each fit takes place one after the other.
+
+::: callout-note
+If you're feeling lost already, a [previous blog post of mine](https://www.simonpcouch.com/blog/2023-03-24-speedups-2023/) on how we think about optimizing our code in tidymodels might be helpful.
+:::
+
+### 1) Use the engine's parallelism implementation only.
+
+The XGBoost and LightGBM engines implement their own parallelism frameworks such that a single model fit can be distributed across many cores. If we distribute a single model fit's computations across 5 cores, we could see, best-case, a 5-fold speedup in the time to fit each model. The model fits still happen in order, but each individual (hopefully) happens much quicker, resulting in a shorter overall time:
+
+
+```{r}
+#| label: engine_resample
+#| echo: false
+#| fig-alt: "The same line segment, but 'squished' horizontally."
+knitr::include_graphics("figures/engine_resample.png")
+```
+
+The increased height of each segment representing a model fit represents how the computations for each model fit are distributed across multiple CPU cores. (I don't know. There's probably a better way to depict that.)
+
+### 2) Use tidymodels' parallelism implementation only.
+
+The tidymodels framework supports distributing model fits across CPU cores in the sense that, when fitting **n** models across **m** CPU cores, tidymodels can allot each core to fit **n/m** of the models. In the case of 10 models across 5 cores, then, each core takes care of fitting two:
+
+```{r}
+#| label: tidymodels_resample
+#| echo: false
+#| fig-alt: "The same line segment to the first, except the orange portion of the segment has been split into 5 segments, 2 dots wide each, and they're all stacked vertically on top of each other."
+knitr::include_graphics("figures/tidymodels_resample.png")
+```
+
+Note that a given model fit happens on a single core, so the time to fit a single model stays the same.
+
+### 3) Use both the engine's and tidymodels' parallelism implementation.
+
+Why can't we do both **1)** and **2)**? If both parallelism approaches play nicely with each other, and neither of them was able to *perfectly* distribute its computations across all of the available resources, then we'd see that we could get some of the benefits from both approach and get the maximal computational performance out of our available resources:
+
+```{r}
+#| label: both_resample
+#| echo: false
+#| fig-alt: "The same graphic from above, but the five orange segments stacked on top of each other are also 'squished' horizontally: a combination of the two graphics above."
+knitr::include_graphics("figures/both_resample.png")
+```
+
+In reality, parallelism frameworks come with their fair share of overhead, and often don't play nicely with each other. It'd be nice to know if, in practice, any of these three approaches stand out among the others as the most performant way to resample XGBoost and LightGBM models with tidymodels. We'll simulate some data and run some quick benchmarks to get some intuition about how to best parallelize parameter tuning with tidymodels.
+
+This post is based on a similar idea to an [Applied Predictive Modeling blog post](https://blog.aml4td.org/posts/while-you-wait-for-that-to-finish-can-i-interest-you-in-parallel-processing/index.html) from Max Kuhn in 2018, but is generally:
+
+-   less refined (Max tries out many different dataset sizes on three different operating systems, while I fix both of those variables here),
+-   uses modern implementations, incl. tidymodels instead of [caret](https://topepo.github.io/caret/), [future](https://www.futureverse.org/) instead of [foreach](https://cran.r-project.org/web/packages/foreach/vignettes/foreach.html), and updated XGBoost (and LightGBM) package versions, and
+-   happens to be situated in a modeling context more similar to one that I'm currently benchmarking for another project.
+
+I'm running this experiment on an M1 Pro Macbook Pro with 32GB of RAM and 10 cores, running MacOS Sonoma 14.4.1. We'll create a 10,000-row dataset and partition it into 10 folds for cross-validation, tuning among a set of 10 possible candidate values, resulting in 100 9,000-row model fits per call to [`tune_grid()`](https://tune.tidymodels.org/reference/tune_grid.html).
+
+## Setup
+
+Starting off by loading needed packages and simulating some data using the [`sim_classification()`](https://modeldata.tidymodels.org/reference/sim_classification.html) function from modeldata:
+
+```{r}
+#| message: false
+#| warning: false
+library(tidymodels)
+library(bonsai)
+library(future)
+
+set.seed(1)
+dat <- sim_classification(1e4)
+```
+
+We'd like to predict `class` using the rest of the variables in the dataset:
+
+```{r}
+dat
+
+form <- class ~ .
+```
+
+Splitting the data into training and testing sets before making a 10-fold cross-validation object:
+
+```{r}
+set.seed(1)
+dat_split <- initial_split(dat)
+dat_train <- training(dat_split)
+dat_test <- testing(dat_split)
+dat_folds <- vfold_cv(dat_train)
+
+dat_folds
+```
+
+For both XGBoost and LightGBM, we'll only tune the learning rate and number of trees.
+
+```{r}
+spec_bt <-
+  boost_tree(learn_rate = tune(), trees = tune()) %>%
+  set_mode("classification")
+```
+
+The `trees` parameter greatly affects the time to fit a boosted tree model. Just to be *super* sure that analogous fits are happening in each of the following `tune_grid()` calls, we'll create the grid of possible parameter values beforehand and pass it to each `tune_grid()` call.
+
+```{r}
+set.seed(1)
+
+grid_bt <-
+  spec_bt %>%
+  extract_parameter_set_dials() %>%
+  grid_latin_hypercube(size = 10)
+
+grid_bt
+```
+
+For both LightGBM and XGBoost, we'll test each of those three approaches. I'll write out the explicit code I use to time each of these computations; note that the only thing that changes in each of those chunks is the parallelism setup code and the arguments to `set_engine()`.
+
+::: {.callout-note title="Homework📄"}
+Write a function that takes in a parallelism setup and engine and returns a `timing` like those below!😉 Make sure to "tear down" the parallelism setup after.
+:::
+
+For a summary of those timings, see @sec-putting-it-all-together.
+
+## XGBoost
+
+First, testing **1) engine implementation only**, we use `plan(sequential)` to tell tidymodels' parallelism framework *not* to kick in, and set `nthread = 10` in `set_engine()` to tell XGBoost to distribute its computations across 10 cores:
+
+```{r}
+#| eval: !expr eval_fits
+#| label: timing_xgb_1
+plan(sequential)
+
+timing_xgb_1 <- system.time({
+  res <-
+    tune_grid(
+      spec_bt %>% set_engine("xgboost", nthread = 10),
+      form,
+      dat_folds,
+      grid = grid_bt
+    )
+})[["elapsed"]]
+```
+
+Now, for **2) tidymodels implementation only**, we use `plan(multisession, workers = 10)` to tell tidymodels to distribute its computations across cores and set `nthread = 1` to disable XGBoost's parallelization:
+
+```{r}
+#| eval: !expr eval_fits
+#| label: timing_xgb_2
+plan(multisession, workers = 10)
+
+timing_xgb_2 <- system.time({
+  res <-
+    tune_grid(
+      spec_bt %>% set_engine("xgboost", nthread = 1),
+      form,
+      dat_folds,
+      grid = grid_bt
+    )
+})[["elapsed"]]
+```
+
+Finally, for **3) both parallelism implementations**, we enable parallelism for both framework:
+
+```{r}
+#| eval: !expr eval_fits
+#| label: timing_xgb_3
+plan(multisession, workers = 10)
+
+timing_xgb_3 <- system.time({
+  res <-
+    tune_grid(
+      spec_bt %>% set_engine("xgboost", nthread = 10),
+      form,
+      dat_folds,
+      grid = grid_bt
+    )
+})[["elapsed"]]
+```
+
+We'll now do the same thing for LightGBM.
+
+## LightGBM
+
+First, testing **1) engine implementation only**:
+
+```{r}
+#| eval: !expr eval_fits
+#| label: timing_lgb_1
+plan(sequential)
+
+timing_lgb_1 <- system.time({
+  res <-
+    tune_grid(
+      spec_bt %>% set_engine("lightgbm", num_threads = 10),
+      form,
+      dat_folds,
+      grid = grid_bt
+    )
+})[["elapsed"]]
+```
+
+Now, **2) tidymodels implementation only**:
+
+```{r}
+#| eval: !expr eval_fits
+#| label: timing_lgb_2
+plan(multisession, workers = 10)
+
+timing_lgb_2 <- system.time({
+  res <-
+    tune_grid(
+      spec_bt %>% set_engine("lightgbm", num_threads = 1),
+      form,
+      dat_folds,
+      grid = grid_bt
+    )
+})[["elapsed"]]
+```
+
+Finally, **3) both parallelism implementations**:
+
+```{r}
+#| eval: !expr eval_fits
+#| label: timing_lgb_3
+plan(multisession, workers = 10)
+
+timing_lgb_3 <- system.time({
+  res <-
+    tune_grid(
+      spec_bt %>% set_engine("lightgbm", num_threads = 10),
+      form,
+      dat_folds,
+      grid = grid_bt
+    )
+})[["elapsed"]]
+```
+
+## Putting it all together {#sec-putting-it-all-together}
+
+At a glance, those timings are (in seconds):
+
+```{r}
+#| echo: FALSE
+if (eval_fits) {
+  fit_timings <- 
+    tibble(
+      approach = c("engine only", "tidymodels only", "both"),
+      xgboost = c(timing_xgb_1, timing_xgb_2, timing_xgb_3),
+      lightgbm = c(timing_lgb_1, timing_lgb_2, timing_lgb_3)
+    )
+  
+  save(fit_timings, file = "fit_timings.rda")
+} else {
+  load("fit_timings.rda")
+}
+
+options(pillar.sigfig = 5)
+```
+
+```{r}
+#| eval: false
+tibble(
+  approach = c("engine only", "tidymodels only", "both"),
+  xgboost = c(timing_xgb_1, timing_xgb_2, timing_xgb_3),
+  lightgbm = c(timing_lgb_1, timing_lgb_2, timing_lgb_3)
+)
+```
+
+```{r}
+#| echo: false
+fit_timings
+```
+
+At least in this context, we see:
+
+-   Using only the engine's parallelization results in a substantial slowdown for both engines.
+-   For both XGBoost and LightGBM, just using the tidymodels parallelization vs. combining the tidymodels and engine parallelization seem comparable in terms of timing. (This is nice to see in the sense that users don't need to adjust their tidymodels parallelism configuration just to fit this particular kind of model; if they have a parallelism configuration set up already, it won't hurt to keep it around.)
+-   LightGBM models train quite a bit faster than XGBoost models, though we can't meaningfully compare those fit times without knowing whether performance metrics are comparable.
+
+These are similar conclusions to what Max observes in the linked APM blog post. A few considerations that, in this context, may have made tidymodels' parallelization seem extra advantageous:
+
+-   We're resampling across 10 folds here and, conveniently, distributing those computations across 10 cores. That is, each core is (likely) responsible for the fits on just one fold, and there are no cores "sitting idle" unless one model fit finishes well before than another.
+-   We're resampling models rather than just fitting one model. If we had just fitted one model, tidymodels wouldn't offer any support for distributing computations across cores, but this is exactly what XGBoost and LightGBM support.
+-   When using tidymodels' parallelism implementation, it's not *just* the model fits that are distributed across cores. Preprocessing, prediction, and metric calculation is also distributed across cores when using tidymodels' parallelism implementation. (Framed in the context of the diagrams above, there are little green segments dispersed throughout the orange ones that _can_ be parallelized.)
+
+## Session Info
+
+```{r}
+sessioninfo::session_info(
+  c(tidymodels_packages(), "xgboost", "lightgbm"),
+  dependencies = FALSE
+)
+```

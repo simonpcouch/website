@@ -1,11 +1,8 @@
 [
   {
-    "listing": "/about/index.html",
-    "items": []
-  },
-  {
     "listing": "/blog/index.html",
     "items": [
+      "/blog/2024-05-13-parallel/index.html",
       "/blog/2024-04-08-fit-time/index.html",
       "/blog/2024-03-14-oracle/index.html",
       "/blog/2023-11-30-listening-2023/index.html",
@@ -33,5 +30,9 @@
       "/blog/2020-10-27-gentle-intro-stacks/index.html",
       "/blog/2020-10-11-intro/index.html"
     ]
+  },
+  {
+    "listing": "/about/index.html",
+    "items": []
   }
 ]

@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta name="dcterms.date" content="2024-05-13">
+<title>How to best parallelize boosted tree model fits with tidymodels | Simon P. Couch</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../assets/cabin.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script><script async="" src="https://www.googletagmanager.com/gtag/js?id=G-DDB8R0B1ZW"></script><script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
+</script>
+</head>
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg navbar-dark "><div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../assets/cabin.png" alt="" class="navbar-logo"></a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Simon P. Couch</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+<li class="nav-item">
+    <a class="nav-link" href="../../about/index.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog/index.html" rel="" target="">
+ <span class="menu-text">Blog</span></a>
+  </li>  
+</ul>
+<div class="quarto-navbar-tools">
+    <a href="https://www.github.com/simonpcouch/website" rel="" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav></header><!-- content --><header id="title-block-header" class="quarto-title-block default page-columns page-full"><div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">How to best parallelize boosted tree model fits with tidymodels</h1>
+            <p class="subtitle lead">Should tidymodels users use the parallelism implementations from XGBoost and LightGBM?</p>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">May 13, 2024</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content"><p>The <a href="https://xgboost.readthedocs.io/">XGBoost</a> and <a href="https://lightgbm.readthedocs.io/en/stable/">LightGBM</a> modeling engines both enable distributing the computations needed to train a single boosted tree model across several CPU cores. Similarly, the <a href="https://tidymodels.org">tidymodels framework</a> enables distributing model fits across cores. The natural question, then, is whether tidymodels users ought to make use of the engine’s parallelism implementation, tidymodels’ implementation, or both at the same time. This blog post is a scrappy attempt at finding which of those approaches will lead to the smallest elapsed time when fitting many models.</p>
+<section id="the-problem" class="level2"><h2 class="anchored" data-anchor-id="the-problem">The problem</h2>
+<p>For example, imagine the case where we evaluate a single model against 10 resamples. Doing so sequentially might look something like this, where each dotted orange segment indicates a model fit:</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="figures/basic_resample.png" class="img-fluid" alt="A horizontal line segment. The left- and right-most tips are colored in green, and the majority of the line segment, on the inside, is orange. 10 dots are evenly interspersed among the orange portion of the segment." width="1126"></p>
+</div>
+</div>
+<p>The x-axis here depicts time. The short green segments on either side of the orange segments indicate the portions of the elapsed time allotted to tidymodels “overhead,” like checking arguments and combining results. This graphic depicts a <em>sequential</em> series of model fits, where each fit takes place one after the other.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If you’re feeling lost already, a <a href="https://www.simonpcouch.com/blog/2023-03-24-speedups-2023/">previous blog post of mine</a> on how we think about optimizing our code in tidymodels might be helpful.</p>
+</div>
+</div>
+<section id="use-the-engines-parallelism-implementation-only." class="level3"><h3 class="anchored" data-anchor-id="use-the-engines-parallelism-implementation-only.">1) Use the engine’s parallelism implementation only.</h3>
+<p>The XGBoost and LightGBM engines implement their own parallelism frameworks such that a single model fit can be distributed across many cores. If we distribute a single model fit’s computations across 5 cores, we could see, best-case, a 5-fold speedup in the time to fit each model. The model fits still happen in order, but each individual (hopefully) happens much quicker, resulting in a shorter overall time:</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="figures/engine_resample.png" class="img-fluid" alt="The same line segment, but 'squished' horizontally." width="1126"></p>
+</div>
+</div>
+<p>The increased height of each segment representing a model fit represents how the computations for each model fit are distributed across multiple CPU cores. (I don’t know. There’s probably a better way to depict that.)</p>
+</section><section id="use-tidymodels-parallelism-implementation-only." class="level3"><h3 class="anchored" data-anchor-id="use-tidymodels-parallelism-implementation-only.">2) Use tidymodels’ parallelism implementation only.</h3>
+<p>The tidymodels framework supports distributing model fits across CPU cores in the sense that, when fitting <strong>n</strong> models across <strong>m</strong> CPU cores, tidymodels can allot each core to fit <strong>n/m</strong> of the models. In the case of 10 models across 5 cores, then, each core takes care of fitting two:</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="figures/tidymodels_resample.png" class="img-fluid" alt="The same line segment to the first, except the orange portion of the segment has been split into 5 segments, 2 dots wide each, and they're all stacked vertically on top of each other." width="1126"></p>
+</div>
+</div>
+<p>Note that a given model fit happens on a single core, so the time to fit a single model stays the same.</p>
+</section><section id="use-both-the-engines-and-tidymodels-parallelism-implementation." class="level3"><h3 class="anchored" data-anchor-id="use-both-the-engines-and-tidymodels-parallelism-implementation.">3) Use both the engine’s and tidymodels’ parallelism implementation.</h3>
+<p>Why can’t we do both <strong>1)</strong> and <strong>2)</strong>? If both parallelism approaches play nicely with each other, and neither of them was able to <em>perfectly</em> distribute its computations across all of the available resources, then we’d see that we could get some of the benefits from both approach and get the maximal computational performance out of our available resources:</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="figures/both_resample.png" class="img-fluid" alt="The same graphic from above, but the five orange segments stacked on top of each other are also 'squished' horizontally: a combination of the two graphics above." width="1126"></p>
+</div>
+</div>
+<p>In reality, parallelism frameworks come with their fair share of overhead, and often don’t play nicely with each other. It’d be nice to know if, in practice, any of these three approaches stand out among the others as the most performant way to resample XGBoost and LightGBM models with tidymodels. We’ll simulate some data and run some quick benchmarks to get some intuition about how to best parallelize parameter tuning with tidymodels.</p>
+<p>This post is based on a similar idea to an <a href="https://blog.aml4td.org/posts/while-you-wait-for-that-to-finish-can-i-interest-you-in-parallel-processing/index.html">Applied Predictive Modeling blog post</a> from Max Kuhn in 2018, but is generally:</p>
+<ul>
+<li>less refined (Max tries out many different dataset sizes on three different operating systems, while I fix both of those variables here),</li>
+<li>uses modern implementations, incl.&nbsp;tidymodels instead of <a href="https://topepo.github.io/caret/">caret</a>, <a href="https://www.futureverse.org/">future</a> instead of <a href="https://cran.r-project.org/web/packages/foreach/vignettes/foreach.html">foreach</a>, and updated XGBoost (and LightGBM) package versions, and</li>
+<li>happens to be situated in a modeling context more similar to one that I’m currently benchmarking for another project.</li>
+</ul>
+<p>I’m running this experiment on an M1 Pro Macbook Pro with 32GB of RAM and 10 cores, running MacOS Sonoma 14.4.1. We’ll create a 10,000-row dataset and partition it into 10 folds for cross-validation, tuning among a set of 10 possible candidate values, resulting in 100 9,000-row model fits per call to <a href="https://tune.tidymodels.org/reference/tune_grid.html"><code>tune_grid()</code></a>.</p>
+</section></section><section id="setup" class="level2"><h2 class="anchored" data-anchor-id="setup">Setup</h2>
+<p>Starting off by loading needed packages and simulating some data using the <a href="https://modeldata.tidymodels.org/reference/sim_classification.html"><code>sim_classification()</code></a> function from modeldata:</p>
+<div class="cell">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidymodels.tidymodels.org">tidymodels</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://bonsai.tidymodels.org/">bonsai</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://future.futureverse.org">future</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu">sim_classification</span><span class="op">(</span><span class="fl">1e4</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We’d like to predict <code>class</code> using the rest of the variables in the dataset:</p>
+<div class="cell">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">dat</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10,000 × 16
+   class   two_factor_1 two_factor_2 non_linear_1 non_linear_2 non_linear_3
+   &lt;fct&gt;          &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;
+ 1 class_2       -0.329       -1.28         0.186       0.578         0.732
+ 2 class_2        0.861       -0.389        0.106       0.701         0.647
+ 3 class_2       -0.461       -1.69         0.193       0.337         0.814
+ 4 class_2        2.75         1.35        -0.215       0.119         0.104
+ 5 class_2        0.719        0.127       -0.479       0.878         0.334
+ 6 class_2       -0.743       -1.36         0.480       0.0517        0.400
+ 7 class_2        0.805        0.447       -0.947       0.342         0.382
+ 8 class_2        0.669        1.23         0.682       0.461         0.924
+ 9 class_2        0.887        0.593        0.701       0.772         0.297
+10 class_1       -1.14         0.353       -0.729       0.819         0.331
+# ℹ 9,990 more rows
+# ℹ 10 more variables: linear_01 &lt;dbl&gt;, linear_02 &lt;dbl&gt;, linear_03 &lt;dbl&gt;,
+#   linear_04 &lt;dbl&gt;, linear_05 &lt;dbl&gt;, linear_06 &lt;dbl&gt;, linear_07 &lt;dbl&gt;,
+#   linear_08 &lt;dbl&gt;, linear_09 &lt;dbl&gt;, linear_10 &lt;dbl&gt;</code></pre>
+</div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">form</span> <span class="op">&lt;-</span> <span class="va">class</span> <span class="op">~</span> <span class="va">.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Splitting the data into training and testing sets before making a 10-fold cross-validation object:</p>
+<div class="cell">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">dat_split</span> <span class="op">&lt;-</span> <span class="fu">initial_split</span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span>
+<span><span class="va">dat_train</span> <span class="op">&lt;-</span> <span class="fu">training</span><span class="op">(</span><span class="va">dat_split</span><span class="op">)</span></span>
+<span><span class="va">dat_test</span> <span class="op">&lt;-</span> <span class="fu">testing</span><span class="op">(</span><span class="va">dat_split</span><span class="op">)</span></span>
+<span><span class="va">dat_folds</span> <span class="op">&lt;-</span> <span class="fu">vfold_cv</span><span class="op">(</span><span class="va">dat_train</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">dat_folds</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#  10-fold cross-validation 
+# A tibble: 10 × 2
+   splits             id    
+   &lt;list&gt;             &lt;chr&gt; 
+ 1 &lt;split [6750/750]&gt; Fold01
+ 2 &lt;split [6750/750]&gt; Fold02
+ 3 &lt;split [6750/750]&gt; Fold03
+ 4 &lt;split [6750/750]&gt; Fold04
+ 5 &lt;split [6750/750]&gt; Fold05
+ 6 &lt;split [6750/750]&gt; Fold06
+ 7 &lt;split [6750/750]&gt; Fold07
+ 8 &lt;split [6750/750]&gt; Fold08
+ 9 &lt;split [6750/750]&gt; Fold09
+10 &lt;split [6750/750]&gt; Fold10</code></pre>
+</div>
+</div>
+<p>For both XGBoost and LightGBM, we’ll only tune the learning rate and number of trees.</p>
+<div class="cell">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">spec_bt</span> <span class="op">&lt;-</span></span>
+<span>  <span class="fu"><a href="https://parsnip.tidymodels.org/reference/boost_tree.html">boost_tree</a></span><span class="op">(</span>learn_rate <span class="op">=</span> <span class="fu"><a href="https://hardhat.tidymodels.org/reference/tune.html">tune</a></span><span class="op">(</span><span class="op">)</span>, trees <span class="op">=</span> <span class="fu"><a href="https://hardhat.tidymodels.org/reference/tune.html">tune</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://parsnip.tidymodels.org/reference/set_args.html">set_mode</a></span><span class="op">(</span><span class="st">"classification"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The <code>trees</code> parameter greatly affects the time to fit a boosted tree model. Just to be <em>super</em> sure that analogous fits are happening in each of the following <code>tune_grid()</code> calls, we’ll create the grid of possible parameter values beforehand and pass it to each <code>tune_grid()</code> call.</p>
+<div class="cell">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">grid_bt</span> <span class="op">&lt;-</span></span>
+<span>  <span class="va">spec_bt</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://hardhat.tidymodels.org/reference/hardhat-extract.html">extract_parameter_set_dials</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">grid_latin_hypercube</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">grid_bt</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 2
+   trees learn_rate
+   &lt;int&gt;      &lt;dbl&gt;
+ 1  1175    0.173  
+ 2   684    0.0817 
+ 3   558    0.00456
+ 4  1555    0.0392 
+ 5   861    0.00172
+ 6  1767    0.00842
+ 7  1354    0.0237 
+ 8    42    0.0146 
+ 9   241    0.00268
+10  1998    0.222  </code></pre>
+</div>
+</div>
+<p>For both LightGBM and XGBoost, we’ll test each of those three approaches. I’ll write out the explicit code I use to time each of these computations; note that the only thing that changes in each of those chunks is the parallelism setup code and the arguments to <code><a href="https://parsnip.tidymodels.org/reference/set_engine.html">set_engine()</a></code>.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Homework📄">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Homework📄
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Write a function that takes in a parallelism setup and engine and returns a <code>timing</code> like those below!😉 Make sure to “tear down” the parallelism setup after.</p>
+</div>
+</div>
+<p>For a summary of those timings, see <a href="#sec-putting-it-all-together">Section&nbsp;5</a>.</p>
+</section><section id="xgboost" class="level2"><h2 class="anchored" data-anchor-id="xgboost">XGBoost</h2>
+<p>First, testing <strong>1) engine implementation only</strong>, we use <code>plan(sequential)</code> to tell tidymodels’ parallelism framework <em>not</em> to kick in, and set <code>nthread = 10</code> in <code><a href="https://parsnip.tidymodels.org/reference/set_engine.html">set_engine()</a></code> to tell XGBoost to distribute its computations across 10 cores:</p>
+<div class="cell">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html">plan</a></span><span class="op">(</span><span class="va">sequential</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">timing_xgb_1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="op">{</span></span>
+<span>  <span class="va">res</span> <span class="op">&lt;-</span></span>
+<span>    <span class="fu">tune_grid</span><span class="op">(</span></span>
+<span>      <span class="va">spec_bt</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://parsnip.tidymodels.org/reference/set_engine.html">set_engine</a></span><span class="op">(</span><span class="st">"xgboost"</span>, nthread <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>,</span>
+<span>      <span class="va">form</span>,</span>
+<span>      <span class="va">dat_folds</span>,</span>
+<span>      grid <span class="op">=</span> <span class="va">grid_bt</span></span>
+<span>    <span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span><span class="op">[[</span><span class="st">"elapsed"</span><span class="op">]</span><span class="op">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now, for <strong>2) tidymodels implementation only</strong>, we use <code>plan(multisession, workers = 10)</code> to tell tidymodels to distribute its computations across cores and set <code>nthread = 1</code> to disable XGBoost’s parallelization:</p>
+<div class="cell">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html">plan</a></span><span class="op">(</span><span class="va">multisession</span>, workers <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">timing_xgb_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="op">{</span></span>
+<span>  <span class="va">res</span> <span class="op">&lt;-</span></span>
+<span>    <span class="fu">tune_grid</span><span class="op">(</span></span>
+<span>      <span class="va">spec_bt</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://parsnip.tidymodels.org/reference/set_engine.html">set_engine</a></span><span class="op">(</span><span class="st">"xgboost"</span>, nthread <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
+<span>      <span class="va">form</span>,</span>
+<span>      <span class="va">dat_folds</span>,</span>
+<span>      grid <span class="op">=</span> <span class="va">grid_bt</span></span>
+<span>    <span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span><span class="op">[[</span><span class="st">"elapsed"</span><span class="op">]</span><span class="op">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Finally, for <strong>3) both parallelism implementations</strong>, we enable parallelism for both framework:</p>
+<div class="cell">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html">plan</a></span><span class="op">(</span><span class="va">multisession</span>, workers <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">timing_xgb_3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="op">{</span></span>
+<span>  <span class="va">res</span> <span class="op">&lt;-</span></span>
+<span>    <span class="fu">tune_grid</span><span class="op">(</span></span>
+<span>      <span class="va">spec_bt</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://parsnip.tidymodels.org/reference/set_engine.html">set_engine</a></span><span class="op">(</span><span class="st">"xgboost"</span>, nthread <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>,</span>
+<span>      <span class="va">form</span>,</span>
+<span>      <span class="va">dat_folds</span>,</span>
+<span>      grid <span class="op">=</span> <span class="va">grid_bt</span></span>
+<span>    <span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span><span class="op">[[</span><span class="st">"elapsed"</span><span class="op">]</span><span class="op">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We’ll now do the same thing for LightGBM.</p>
+</section><section id="lightgbm" class="level2"><h2 class="anchored" data-anchor-id="lightgbm">LightGBM</h2>
+<p>First, testing <strong>1) engine implementation only</strong>:</p>
+<div class="cell">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html">plan</a></span><span class="op">(</span><span class="va">sequential</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">timing_lgb_1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="op">{</span></span>
+<span>  <span class="va">res</span> <span class="op">&lt;-</span></span>
+<span>    <span class="fu">tune_grid</span><span class="op">(</span></span>
+<span>      <span class="va">spec_bt</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://parsnip.tidymodels.org/reference/set_engine.html">set_engine</a></span><span class="op">(</span><span class="st">"lightgbm"</span>, num_threads <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>,</span>
+<span>      <span class="va">form</span>,</span>
+<span>      <span class="va">dat_folds</span>,</span>
+<span>      grid <span class="op">=</span> <span class="va">grid_bt</span></span>
+<span>    <span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span><span class="op">[[</span><span class="st">"elapsed"</span><span class="op">]</span><span class="op">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now, <strong>2) tidymodels implementation only</strong>:</p>
+<div class="cell">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html">plan</a></span><span class="op">(</span><span class="va">multisession</span>, workers <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">timing_lgb_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="op">{</span></span>
+<span>  <span class="va">res</span> <span class="op">&lt;-</span></span>
+<span>    <span class="fu">tune_grid</span><span class="op">(</span></span>
+<span>      <span class="va">spec_bt</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://parsnip.tidymodels.org/reference/set_engine.html">set_engine</a></span><span class="op">(</span><span class="st">"lightgbm"</span>, num_threads <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
+<span>      <span class="va">form</span>,</span>
+<span>      <span class="va">dat_folds</span>,</span>
+<span>      grid <span class="op">=</span> <span class="va">grid_bt</span></span>
+<span>    <span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span><span class="op">[[</span><span class="st">"elapsed"</span><span class="op">]</span><span class="op">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Finally, <strong>3) both parallelism implementations</strong>:</p>
+<div class="cell">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html">plan</a></span><span class="op">(</span><span class="va">multisession</span>, workers <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">timing_lgb_3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="op">{</span></span>
+<span>  <span class="va">res</span> <span class="op">&lt;-</span></span>
+<span>    <span class="fu">tune_grid</span><span class="op">(</span></span>
+<span>      <span class="va">spec_bt</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://parsnip.tidymodels.org/reference/set_engine.html">set_engine</a></span><span class="op">(</span><span class="st">"lightgbm"</span>, num_threads <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>,</span>
+<span>      <span class="va">form</span>,</span>
+<span>      <span class="va">dat_folds</span>,</span>
+<span>      grid <span class="op">=</span> <span class="va">grid_bt</span></span>
+<span>    <span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span><span class="op">[[</span><span class="st">"elapsed"</span><span class="op">]</span><span class="op">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section><section id="sec-putting-it-all-together" class="level2"><h2 class="anchored" data-anchor-id="sec-putting-it-all-together">Putting it all together</h2>
+<p>At a glance, those timings are (in seconds):</p>
+<div class="cell">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">tibble</span><span class="op">(</span></span>
+<span>  approach <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"engine only"</span>, <span class="st">"tidymodels only"</span>, <span class="st">"both"</span><span class="op">)</span>,</span>
+<span>  xgboost <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">timing_xgb_1</span>, <span class="va">timing_xgb_2</span>, <span class="va">timing_xgb_3</span><span class="op">)</span>,</span>
+<span>  lightgbm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">timing_lgb_1</span>, <span class="va">timing_lgb_2</span>, <span class="va">timing_lgb_3</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 3
+  approach        xgboost lightgbm
+  &lt;chr&gt;             &lt;dbl&gt;    &lt;dbl&gt;
+1 engine only      988.46  103.13 
+2 tidymodels only  133.23   23.328
+3 both             132.59   23.279</code></pre>
+</div>
+</div>
+<p>At least in this context, we see:</p>
+<ul>
+<li>Using only the engine’s parallelization results in a substantial slowdown for both engines.</li>
+<li>For both XGBoost and LightGBM, just using the tidymodels parallelization vs.&nbsp;combining the tidymodels and engine parallelization seem comparable in terms of timing. (This is nice to see in the sense that users don’t need to adjust their tidymodels parallelism configuration just to fit this particular kind of model; if they have a parallelism configuration set up already, it won’t hurt to keep it around.)</li>
+<li>LightGBM models train quite a bit faster than XGBoost models, though we can’t meaningfully compare those fit times without knowing whether performance metrics are comparable.</li>
+</ul>
+<p>These are similar conclusions to what Max observes in the linked APM blog post. A few considerations that, in this context, may have made tidymodels’ parallelization seem extra advantageous:</p>
+<ul>
+<li>We’re resampling across 10 folds here and, conveniently, distributing those computations across 10 cores. That is, each core is (likely) responsible for the fits on just one fold, and there are no cores “sitting idle” unless one model fit finishes well before than another.</li>
+<li>We’re resampling models rather than just fitting one model. If we had just fitted one model, tidymodels wouldn’t offer any support for distributing computations across cores, but this is exactly what XGBoost and LightGBM support.</li>
+<li>When using tidymodels’ parallelism implementation, it’s not <em>just</em> the model fits that are distributed across cores. Preprocessing, prediction, and metric calculation is also distributed across cores when using tidymodels’ parallelism implementation. (Framed in the context of the diagrams above, there are little green segments dispersed throughout the orange ones that <em>can</em> be parallelized.)</li>
+</ul></section><section id="session-info" class="level2"><h2 class="anchored" data-anchor-id="session-info">Session Info</h2>
+<div class="cell">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">sessioninfo</span><span class="fu">::</span><span class="fu"><a href="https://r-lib.github.io/sessioninfo/reference/session_info.html">session_info</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://tidymodels.tidymodels.org/reference/tidymodels_packages.html">tidymodels_packages</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"xgboost"</span>, <span class="st">"lightgbm"</span><span class="op">)</span>,</span>
+<span>  dependencies <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>─ Session info ───────────────────────────────────────────────────────────────
+ setting  value
+ version  R version 4.3.3 (2024-02-29)
+ os       macOS Sonoma 14.4.1
+ system   aarch64, darwin20
+ ui       X11
+ language (EN)
+ collate  en_US.UTF-8
+ ctype    en_US.UTF-8
+ tz       America/Chicago
+ date     2024-05-13
+ pandoc   3.1.12.3 @ /opt/homebrew/bin/ (via rmarkdown)
+
+─ Packages ───────────────────────────────────────────────────────────────────
+ package      * version     date (UTC) lib source
+ broom        * 1.0.5.9000  2024-05-09 [1] Github (tidymodels/broom@b984deb)
+ cli            3.6.2       2023-12-11 [1] CRAN (R 4.3.1)
+ conflicted     1.2.0       2023-02-01 [1] CRAN (R 4.3.0)
+ dials        * 1.2.1       2024-02-22 [1] CRAN (R 4.3.1)
+ dplyr        * 1.1.4       2023-11-17 [1] CRAN (R 4.3.1)
+ ggplot2      * 3.5.1       2024-04-23 [1] CRAN (R 4.3.1)
+ hardhat        1.3.1.9000  2024-04-26 [1] Github (tidymodels/hardhat@ae8fba7)
+ infer        * 1.0.6.9000  2024-03-25 [1] local
+ lightgbm       4.3.0       2024-01-18 [1] CRAN (R 4.3.1)
+ modeldata    * 1.3.0       2024-01-21 [1] CRAN (R 4.3.1)
+ parsnip      * 1.2.1.9001  2024-05-09 [1] Github (tidymodels/parsnip@320affd)
+ purrr        * 1.0.2       2023-08-10 [1] CRAN (R 4.3.0)
+ recipes      * 1.0.10.9000 2024-04-08 [1] Github (tidymodels/recipes@63ced27)
+ rlang          1.1.3       2024-01-10 [1] CRAN (R 4.3.1)
+ rsample      * 1.2.1       2024-03-25 [1] CRAN (R 4.3.1)
+ rstudioapi     0.16.0      2024-03-24 [1] CRAN (R 4.3.1)
+ tibble       * 3.2.1       2023-03-20 [1] CRAN (R 4.3.0)
+ tidymodels   * 1.2.0       2024-03-25 [1] CRAN (R 4.3.1)
+ tidyr        * 1.3.1       2024-01-24 [1] CRAN (R 4.3.1)
+ tune         * 1.2.1       2024-04-18 [1] CRAN (R 4.3.1)
+ workflows    * 1.1.4.9000  2024-05-01 [1] local
+ workflowsets * 1.1.0       2024-03-21 [1] CRAN (R 4.3.1)
+ xgboost        1.7.7.1     2024-01-25 [1] CRAN (R 4.3.1)
+ yardstick    * 1.3.1       2024-03-21 [1] CRAN (R 4.3.1)
+
+ [1] /Users/simoncouch/Library/R/arm64/4.3/library
+ [2] /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/library
+
+──────────────────────────────────────────────────────────────────────────────</code></pre>
+</div>
+</div>
+
+
+</section><a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a><div id="quarto-appendix" class="default"><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">Reuse</h2><div id="quarto-reuse" class="quarto-appendix-contents"><div><a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">https://creativecommons.org/licenses/by-sa/4.0/</a></div></div></section></div></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><script src="https://utteranc.es/client.js" repo="simonpcouch/website" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script>
+</div> <!-- /content -->
+<footer class="footer"><div class="nav-footer">
+    <div class="nav-footer-left">© 2023 Simon P. Couch ∙ Made with <a href="https://quarto.org">Quarto</a></div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+</body></html>

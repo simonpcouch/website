@@ -10,7 +10,15 @@
 <atom:link href="https://simonpcouch.com/blog/index.xml" rel="self" type="application/rss+xml"/>
 <description>A data science blog</description>
 <generator>quarto-1.3.450</generator>
-<lastBuildDate>Mon, 08 Apr 2024 05:00:00 GMT</lastBuildDate>
+<lastBuildDate>Mon, 13 May 2024 05:00:00 GMT</lastBuildDate>
+<item>
+  <title>How to best parallelize boosted tree model fits with tidymodels</title>
+  <link>https://simonpcouch.com/blog/2024-05-13-parallel/index.html</link>
+  <description><![CDATA[ The <a href="https://xgboost.readthedocs.io/">XGBoost</a> and <a href="https://lightgbm.readthedocs.io/en/stable/">LightGBM</a> modeling engines both enable distributing the computations needed to train a single boosted tree model across several CPU cores. Similarly, the <a href="https://tidymodels.org">tidymodels framework</a> enables distributing model fits across cores. The natural question, then, is whether tidymodels users ought to make use of the engine’s parallelism implementation, tidymodels’ implementation, or both at the same time. This blog post is a scrappy attempt at finding which of those approaches will lead to the smallest elapsed time when fitting many models. ]]></description>
+  <guid>https://simonpcouch.com/blog/2024-05-13-parallel/index.html</guid>
+  <pubDate>Mon, 13 May 2024 05:00:00 GMT</pubDate>
+  <media:content url="https://simonpcouch.com/blog/2024-05-13-parallel/featured.png" medium="image" type="image/png" height="145" width="144"/>
+</item>
 <item>
   <title>Measuring elapsed time to fit with tidymodels</title>
   <link>https://simonpcouch.com/blog/2024-04-08-fit-time/index.html</link>
@@ -162,14 +170,6 @@
   <guid>https://simonpcouch.com/blog/2021-05-10-dev-docs-p1/index.html</guid>
   <pubDate>Mon, 10 May 2021 05:00:00 GMT</pubDate>
   <media:content url="https://simonpcouch.com/blog/2021-05-10-dev-docs-p1/featured.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
-  <title>What’s Next For Me</title>
-  <link>https://simonpcouch.com/blog/2021-03-23-whats-next-s21/index.html</link>
-  <description><![CDATA[ I’ve been a bit unsure about how personal this blog ought to be, and what qualifies as “significant” enough to post. A lot of changes are coming up soon for me, though, and this feels like a good place to document. ]]></description>
-  <guid>https://simonpcouch.com/blog/2021-03-23-whats-next-s21/index.html</guid>
-  <pubDate>Tue, 23 Mar 2021 05:00:00 GMT</pubDate>
-  <media:content url="https://simonpcouch.com/blog/2021-03-23-whats-next-s21/featured.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>
