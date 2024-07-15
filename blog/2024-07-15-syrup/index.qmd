@@ -1,0 +1,187 @@
+---
+title: "A new package for profiling parallel R code"
+date: '2024-07-15'
+tags:
+  - rstats
+  - parallel
+subtitle: "Periodic snapshots of CPU and memory usage consumed by R sessions enable better analyses of parallel computation."
+image: featured.png
+summary: ''
+---
+
+```{r}
+#| label: set-style
+#| include: false
+library(ggplot2)
+
+theme_set(
+  theme_bw() +
+  theme(
+    panel.background = element_rect(fill = "#f8f8f1", color = "#f8f8f1"),
+    plot.background = element_rect(fill = "#f8f8f1"))
+)
+
+options(
+  ggplot2.discrete.fill = c("#ccb118", "#4A7862"),
+  ggplot2.discrete.colour = c("#ccb118", "#4A7862")
+)
+```
+
+I've found that the following pattern looms large in content about parallel processing with R (including my own):
+
+* Run some code sequentially
+* Run the same code in parallel
+* Compare the execution times
+* Hypothesize on what's behind the differences in those times
+
+To help myself ask better questions about parallelism and its effect on usage of system resources, I wanted a tool that could help me collect data beyond execution times. There are many good tools for profiling memory usage and execution time for sequential (as in "normal," single-threaded, not parallelized) R code—such as `Rprofmem()`, the [profmem](https://CRAN.R-project.org/package=profmem) package, the [bench](https://bench.r-lib.org/) package, and packages in the [R-prof](https://github.com/r-prof) GitHub organization—but extending those tools to the parallel context is a hard, hard problem.
+
+I'm excited to share the initial release of [syrup](https://github.com/simonpcouch/syrup), an R package providing measures of memory and CPU usage for parallel R code. Rather than logging allocations and garbage collections, syrup measures usage of system resources by regularly pinging the system command `ps` and logging its results for all running R sessions. While the measurements that syrup can take are rather coarse in comparison to available tools for profiling sequential R code, I've found that they provide enough data to help me argue hypotheses that I was unable to support with data before.
+
+You can install the package with the following code:
+
+```r
+install.packages("syrup")
+```
+
+In this blog post, I'll give a brief example of [what it does](#sec-what) and then share briefly about [how it works](#sec-how).
+
+```{r}
+#| message: false
+#| label: load-syrup
+library(syrup)
+```
+
+## What does it do? {#sec-what}
+
+The syrup package provides one function, `syrup()`. Supplied an expression, the function will return snapshots of memory and CPU usage captured while the expression evaluates. For example:
+
+```{r}
+#| label: sys-sleep
+syrup(Sys.sleep(2))
+```
+
+In this tibble, `id` defines a specific time point at which process usage was snapshotted, and the remaining columns show output derived from [ps::ps()](https://ps.r-lib.org/reference/ps.html). Notably, `pid` is the process ID, `ppid` is the process ID of the parent process, `pct_cpu` is the percent CPU usage, and `rss` is the resident set size (a measure of memory usage).
+
+For a more interesting demo, we'll tune a regularized linear model using cross-validation with tidymodels. First, loading needed packages:
+
+```{r load-pkgs, message = FALSE, warning = FALSE}
+library(future)
+library(tidymodels)
+library(rlang)
+```
+
+Using future to define our parallelism strategy, we'll set `plan(multicore, workers = 5)`, indicating that we'd like to distribute computations across 5 cores using forking. By default, future disables forking from RStudio; I know that, in the context of building this README, this usage of forking is safe, so I'll temporarily override that default with `parallelly.fork.enable`. 
+
+```{r parallel}
+local_options(parallelly.fork.enable = TRUE)
+plan(multicore, workers = 5)
+```
+
+Now, simulating some data:
+
+```{r dat}
+set.seed(1)
+dat <- sim_regression(1000000)
+
+dat
+```
+
+We've got a million observations from a simulated regression problem, where 20 predictors are available to predict the value of `outcome`.
+
+The call to `tune_grid()` does some setup sequentially before sending data off to the five child processes to actually carry out the model fitting. After models are fitted, data is sent back to the parent process to be combined. To better understand system resource usage throughout that process, we wrap the call in `syrup()`:
+
+```{r syrup}
+res_mem <- syrup({
+  res <-
+    # perform a grid search, where we...
+    tune_grid(
+      # vary the amount of regularization in a linear regression, and...
+      linear_reg(engine = "glmnet", penalty = tune()),
+      # use all predictors to model the outcome, ...
+      outcome ~ .,
+      # cross-validating the training data with (default) 10 folds.
+      vfold_cv(dat)
+    )
+})
+
+res_mem
+```
+
+These results are a bit more interesting than the sequential results from `Sys.sleep(2)`. Look closely at the `ppid`s for each `id`; after a snapshot or two, you'll see five identical `ppid`s for each `id`, and those `ppid`s match up with the remaining `pid` in the one remaining R process. This shows us that we've indeed distributed computations using forking in that one remaining R process, the "parent," has spawned off five child processes from itself. 
+
+We can plot the result to get a better sense of how memory usage of these processes changes over time:
+
+```{r plot-mem, warning = FALSE}
+#| fig-align: center
+# retrieve the current process ID, which will be the parent
+# ID for the workers
+worker_ppid <- ps::ps_pid()
+
+res_mem %>%
+  # keep only the parent process and its workers
+  filter(ppid == worker_ppid | pid == worker_ppid) %>%
+  ggplot() +
+  aes(x = id, y = rss, group = pid) +
+  geom_line() +
+  scale_x_continuous(breaks = 1:max(res_mem$id))
+```
+
+At first, only the parent process has non-`NA` `rss`, as tidymodels hasn't sent data off to any workers yet. Then, each of the 5 workers receives data from tidymodels and begins fitting models. Eventually, each of those workers returns their results to the parent process, and their `rss` is once again `NA`. The parent process wraps up its computations before completing evaluation of the expression, at which point `syrup()` returns. (Keep in mind: memory is weird. In the above plot, the total memory allotted to the parent session and its five workers at each ID is not simply the sum of those `rss` values, as memory is shared among them.) We see another side of the story come together for CPU usage:
+
+```{r plot-cpu, message = FALSE, warning = FALSE}
+#| fig-align: center
+res_mem %>%
+  filter(ppid == worker_ppid | pid == worker_ppid) %>%
+  ggplot() +
+  aes(x = id, y = pct_cpu, group = pid) +
+  geom_line() +
+  scale_x_continuous(breaks = 1:max(res_mem$id))
+```
+
+The percent CPU usage will always be `NA` the first time a process ID is seen, as the usage calculation is based on change since the previous recorded value. As soon as we're able to start measuring, we see the workers at 100% usage, while the parent process is largely idle once it has sent data off to workers.
+
+## How does it work? {#sec-how}
+
+Loosely, the function works like this:
+
+* `syrup()` captures the supplied expression (and doesn't yet evaluate it).
+* The function then spins up another R session—call it `sesh`—that snapshots memory and CPU usage information for all running R processes at a regular interval.
+* In the original R session, `syrup()` evaluates the supplied expression. While it's doing so, `sesh` is running in the background tracking its usage of system resources.
+* Once the expression is finished evaluating, the original R session tells `sesh` to return all of the information it's queried and then closes `sesh`.
+* Finally, `syrup()` returns the memory and CPU usage information.
+
+Those "snapshots" are calls to `ps::ps()`, whose output looks something like this:
+
+```{r}
+#| label: ps-ps
+ps::ps()
+```
+
+`ps::ps()` returns information on all active processes. Under the hood, `syrup()` does a `filter()` to extract only active R processes^[This is just a `grep()` for processes named `"R"` or R processes that look like the ones RStudio and Positron carry around (`"rsession"` and `"ark"`, respectively).] and does some `mutate()`s to calculate the percent CPU usage.
+
+My graphic design skills are lame, but here's an attempt at visualizing that process for the simple `Sys.sleep()` example:
+
+```{r}
+#| label: diagram-basic
+#| fig-cap: "A diagram showing what happens behind the scenes of `syrup()` in a simple case. The `interval` argument controls how often resource usage is snapshotted and defaults to half a second; I set it explicitly here just for demonstration."
+#| fig-alt: "The evaluation of the `syrup()` function is depicted on a timeline. Two horizontal lines depict two R sessions. One is the original, one is `sesh`. The original session starts before and ends after `sesh`. While the original session evaluate `Sys.sleep(2)`, `sesh` is able to capture system resources five times, once every half second, before closing."
+#| echo: false
+knitr::include_graphics("figures/syrup_diagram_basic.png")
+```
+
+Again, the function output becomes a bit more interesting when code is executed in parallel. For that tuning process, it might look something like:
+
+```{r}
+#| label: diagram-parallel
+#| fig-cap: "Since we've configured future to distribute computations across 5 cores using forking, the call to `tune_grid()` results in 5 workers spinning up to cross-validate models. Each call to `ps::ps()` will capture details on all running R sessions."
+#| fig-alt: "As before, a call to `syrup()` is a depicted on a timeline, this time surrounding a call to `tune_grid()`. Five additional horizontal lines depict five workers reated by `tune_grid()` to fit models. `sesh` is able to snapshot system resource usage for all running R processes throughout `tune_grid()`'s evaluation."
+#| echo: false
+knitr::include_graphics("figures/syrup_diagram_parallel.png")
+```
+
+## Concluding
+
+syrup is a pretty scrappy tool, both in terms of its implementation and the utility of its output. At the same time, I think its existence is a testament to the power of the R package ecosystem--syrup is able to traverse quite a bit of complexity in only a couple hundred lines of source code thanks to a few (relatively heavy) dependencies. The callr and ps packages do a lot of heavy lifting for interfacing with multiple R processes at once^[Thanks, Gábor.], and I took on tidyverse dependencies liberally to speed up the development process while ensuring safety.
+
+While the kinds of measurements that syrup can provide are pretty coarse in comparison to what's available for sequential R code, they provide more data points with which to test hypotheses about how parallel R code interfaces with system processes and consumes computational resources. I've found the package to be a helpful tool in better understanding tidymodels' support for parallelism, and I hope others find it useful in their own work.

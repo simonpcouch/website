@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta name="dcterms.date" content="2024-07-15">
+<title>A new package for profiling parallel R code | Simon P. Couch</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../assets/cabin.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script><script async="" src="https://www.googletagmanager.com/gtag/js?id=G-DDB8R0B1ZW"></script><script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
+</script>
+</head>
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg navbar-dark "><div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../assets/cabin.png" alt="" class="navbar-logo"></a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Simon P. Couch</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+<li class="nav-item">
+    <a class="nav-link" href="../../about/index.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog/index.html" rel="" target="">
+ <span class="menu-text">Blog</span></a>
+  </li>  
+</ul>
+<div class="quarto-navbar-tools">
+    <a href="https://www.github.com/simonpcouch/website" rel="" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav></header><!-- content --><header id="title-block-header" class="quarto-title-block default page-columns page-full"><div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">A new package for profiling parallel R code</h1>
+            <p class="subtitle lead">Periodic snapshots of CPU and memory usage consumed by R sessions enable better analyses of parallel computation.</p>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">July 15, 2024</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content"><p>I’ve found that the following pattern looms large in content about parallel processing with R (including my own):</p>
+<ul>
+<li>Run some code sequentially</li>
+<li>Run the same code in parallel</li>
+<li>Compare the execution times</li>
+<li>Hypothesize on what’s behind the differences in those times</li>
+</ul>
+<p>To help myself ask better questions about parallelism and its effect on usage of system resources, I wanted a tool that could help me collect data beyond execution times. There are many good tools for profiling memory usage and execution time for sequential (as in “normal,” single-threaded, not parallelized) R code—such as <code><a href="https://rdrr.io/r/utils/Rprofmem.html">Rprofmem()</a></code>, the <a href="https://CRAN.R-project.org/package=profmem">profmem</a> package, the <a href="https://bench.r-lib.org/">bench</a> package, and packages in the <a href="https://github.com/r-prof">R-prof</a> GitHub organization—but extending those tools to the parallel context is a hard, hard problem.</p>
+<p>I’m excited to share the initial release of <a href="https://github.com/simonpcouch/syrup">syrup</a>, an R package providing measures of memory and CPU usage for parallel R code. Rather than logging allocations and garbage collections, syrup measures usage of system resources by regularly pinging the system command <code>ps</code> and logging its results for all running R sessions. While the measurements that syrup can take are rather coarse in comparison to available tools for profiling sequential R code, I’ve found that they provide enough data to help me argue hypotheses that I was unable to support with data before.</p>
+<p>You can install the package with the following code:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"syrup"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>In this blog post, I’ll give a brief example of <a href="#sec-what">what it does</a> and then share briefly about <a href="#sec-how">how it works</a>.</p>
+<div class="cell">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/simonpcouch/syrup">syrup</a></span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="sec-what" class="level2"><h2 class="anchored" data-anchor-id="sec-what">What does it do?</h2>
+<p>The syrup package provides one function, <code><a href="https://rdrr.io/pkg/syrup/man/syrup.html">syrup()</a></code>. Supplied an expression, the function will return snapshots of memory and CPU usage captured while the expression evaluates. For example:</p>
+<div class="cell">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/syrup/man/syrup.html">syrup</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.sleep.html">Sys.sleep</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 8 × 8
+     id time                  pid  ppid name            pct_cpu       rss    vms
+  &lt;dbl&gt; &lt;dttm&gt;              &lt;int&gt; &lt;int&gt; &lt;chr&gt;             &lt;dbl&gt; &lt;bch:byt&gt; &lt;bch:&gt;
+1     1 2024-07-14 12:46:13 15884 15341 R              NA           146MB  392GB
+2     1 2024-07-14 12:46:13 15212 15192 rsession-arm64 NA           175MB  393GB
+3     2 2024-07-14 12:46:14 15884 15341 R               0           146MB  392GB
+4     2 2024-07-14 12:46:14 15212 15192 rsession-arm64  0.00943     175MB  393GB
+5     3 2024-07-14 12:46:14 15884 15341 R               0           146MB  392GB
+6     3 2024-07-14 12:46:14 15212 15192 rsession-arm64  0.00647     175MB  393GB
+7     4 2024-07-14 12:46:15 15884 15341 R               0.00179     146MB  392GB
+8     4 2024-07-14 12:46:15 15212 15192 rsession-arm64  0.00716     175MB  393GB</code></pre>
+</div>
+</div>
+<p>In this tibble, <code>id</code> defines a specific time point at which process usage was snapshotted, and the remaining columns show output derived from <a href="https://ps.r-lib.org/reference/ps.html">ps::ps()</a>. Notably, <code>pid</code> is the process ID, <code>ppid</code> is the process ID of the parent process, <code>pct_cpu</code> is the percent CPU usage, and <code>rss</code> is the resident set size (a measure of memory usage).</p>
+<p>For a more interesting demo, we’ll tune a regularized linear model using cross-validation with tidymodels. First, loading needed packages:</p>
+<div class="cell">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://future.futureverse.org">future</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidymodels.tidymodels.org">tidymodels</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://rlang.r-lib.org">rlang</a></span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Using future to define our parallelism strategy, we’ll set <code>plan(multicore, workers = 5)</code>, indicating that we’d like to distribute computations across 5 cores using forking. By default, future disables forking from RStudio; I know that, in the context of building this README, this usage of forking is safe, so I’ll temporarily override that default with <code>parallelly.fork.enable</code>.</p>
+<div class="cell">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/rlang/man/local_options.html">local_options</a></span><span class="op">(</span>parallelly.fork.enable <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/future/man/plan.html">plan</a></span><span class="op">(</span><span class="va">multicore</span>, workers <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now, simulating some data:</p>
+<div class="cell">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu">sim_regression</span><span class="op">(</span><span class="fl">1000000</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">dat</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1,000,000 × 21
+   outcome predictor_01 predictor_02 predictor_03 predictor_04 predictor_05
+     &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;
+ 1    3.63       -1.88        0.872       -0.799       -0.0379       2.68  
+ 2   41.6         0.551      -2.47         2.37         3.90         5.18  
+ 3   -6.99       -2.51       -3.15         2.61         2.13         3.08  
+ 4   33.2         4.79        1.86        -2.37         4.27        -3.59  
+ 5   34.3         0.989      -0.315        3.08         2.56        -5.91  
+ 6   26.7        -2.46       -0.459        1.75        -5.24         5.04  
+ 7   21.4         1.46       -0.674       -0.894       -3.91        -3.38  
+ 8   21.7         2.21        1.28        -1.05        -0.561        2.99  
+ 9   -8.84        1.73        0.0725       0.0976       5.40         4.30  
+10   24.5        -0.916      -0.223       -0.561       -4.12         0.0508
+# ℹ 999,990 more rows
+# ℹ 15 more variables: predictor_06 &lt;dbl&gt;, predictor_07 &lt;dbl&gt;,
+#   predictor_08 &lt;dbl&gt;, predictor_09 &lt;dbl&gt;, predictor_10 &lt;dbl&gt;,
+#   predictor_11 &lt;dbl&gt;, predictor_12 &lt;dbl&gt;, predictor_13 &lt;dbl&gt;,
+#   predictor_14 &lt;dbl&gt;, predictor_15 &lt;dbl&gt;, predictor_16 &lt;dbl&gt;,
+#   predictor_17 &lt;dbl&gt;, predictor_18 &lt;dbl&gt;, predictor_19 &lt;dbl&gt;,
+#   predictor_20 &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<p>We’ve got a million observations from a simulated regression problem, where 20 predictors are available to predict the value of <code>outcome</code>.</p>
+<p>The call to <code>tune_grid()</code> does some setup sequentially before sending data off to the five child processes to actually carry out the model fitting. After models are fitted, data is sent back to the parent process to be combined. To better understand system resource usage throughout that process, we wrap the call in <code><a href="https://rdrr.io/pkg/syrup/man/syrup.html">syrup()</a></code>:</p>
+<div class="cell">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">res_mem</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/syrup/man/syrup.html">syrup</a></span><span class="op">(</span><span class="op">{</span></span>
+<span>  <span class="va">res</span> <span class="op">&lt;-</span></span>
+<span>    <span class="co"># perform a grid search, where we...</span></span>
+<span>    <span class="fu">tune_grid</span><span class="op">(</span></span>
+<span>      <span class="co"># vary the amount of regularization in a linear regression, and...</span></span>
+<span>      <span class="fu">linear_reg</span><span class="op">(</span>engine <span class="op">=</span> <span class="st">"glmnet"</span>, penalty <span class="op">=</span> <span class="fu">tune</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>      <span class="co"># use all predictors to model the outcome, ...</span></span>
+<span>      <span class="va">outcome</span> <span class="op">~</span> <span class="va">.</span>,</span>
+<span>      <span class="co"># cross-validating the training data with (default) 10 folds.</span></span>
+<span>      <span class="fu">vfold_cv</span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">res_mem</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 49 × 8
+      id time                  pid  ppid name            pct_cpu       rss   vms
+   &lt;dbl&gt; &lt;dttm&gt;              &lt;int&gt; &lt;int&gt; &lt;chr&gt;             &lt;dbl&gt; &lt;bch:byt&gt; &lt;bch&gt;
+ 1     1 2024-07-14 12:46:19 15884 15341 R              NA          1.22GB 393GB
+ 2     1 2024-07-14 12:46:19 15212 15192 rsession-arm64 NA        174.58MB 393GB
+ 3     2 2024-07-14 12:46:19 15922 15884 R              NA        511.45MB 393GB
+ 4     2 2024-07-14 12:46:19 15921 15884 R              NA        541.27MB 393GB
+ 5     2 2024-07-14 12:46:19 15920 15884 R              NA        551.88MB 393GB
+ 6     2 2024-07-14 12:46:19 15919 15884 R              NA        557.55MB 393GB
+ 7     2 2024-07-14 12:46:19 15918 15884 R              NA        577.97MB 393GB
+ 8     2 2024-07-14 12:46:19 15884 15341 R               0.555      1.26GB 393GB
+ 9     2 2024-07-14 12:46:19 15212 15192 rsession-arm64  0.00470  174.58MB 393GB
+10     3 2024-07-14 12:46:20 15922 15884 R               0.981    741.95MB 393GB
+# ℹ 39 more rows</code></pre>
+</div>
+</div>
+<p>These results are a bit more interesting than the sequential results from <code>Sys.sleep(2)</code>. Look closely at the <code>ppid</code>s for each <code>id</code>; after a snapshot or two, you’ll see five identical <code>ppid</code>s for each <code>id</code>, and those <code>ppid</code>s match up with the remaining <code>pid</code> in the one remaining R process. This shows us that we’ve indeed distributed computations using forking in that one remaining R process, the “parent,” has spawned off five child processes from itself.</p>
+<p>We can plot the result to get a better sense of how memory usage of these processes changes over time:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># retrieve the current process ID, which will be the parent</span></span>
+<span><span class="co"># ID for the workers</span></span>
+<span><span class="va">worker_ppid</span> <span class="op">&lt;-</span> <span class="fu">ps</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ps/man/ps_pid.html">ps_pid</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">res_mem</span> <span class="op">%&gt;%</span></span>
+<span>  <span class="co"># keep only the parent process and its workers</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">ppid</span> <span class="op">==</span> <span class="va">worker_ppid</span> <span class="op">|</span> <span class="va">pid</span> <span class="op">==</span> <span class="va">worker_ppid</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span>  <span class="fu">ggplot</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">id</span>, y <span class="op">=</span> <span class="va">rss</span>, group <span class="op">=</span> <span class="va">pid</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_line</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">scale_x_continuous</span><span class="op">(</span>breaks <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">res_mem</span><span class="op">$</span><span class="va">id</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="index_files/figure-html/plot-mem-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>At first, only the parent process has non-<code>NA</code> <code>rss</code>, as tidymodels hasn’t sent data off to any workers yet. Then, each of the 5 workers receives data from tidymodels and begins fitting models. Eventually, each of those workers returns their results to the parent process, and their <code>rss</code> is once again <code>NA</code>. The parent process wraps up its computations before completing evaluation of the expression, at which point <code><a href="https://rdrr.io/pkg/syrup/man/syrup.html">syrup()</a></code> returns. (Keep in mind: memory is weird. In the above plot, the total memory allotted to the parent session and its five workers at each ID is not simply the sum of those <code>rss</code> values, as memory is shared among them.) We see another side of the story come together for CPU usage:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">res_mem</span> <span class="op">%&gt;%</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">ppid</span> <span class="op">==</span> <span class="va">worker_ppid</span> <span class="op">|</span> <span class="va">pid</span> <span class="op">==</span> <span class="va">worker_ppid</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span>  <span class="fu">ggplot</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">id</span>, y <span class="op">=</span> <span class="va">pct_cpu</span>, group <span class="op">=</span> <span class="va">pid</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_line</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">scale_x_continuous</span><span class="op">(</span>breaks <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">res_mem</span><span class="op">$</span><span class="va">id</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="index_files/figure-html/plot-cpu-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The percent CPU usage will always be <code>NA</code> the first time a process ID is seen, as the usage calculation is based on change since the previous recorded value. As soon as we’re able to start measuring, we see the workers at 100% usage, while the parent process is largely idle once it has sent data off to workers.</p>
+</section><section id="sec-how" class="level2"><h2 class="anchored" data-anchor-id="sec-how">How does it work?</h2>
+<p>Loosely, the function works like this:</p>
+<ul>
+<li>
+<code><a href="https://rdrr.io/pkg/syrup/man/syrup.html">syrup()</a></code> captures the supplied expression (and doesn’t yet evaluate it).</li>
+<li>The function then spins up another R session—call it <code>sesh</code>—that snapshots memory and CPU usage information for all running R processes at a regular interval.</li>
+<li>In the original R session, <code><a href="https://rdrr.io/pkg/syrup/man/syrup.html">syrup()</a></code> evaluates the supplied expression. While it’s doing so, <code>sesh</code> is running in the background tracking its usage of system resources.</li>
+<li>Once the expression is finished evaluating, the original R session tells <code>sesh</code> to return all of the information it’s queried and then closes <code>sesh</code>.</li>
+<li>Finally, <code><a href="https://rdrr.io/pkg/syrup/man/syrup.html">syrup()</a></code> returns the memory and CPU usage information.</li>
+</ul>
+<p>Those “snapshots” are calls to <code><a href="https://rdrr.io/pkg/ps/man/ps.html">ps::ps()</a></code>, whose output looks something like this:</p>
+<div class="cell">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">ps</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ps/man/ps.html">ps</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A data frame: 656 × 11
+     pid  ppid name            username status    user   system     rss      vms
+ * &lt;int&gt; &lt;int&gt; &lt;chr&gt;           &lt;chr&gt;    &lt;chr&gt;    &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;
+ 1 15884 15341 R               simonco… runni…  4.02    0.576    1.11e9  4.22e11
+ 2 15875  1957 Google Chrome … simonco… runni…  0.0708  0.0225   1.11e8  1.64e12
+ 3 15873     1 mdworker_shared simonco… runni…  0.0748  0.0296   1.85e7  4.20e11
+ 4 15872  1957 Google Chrome … simonco… runni…  2.03    1.16     2.10e8  1.64e12
+ 5 15775     1 mdworker_shared _spotli… runni… NA      NA       NA      NA      
+ 6 15761     1 mdworker_shared simonco… runni…  0.102   0.0470   2.52e7  4.20e11
+ 7 15398  1957 Google Chrome … simonco… runni…  0.0442  0.0205   6.28e7  1.64e12
+ 8 15390     1 helpd           simonco… runni…  0.0108  0.00908  4.46e6  4.20e11
+ 9 15342 15192 RStudio Helper… simonco… runni…  0.433   0.0623   1.09e8  1.64e12
+10 15341 15329 deno            simonco… runni…  4.72    0.915    2.36e8  4.34e11
+# ℹ 646 more rows
+# ℹ 2 more variables: created &lt;dttm&gt;, ps_handle &lt;I&lt;list&gt;&gt;</code></pre>
+</div>
+</div>
+<p><code><a href="https://rdrr.io/pkg/ps/man/ps.html">ps::ps()</a></code> returns information on all active processes. Under the hood, <code><a href="https://rdrr.io/pkg/syrup/man/syrup.html">syrup()</a></code> does a <code><a href="https://rdrr.io/r/stats/filter.html">filter()</a></code> to extract only active R processes<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> and does some <code>mutate()</code>s to calculate the percent CPU usage.</p>
+<p>My graphic design skills are lame, but here’s an attempt at visualizing that process for the simple <code><a href="https://rdrr.io/r/base/Sys.sleep.html">Sys.sleep()</a></code> example:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="figures/syrup_diagram_basic.png" class="img-fluid figure-img" alt="The evaluation of the `syrup()` function is depicted on a timeline. Two horizontal lines depict two R sessions. One is the original, one is `sesh`. The original session starts before and ends after `sesh`. While the original session evaluate `Sys.sleep(2)`, `sesh` is able to capture system resources five times, once every half second, before closing." width="1750"></p>
+<figcaption class="figure-caption">A diagram showing what happens behind the scenes of <code><a href="https://rdrr.io/pkg/syrup/man/syrup.html">syrup()</a></code> in a simple case. The <code>interval</code> argument controls how often resource usage is snapshotted and defaults to half a second; I set it explicitly here just for demonstration.</figcaption></figure>
+</div>
+</div>
+</div>
+<p>Again, the function output becomes a bit more interesting when code is executed in parallel. For that tuning process, it might look something like:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="figures/syrup_diagram_parallel.png" class="img-fluid figure-img" alt="As before, a call to `syrup()` is a depicted on a timeline, this time surrounding a call to `tune_grid()`. Five additional horizontal lines depict five workers reated by `tune_grid()` to fit models. `sesh` is able to snapshot system resource usage for all running R processes throughout `tune_grid()`'s evaluation." width="1750"></p>
+<figcaption class="figure-caption">Since we’ve configured future to distribute computations across 5 cores using forking, the call to <code>tune_grid()</code> results in 5 workers spinning up to cross-validate models. Each call to <code><a href="https://rdrr.io/pkg/ps/man/ps.html">ps::ps()</a></code> will capture details on all running R sessions.</figcaption></figure>
+</div>
+</div>
+</div>
+</section><section id="concluding" class="level2"><h2 class="anchored" data-anchor-id="concluding">Concluding</h2>
+<p>syrup is a pretty scrappy tool, both in terms of its implementation and the utility of its output. At the same time, I think its existence is a testament to the power of the R package ecosystem–syrup is able to traverse quite a bit of complexity in only a couple hundred lines of source code thanks to a few (relatively heavy) dependencies. The callr and ps packages do a lot of heavy lifting for interfacing with multiple R processes at once<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>, and I took on tidyverse dependencies liberally to speed up the development process while ensuring safety.</p>
+<p>While the kinds of measurements that syrup can provide are pretty coarse in comparison to what’s available for sequential R code, they provide more data points with which to test hypotheses about how parallel R code interfaces with system processes and consumes computational resources. I’ve found the package to be a helpful tool in better understanding tidymodels’ support for parallelism, and I hope others find it useful in their own work.</p>
+
+
+</section><a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a><div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+<ol>
+<li id="fn1"><p>This is just a <code><a href="https://rdrr.io/r/base/grep.html">grep()</a></code> for processes named <code>"R"</code> or R processes that look like the ones RStudio and Positron carry around (<code>"rsession"</code> and <code>"ark"</code>, respectively).<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Thanks, Gábor.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol></section><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">Reuse</h2><div id="quarto-reuse" class="quarto-appendix-contents"><div><a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">https://creativecommons.org/licenses/by-sa/4.0/</a></div></div></section></div></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><script src="https://utteranc.es/client.js" repo="simonpcouch/website" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script>
+</div> <!-- /content -->
+<footer class="footer"><div class="nav-footer">
+    <div class="nav-footer-left">© 2023 Simon P. Couch ∙ Made with <a href="https://quarto.org">Quarto</a></div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+</body></html>
