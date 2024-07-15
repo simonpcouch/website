@@ -171,21 +171,21 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/simonpcouch/syrup">syrup</a></span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="sec-what" class="level2"><h2 class="anchored" data-anchor-id="sec-what">What does it do?</h2>
-<p>The syrup package provides one function, <code><a href="https://rdrr.io/pkg/syrup/man/syrup.html">syrup()</a></code>. Supplied an expression, the function will return snapshots of memory and CPU usage captured while the expression evaluates. For example:</p>
+<p>The syrup package provides one function, <code><a href="https://simonpcouch.github.io/syrup/reference/syrup.html">syrup()</a></code>. Supplied an expression, the function will return snapshots of memory and CPU usage captured while the expression evaluates. For example:</p>
 <div class="cell">
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/syrup/man/syrup.html">syrup</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.sleep.html">Sys.sleep</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://simonpcouch.github.io/syrup/reference/syrup.html">syrup</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.sleep.html">Sys.sleep</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 8 × 8
-     id time                  pid  ppid name            pct_cpu       rss    vms
-  &lt;dbl&gt; &lt;dttm&gt;              &lt;int&gt; &lt;int&gt; &lt;chr&gt;             &lt;dbl&gt; &lt;bch:byt&gt; &lt;bch:&gt;
-1     1 2024-07-14 12:46:13 15884 15341 R              NA           146MB  392GB
-2     1 2024-07-14 12:46:13 15212 15192 rsession-arm64 NA           175MB  393GB
-3     2 2024-07-14 12:46:14 15884 15341 R               0           146MB  392GB
-4     2 2024-07-14 12:46:14 15212 15192 rsession-arm64  0.00943     175MB  393GB
-5     3 2024-07-14 12:46:14 15884 15341 R               0           146MB  392GB
-6     3 2024-07-14 12:46:14 15212 15192 rsession-arm64  0.00647     175MB  393GB
-7     4 2024-07-14 12:46:15 15884 15341 R               0.00179     146MB  392GB
-8     4 2024-07-14 12:46:15 15212 15192 rsession-arm64  0.00716     175MB  393GB</code></pre>
+     id time                  pid  ppid name           pct_cpu       rss     vms
+  &lt;dbl&gt; &lt;dttm&gt;              &lt;int&gt; &lt;int&gt; &lt;chr&gt;            &lt;dbl&gt; &lt;bch:byt&gt; &lt;bch:b&gt;
+1     1 2024-07-15 08:47:07 23227 23168 R               NA         146MB   392GB
+2     1 2024-07-15 08:47:07 22648 21210 rsession-arm64  NA         176MB   393GB
+3     2 2024-07-15 08:47:08 23227 23168 R                0         146MB   392GB
+4     2 2024-07-15 08:47:08 22648 21210 rsession-arm64   0.988     176MB   393GB
+5     3 2024-07-15 08:47:08 23227 23168 R                0         146MB   392GB
+6     3 2024-07-15 08:47:08 22648 21210 rsession-arm64   0.864     176MB   393GB
+7     4 2024-07-15 08:47:09 23227 23168 R                0.162     146MB   392GB
+8     4 2024-07-15 08:47:09 22648 21210 rsession-arm64   0.824     176MB   393GB</code></pre>
 </div>
 </div>
 <p>In this tibble, <code>id</code> defines a specific time point at which process usage was snapshotted, and the remaining columns show output derived from <a href="https://ps.r-lib.org/reference/ps.html">ps::ps()</a>. Notably, <code>pid</code> is the process ID, <code>ppid</code> is the process ID of the parent process, <code>pct_cpu</code> is the percent CPU usage, and <code>rss</code> is the resident set size (a measure of memory usage).</p>
@@ -197,8 +197,8 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 </div>
 <p>Using future to define our parallelism strategy, we’ll set <code>plan(multicore, workers = 5)</code>, indicating that we’d like to distribute computations across 5 cores using forking. By default, future disables forking from RStudio; I know that, in the context of building this README, this usage of forking is safe, so I’ll temporarily override that default with <code>parallelly.fork.enable</code>.</p>
 <div class="cell">
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/rlang/man/local_options.html">local_options</a></span><span class="op">(</span>parallelly.fork.enable <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/future/man/plan.html">plan</a></span><span class="op">(</span><span class="va">multicore</span>, workers <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rlang.r-lib.org/reference/local_options.html">local_options</a></span><span class="op">(</span>parallelly.fork.enable <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html">plan</a></span><span class="op">(</span><span class="va">multicore</span>, workers <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now, simulating some data:</p>
 <div class="cell">
@@ -230,9 +230,9 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 </div>
 </div>
 <p>We’ve got a million observations from a simulated regression problem, where 20 predictors are available to predict the value of <code>outcome</code>.</p>
-<p>The call to <code>tune_grid()</code> does some setup sequentially before sending data off to the five child processes to actually carry out the model fitting. After models are fitted, data is sent back to the parent process to be combined. To better understand system resource usage throughout that process, we wrap the call in <code><a href="https://rdrr.io/pkg/syrup/man/syrup.html">syrup()</a></code>:</p>
+<p>The call to <code>tune_grid()</code> does some setup sequentially before sending data off to the five child processes to actually carry out the model fitting. After models are fitted, data is sent back to the parent process to be combined. To better understand system resource usage throughout that process, we wrap the call in <code><a href="https://simonpcouch.github.io/syrup/reference/syrup.html">syrup()</a></code>:</p>
 <div class="cell">
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">res_mem</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/syrup/man/syrup.html">syrup</a></span><span class="op">(</span><span class="op">{</span></span>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">res_mem</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://simonpcouch.github.io/syrup/reference/syrup.html">syrup</a></span><span class="op">(</span><span class="op">{</span></span>
 <span>  <span class="va">res</span> <span class="op">&lt;-</span></span>
 <span>    <span class="co"># perform a grid search, where we...</span></span>
 <span>    <span class="fu">tune_grid</span><span class="op">(</span></span>
@@ -247,20 +247,20 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 <span></span>
 <span><span class="va">res_mem</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 49 × 8
-      id time                  pid  ppid name            pct_cpu       rss   vms
-   &lt;dbl&gt; &lt;dttm&gt;              &lt;int&gt; &lt;int&gt; &lt;chr&gt;             &lt;dbl&gt; &lt;bch:byt&gt; &lt;bch&gt;
- 1     1 2024-07-14 12:46:19 15884 15341 R              NA          1.22GB 393GB
- 2     1 2024-07-14 12:46:19 15212 15192 rsession-arm64 NA        174.58MB 393GB
- 3     2 2024-07-14 12:46:19 15922 15884 R              NA        511.45MB 393GB
- 4     2 2024-07-14 12:46:19 15921 15884 R              NA        541.27MB 393GB
- 5     2 2024-07-14 12:46:19 15920 15884 R              NA        551.88MB 393GB
- 6     2 2024-07-14 12:46:19 15919 15884 R              NA        557.55MB 393GB
- 7     2 2024-07-14 12:46:19 15918 15884 R              NA        577.97MB 393GB
- 8     2 2024-07-14 12:46:19 15884 15341 R               0.555      1.26GB 393GB
- 9     2 2024-07-14 12:46:19 15212 15192 rsession-arm64  0.00470  174.58MB 393GB
-10     3 2024-07-14 12:46:20 15922 15884 R               0.981    741.95MB 393GB
-# ℹ 39 more rows</code></pre>
+<pre><code># A tibble: 46 × 8
+      id time                  pid  ppid name           pct_cpu       rss    vms
+   &lt;dbl&gt; &lt;dttm&gt;              &lt;int&gt; &lt;int&gt; &lt;chr&gt;            &lt;dbl&gt; &lt;bch:byt&gt; &lt;bch:&gt;
+ 1     1 2024-07-15 08:47:12 23227 23168 R               NA         1.2GB  393GB
+ 2     1 2024-07-15 08:47:12 22648 21210 rsession-arm64  NA      175.95MB  393GB
+ 3     2 2024-07-15 08:47:13 23252 23227 R               NA      543.59MB  393GB
+ 4     2 2024-07-15 08:47:13 23251 23227 R               NA      556.78MB  393GB
+ 5     2 2024-07-15 08:47:13 23250 23227 R               NA      563.22MB  393GB
+ 6     2 2024-07-15 08:47:13 23249 23227 R               NA      565.36MB  393GB
+ 7     2 2024-07-15 08:47:13 23248 23227 R               NA      596.19MB  393GB
+ 8     2 2024-07-15 08:47:13 23227 23168 R               62.0      1.25GB  393GB
+ 9     2 2024-07-15 08:47:13 22648 21210 rsession-arm64   0.399  175.95MB  393GB
+10     3 2024-07-15 08:47:14 23252 23227 R               98.5    744.69MB  393GB
+# ℹ 36 more rows</code></pre>
 </div>
 </div>
 <p>These results are a bit more interesting than the sequential results from <code>Sys.sleep(2)</code>. Look closely at the <code>ppid</code>s for each <code>id</code>; after a snapshot or two, you’ll see five identical <code>ppid</code>s for each <code>id</code>, and those <code>ppid</code>s match up with the remaining <code>pid</code> in the one remaining R process. This shows us that we’ve indeed distributed computations using forking in that one remaining R process, the “parent,” has spawned off five child processes from itself.</p>
@@ -268,7 +268,7 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 <div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># retrieve the current process ID, which will be the parent</span></span>
 <span><span class="co"># ID for the workers</span></span>
-<span><span class="va">worker_ppid</span> <span class="op">&lt;-</span> <span class="fu">ps</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ps/man/ps_pid.html">ps_pid</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">worker_ppid</span> <span class="op">&lt;-</span> <span class="fu">ps</span><span class="fu">::</span><span class="fu"><a href="https://ps.r-lib.org/reference/ps_pid.html">ps_pid</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">res_mem</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="co"># keep only the parent process and its workers</span></span>
@@ -284,7 +284,7 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 </div>
 </div>
 </div>
-<p>At first, only the parent process has non-<code>NA</code> <code>rss</code>, as tidymodels hasn’t sent data off to any workers yet. Then, each of the 5 workers receives data from tidymodels and begins fitting models. Eventually, each of those workers returns their results to the parent process, and their <code>rss</code> is once again <code>NA</code>. The parent process wraps up its computations before completing evaluation of the expression, at which point <code><a href="https://rdrr.io/pkg/syrup/man/syrup.html">syrup()</a></code> returns. (Keep in mind: memory is weird. In the above plot, the total memory allotted to the parent session and its five workers at each ID is not simply the sum of those <code>rss</code> values, as memory is shared among them.) We see another side of the story come together for CPU usage:</p>
+<p>At first, only the parent process has non-<code>NA</code> <code>rss</code>, as tidymodels hasn’t sent data off to any workers yet. Then, each of the 5 workers receives data from tidymodels and begins fitting models. Eventually, each of those workers returns their results to the parent process, and their <code>rss</code> is once again <code>NA</code>. The parent process wraps up its computations before completing evaluation of the expression, at which point <code><a href="https://simonpcouch.github.io/syrup/reference/syrup.html">syrup()</a></code> returns. (Keep in mind: memory is weird. In the above plot, the total memory allotted to the parent session and its five workers at each ID is not simply the sum of those <code>rss</code> values, as memory is shared among them.) We see another side of the story come together for CPU usage:</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">res_mem</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">ppid</span> <span class="op">==</span> <span class="va">worker_ppid</span> <span class="op">|</span> <span class="va">pid</span> <span class="op">==</span> <span class="va">worker_ppid</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
@@ -304,40 +304,40 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 <p>Loosely, the function works like this:</p>
 <ul>
 <li>
-<code><a href="https://rdrr.io/pkg/syrup/man/syrup.html">syrup()</a></code> captures the supplied expression (and doesn’t yet evaluate it).</li>
+<code><a href="https://simonpcouch.github.io/syrup/reference/syrup.html">syrup()</a></code> captures the supplied expression (and doesn’t yet evaluate it).</li>
 <li>The function then spins up another R session—call it <code>sesh</code>—that snapshots memory and CPU usage information for all running R processes at a regular interval.</li>
-<li>In the original R session, <code><a href="https://rdrr.io/pkg/syrup/man/syrup.html">syrup()</a></code> evaluates the supplied expression. While it’s doing so, <code>sesh</code> is running in the background tracking its usage of system resources.</li>
+<li>In the original R session, <code><a href="https://simonpcouch.github.io/syrup/reference/syrup.html">syrup()</a></code> evaluates the supplied expression. While it’s doing so, <code>sesh</code> is running in the background tracking its usage of system resources.</li>
 <li>Once the expression is finished evaluating, the original R session tells <code>sesh</code> to return all of the information it’s queried and then closes <code>sesh</code>.</li>
-<li>Finally, <code><a href="https://rdrr.io/pkg/syrup/man/syrup.html">syrup()</a></code> returns the memory and CPU usage information.</li>
+<li>Finally, <code><a href="https://simonpcouch.github.io/syrup/reference/syrup.html">syrup()</a></code> returns the memory and CPU usage information.</li>
 </ul>
-<p>Those “snapshots” are calls to <code><a href="https://rdrr.io/pkg/ps/man/ps.html">ps::ps()</a></code>, whose output looks something like this:</p>
+<p>Those “snapshots” are calls to <code><a href="https://ps.r-lib.org/reference/ps.html">ps::ps()</a></code>, whose output looks something like this:</p>
 <div class="cell">
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">ps</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ps/man/ps.html">ps</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">ps</span><span class="fu">::</span><span class="fu"><a href="https://ps.r-lib.org/reference/ps.html">ps</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A data frame: 656 × 11
-     pid  ppid name            username status    user   system     rss      vms
- * &lt;int&gt; &lt;int&gt; &lt;chr&gt;           &lt;chr&gt;    &lt;chr&gt;    &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;
- 1 15884 15341 R               simonco… runni…  4.02    0.576    1.11e9  4.22e11
- 2 15875  1957 Google Chrome … simonco… runni…  0.0708  0.0225   1.11e8  1.64e12
- 3 15873     1 mdworker_shared simonco… runni…  0.0748  0.0296   1.85e7  4.20e11
- 4 15872  1957 Google Chrome … simonco… runni…  2.03    1.16     2.10e8  1.64e12
- 5 15775     1 mdworker_shared _spotli… runni… NA      NA       NA      NA      
- 6 15761     1 mdworker_shared simonco… runni…  0.102   0.0470   2.52e7  4.20e11
- 7 15398  1957 Google Chrome … simonco… runni…  0.0442  0.0205   6.28e7  1.64e12
- 8 15390     1 helpd           simonco… runni…  0.0108  0.00908  4.46e6  4.20e11
- 9 15342 15192 RStudio Helper… simonco… runni…  0.433   0.0623   1.09e8  1.64e12
-10 15341 15329 deno            simonco… runni…  4.72    0.915    2.36e8  4.34e11
-# ℹ 646 more rows
+<pre><code># A data frame: 613 × 11
+     pid  ppid name            username  status    user  system     rss      vms
+ * &lt;int&gt; &lt;int&gt; &lt;chr&gt;           &lt;chr&gt;     &lt;chr&gt;    &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;
+ 1 23257 21210 license-manager simoncou… &lt;NA&gt;   NA      NA      NA      NA      
+ 2 23256    NA &lt;NA&gt;            &lt;NA&gt;      &lt;NA&gt;   NA      NA      NA      NA      
+ 3 23227 23168 R               simoncou… runni…  3.47    0.546   1.40e9  4.22e11
+ 4 23225     1 mdworker_shared simoncou… runni…  0.0657  0.0266  2.72e7  4.20e11
+ 5 23222     1 mdworker_shared simoncou… runni…  0.0636  0.0223  2.74e7  4.20e11
+ 6 23220     1 mdworker_shared simoncou… runni…  0.0409  0.0116  1.15e7  4.20e11
+ 7 23219     1 mdworker_shared simoncou… runni…  0.0436  0.0131  1.15e7  4.20e11
+ 8 23217     1 mdworker_shared simoncou… runni…  0.0370  0.0111  1.16e7  4.20e11
+ 9 23210     1 mdworker_shared simoncou… runni…  0.0299  0.0145  2.21e7  4.20e11
+10 23208     1 mdworker_shared simoncou… runni…  0.0421  0.0148  2.19e7  4.20e11
+# ℹ 603 more rows
 # ℹ 2 more variables: created &lt;dttm&gt;, ps_handle &lt;I&lt;list&gt;&gt;</code></pre>
 </div>
 </div>
-<p><code><a href="https://rdrr.io/pkg/ps/man/ps.html">ps::ps()</a></code> returns information on all active processes. Under the hood, <code><a href="https://rdrr.io/pkg/syrup/man/syrup.html">syrup()</a></code> does a <code><a href="https://rdrr.io/r/stats/filter.html">filter()</a></code> to extract only active R processes<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> and does some <code>mutate()</code>s to calculate the percent CPU usage.</p>
+<p><code><a href="https://ps.r-lib.org/reference/ps.html">ps::ps()</a></code> returns information on all active processes. Under the hood, <code><a href="https://simonpcouch.github.io/syrup/reference/syrup.html">syrup()</a></code> does a <code><a href="https://rdrr.io/r/stats/filter.html">filter()</a></code> to extract only active R processes<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> and does some <code>mutate()</code>s to calculate the percent CPU usage.</p>
 <p>My graphic design skills are lame, but here’s an attempt at visualizing that process for the simple <code><a href="https://rdrr.io/r/base/Sys.sleep.html">Sys.sleep()</a></code> example:</p>
 <div class="cell">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure"><p><img src="figures/syrup_diagram_basic.png" class="img-fluid figure-img" alt="The evaluation of the `syrup()` function is depicted on a timeline. Two horizontal lines depict two R sessions. One is the original, one is `sesh`. The original session starts before and ends after `sesh`. While the original session evaluate `Sys.sleep(2)`, `sesh` is able to capture system resources five times, once every half second, before closing." width="1750"></p>
-<figcaption class="figure-caption">A diagram showing what happens behind the scenes of <code><a href="https://rdrr.io/pkg/syrup/man/syrup.html">syrup()</a></code> in a simple case. The <code>interval</code> argument controls how often resource usage is snapshotted and defaults to half a second; I set it explicitly here just for demonstration.</figcaption></figure>
+<figcaption class="figure-caption">A diagram showing what happens behind the scenes of <code><a href="https://simonpcouch.github.io/syrup/reference/syrup.html">syrup()</a></code> in a simple case. The <code>interval</code> argument controls how often resource usage is snapshotted and defaults to half a second; I set it explicitly here just for demonstration.</figcaption></figure>
 </div>
 </div>
 </div>
@@ -346,7 +346,7 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure"><p><img src="figures/syrup_diagram_parallel.png" class="img-fluid figure-img" alt="As before, a call to `syrup()` is a depicted on a timeline, this time surrounding a call to `tune_grid()`. Five additional horizontal lines depict five workers reated by `tune_grid()` to fit models. `sesh` is able to snapshot system resource usage for all running R processes throughout `tune_grid()`'s evaluation." width="1750"></p>
-<figcaption class="figure-caption">Since we’ve configured future to distribute computations across 5 cores using forking, the call to <code>tune_grid()</code> results in 5 workers spinning up to cross-validate models. Each call to <code><a href="https://rdrr.io/pkg/ps/man/ps.html">ps::ps()</a></code> will capture details on all running R sessions.</figcaption></figure>
+<figcaption class="figure-caption">Since we’ve configured future to distribute computations across 5 cores using forking, the call to <code>tune_grid()</code> results in 5 workers spinning up to cross-validate models. Each call to <code><a href="https://ps.r-lib.org/reference/ps.html">ps::ps()</a></code> will capture details on all running R sessions.</figcaption></figure>
 </div>
 </div>
 </div>
