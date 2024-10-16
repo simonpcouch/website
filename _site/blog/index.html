@@ -2,13 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.5.57">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="  This is where I sometimes write about what I’m up to related to R, data science, and statistics. My dog, Millie, tags along in the thumbnails. I hope folks find some of these notes useful. Subscribe via RSS">
+<meta name="description" content=" This is where I sometimes write about what I’m up to related to R, data science, and statistics. My dog, Millie, tags along in the thumbnails. I hope folks find some of these notes useful. Subscribe via RSS">
 
-<title>Some Pitters and Patters with R | Simon P. Couch</title>
+<title>Some Pitters and Patters with R | Simon P. Couch – Simon P. Couch</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -49,7 +49,13 @@ ul.task-list li input[type="checkbox"] {
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "overlay",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -58,6 +64,7 @@ ul.task-list li input[type="checkbox"] {
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -104,18 +111,45 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 </script>
 <link rel="stylesheet" href="../assets/listing-default.css">
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
-<link rel="alternate" type="application/rss+xml" title="Simon P. Couch" href="index.xml"></head>
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="alternate" type="application/rss+xml" title="Simon P. Couch" href="index.xml" data-external="1"></head>
 
 <body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg navbar-dark ">
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
-      <div class="navbar-brand-container">
+      <div class="navbar-brand-container mx-auto">
     <a href="../index.html" class="navbar-brand navbar-brand-logo">
     <img src="../assets/cabin.png" alt="" class="navbar-logo">
     </a>
@@ -124,24 +158,24 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../about/index.html" rel="" target="">
- <span class="menu-text">About</span></a>
+    <a class="nav-link" href="../about/index.html"> 
+<span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="../blog/index.html" rel="" target="" aria-current="page">
- <span class="menu-text">Blog</span></a>
+    <a class="nav-link active" href="../blog/index.html" aria-current="page"> 
+<span class="menu-text">Blog</span></a>
   </li>  
 </ul>
-            <div class="quarto-navbar-tools">
-    <a href="https://www.github.com/simonpcouch/website" rel="" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
-</div>
           </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+    <a href="https://www.github.com/simonpcouch/website" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
+</div>
       </div> <!-- /container-fluid -->
     </nav>
 </header>
@@ -159,7 +193,7 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
   </div>
     
   
-  <div class="quarto-title-meta">
+  <div class="quarto-title-meta column-page">
 
       
     
@@ -181,704 +215,730 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 
 
 
+
 <div class="quarto-listing quarto-listing-container-default" id="listing-listing">
 <div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-listing-date-sort="1721019600000" data-listing-file-modified-sort="1721051226299" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="8">
+<div class="quarto-post image-right" data-index="0" data-listing-date-sort="1729062000000" data-listing-file-modified-sort="1729084203901" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="6" data-listing-word-count-sort="1187">
 <div class="thumbnail">
-<p><a href="../blog/2024-07-15-syrup/index.html"> <img src="../blog/2024-07-15-syrup/featured.png" class="thumbnail-image"> </a></p>
+<p><a href="../blog/2024-10-16-postprocessing/index.html" class="no-external"></a></p><a href="../blog/2024-10-16-postprocessing/index.html" class="no-external">
+<p><img loading="lazy" src="../blog/2024-10-16-postprocessing/featured.png" class="thumbnail-image"></p>
+</a><p><a href="../blog/2024-10-16-postprocessing/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="../blog/2024-07-15-syrup/index.html">
 <h3 class="no-anchor listing-title">
-A new package for profiling parallel R code
+<a href="../blog/2024-10-16-postprocessing/index.html" class="no-external">Postprocessing is coming to tidymodels</a>
 </h3>
 <div class="listing-subtitle">
-Periodic snapshots of CPU and memory usage consumed by R sessions enable better analyses of parallel computation.
+<a href="../blog/2024-10-16-postprocessing/index.html" class="no-external">The tidymodels team has been hard at work on postprocessing, a set of features to adjust model predictions. The functionality includes a new package as well as changes across the framework.</a>
+</div>
+</div>
+<div class="metadata">
+<a href="../blog/2024-10-16-postprocessing/index.html" class="no-external">
+<div class="listing-date">
+Oct 16, 2024
+</div>
+<div class="metadata-value listing-summary">
+&nbsp;
 </div>
 </a>
 </div>
+</div>
+<div class="quarto-post image-right" data-index="1" data-listing-date-sort="1721026800000" data-listing-file-modified-sort="1727900556869" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="8" data-listing-word-count-sort="1569">
+<div class="thumbnail">
+<p><a href="../blog/2024-07-15-syrup/index.html" class="no-external"></a></p><a href="../blog/2024-07-15-syrup/index.html" class="no-external">
+<p><img loading="lazy" src="../blog/2024-07-15-syrup/featured.png" class="thumbnail-image"></p>
+</a><p><a href="../blog/2024-07-15-syrup/index.html" class="no-external"></a></p>
+</div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="../blog/2024-07-15-syrup/index.html" class="no-external">A new package for profiling parallel R code</a>
+</h3>
+<div class="listing-subtitle">
+<a href="../blog/2024-07-15-syrup/index.html" class="no-external">Periodic snapshots of CPU and memory usage consumed by R sessions enable better analyses of parallel computation.</a>
+</div>
+</div>
 <div class="metadata">
-<a href="../blog/2024-07-15-syrup/index.html">
+<a href="../blog/2024-07-15-syrup/index.html" class="no-external">
 <div class="listing-date">
 Jul 15, 2024
 </div>
 <div class="metadata-value listing-summary">
-
+&nbsp;
 </div>
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="1" data-listing-date-sort="1715576400000" data-listing-file-modified-sort="1715605678877" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="10">
+<div class="quarto-post image-right" data-index="2" data-listing-date-sort="1715583600000" data-listing-file-modified-sort="1715605678877" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="10" data-listing-word-count-sort="1809">
 <div class="thumbnail">
-<p><a href="../blog/2024-05-13-parallel/index.html"> <img src="../blog/2024-05-13-parallel/featured.png" class="thumbnail-image"> </a></p>
+<p><a href="../blog/2024-05-13-parallel/index.html" class="no-external"></a></p><a href="../blog/2024-05-13-parallel/index.html" class="no-external">
+<p><img loading="lazy" src="../blog/2024-05-13-parallel/featured.png" class="thumbnail-image"></p>
+</a><p><a href="../blog/2024-05-13-parallel/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="../blog/2024-05-13-parallel/index.html">
 <h3 class="no-anchor listing-title">
-How to best parallelize boosted tree model fits with tidymodels
+<a href="../blog/2024-05-13-parallel/index.html" class="no-external">How to best parallelize boosted tree model fits with tidymodels</a>
 </h3>
 <div class="listing-subtitle">
-Should tidymodels users use the parallelism implementations from XGBoost and LightGBM?
+<a href="../blog/2024-05-13-parallel/index.html" class="no-external">Should tidymodels users use the parallelism implementations from XGBoost and LightGBM?</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="../blog/2024-05-13-parallel/index.html">
+<a href="../blog/2024-05-13-parallel/index.html" class="no-external">
 <div class="listing-date">
 May 13, 2024
 </div>
 <div class="metadata-value listing-summary">
-
+&nbsp;
 </div>
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="2" data-listing-date-sort="1712552400000" data-listing-file-modified-sort="1712591721660" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9">
+<div class="quarto-post image-right" data-index="3" data-listing-date-sort="1712559600000" data-listing-file-modified-sort="1712591721660" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9" data-listing-word-count-sort="1711">
 <div class="thumbnail">
-<p><a href="../blog/2024-04-08-fit-time/index.html"> <img src="../blog/2024-04-08-fit-time/featured.png" class="thumbnail-image"> </a></p>
+<p><a href="../blog/2024-04-08-fit-time/index.html" class="no-external"></a></p><a href="../blog/2024-04-08-fit-time/index.html" class="no-external">
+<p><img loading="lazy" src="../blog/2024-04-08-fit-time/featured.png" class="thumbnail-image"></p>
+</a><p><a href="../blog/2024-04-08-fit-time/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="../blog/2024-04-08-fit-time/index.html">
 <h3 class="no-anchor listing-title">
-Measuring elapsed time to fit with tidymodels
+<a href="../blog/2024-04-08-fit-time/index.html" class="no-external">Measuring elapsed time to fit with tidymodels</a>
 </h3>
 <div class="listing-subtitle">
-The development versions of tidymodels packages now include tools to benchmark training time.
+<a href="../blog/2024-04-08-fit-time/index.html" class="no-external">The development versions of tidymodels packages now include tools to benchmark training time.</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="../blog/2024-04-08-fit-time/index.html">
+<a href="../blog/2024-04-08-fit-time/index.html" class="no-external">
 <div class="listing-date">
 Apr 8, 2024
 </div>
 <div class="metadata-value listing-summary">
-
+&nbsp;
 </div>
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="3" data-listing-date-sort="1710392400000" data-listing-file-modified-sort="1710447608055" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4">
+<div class="quarto-post image-right" data-index="4" data-listing-date-sort="1710399600000" data-listing-file-modified-sort="1710447608055" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="686">
 <div class="thumbnail">
-<p><a href="../blog/2024-03-14-oracle/index.html"> <img src="../blog/2024-03-14-oracle/featured.png" class="thumbnail-image"> </a></p>
+<p><a href="../blog/2024-03-14-oracle/index.html" class="no-external"></a></p><a href="../blog/2024-03-14-oracle/index.html" class="no-external">
+<p><img loading="lazy" src="../blog/2024-03-14-oracle/featured.png" class="thumbnail-image"></p>
+</a><p><a href="../blog/2024-03-14-oracle/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="../blog/2024-03-14-oracle/index.html">
 <h3 class="no-anchor listing-title">
-Run an Oracle Database with Docker Desktop on ARM (M1, M2, M3) MacOS
+<a href="../blog/2024-03-14-oracle/index.html" class="no-external">Run an Oracle Database with Docker Desktop on ARM (M1, M2, M3) MacOS</a>
 </h3>
 <div class="listing-subtitle">
-Starting a containerized Oracle database on an Apple Silicon Mac.
+<a href="../blog/2024-03-14-oracle/index.html" class="no-external">Starting a containerized Oracle database on an Apple Silicon Mac.</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="../blog/2024-03-14-oracle/index.html">
+<a href="../blog/2024-03-14-oracle/index.html" class="no-external">
 <div class="listing-date">
 Mar 14, 2024
 </div>
 <div class="metadata-value listing-summary">
-
+&nbsp;
 </div>
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="4" data-listing-date-sort="1701324000000" data-listing-file-modified-sort="1701354925523" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4">
+<div class="quarto-post image-right" data-index="5" data-listing-date-sort="1701331200000" data-listing-file-modified-sort="1701354925523" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="654">
 <div class="thumbnail">
-<p><a href="../blog/2023-11-30-listening-2023/index.html"> <img src="../blog/2023-11-30-listening-2023/featured.png" class="thumbnail-image"> </a></p>
+<p><a href="../blog/2023-11-30-listening-2023/index.html" class="no-external"></a></p><a href="../blog/2023-11-30-listening-2023/index.html" class="no-external">
+<p><img loading="lazy" src="../blog/2023-11-30-listening-2023/featured.png" class="thumbnail-image"></p>
+</a><p><a href="../blog/2023-11-30-listening-2023/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="../blog/2023-11-30-listening-2023/index.html">
 <h3 class="no-anchor listing-title">
-Analyzing my own music listening data with R and the tidyverse (2023)
+<a href="../blog/2023-11-30-listening-2023/index.html" class="no-external">Analyzing my own music listening data with R and the tidyverse (2023)</a>
 </h3>
 <div class="listing-subtitle">
-All of my friends are posting their Spotify Wrapped, and I’m jealous.
+<a href="../blog/2023-11-30-listening-2023/index.html" class="no-external">All of my friends are posting their Spotify Wrapped, and I’m jealous.</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="../blog/2023-11-30-listening-2023/index.html">
+<a href="../blog/2023-11-30-listening-2023/index.html" class="no-external">
 <div class="listing-date">
 Nov 30, 2023
 </div>
 <div class="metadata-value listing-summary">
-
+&nbsp;
 </div>
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="5" data-listing-date-sort="1701151200000" data-listing-file-modified-sort="1701197639992" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="10">
+<div class="quarto-post image-right" data-index="6" data-listing-date-sort="1701158400000" data-listing-file-modified-sort="1701197639992" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="10" data-listing-word-count-sort="1982">
 <div class="thumbnail">
-<p><a href="../blog/2023-11-28-flights/index.html"> <img src="../blog/2023-11-28-flights/featured.png" class="thumbnail-image"> </a></p>
+<p><a href="../blog/2023-11-28-flights/index.html" class="no-external"></a></p><a href="../blog/2023-11-28-flights/index.html" class="no-external">
+<p><img loading="lazy" data-src="../blog/2023-11-28-flights/featured.png" class="thumbnail-image"></p>
+</a><p><a href="../blog/2023-11-28-flights/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="../blog/2023-11-28-flights/index.html">
 <h3 class="no-anchor listing-title">
-Predicting flight delays with tidymodels🛩
+<a href="../blog/2023-11-28-flights/index.html" class="no-external">Predicting flight delays with tidymodels🛩</a>
 </h3>
 <div class="listing-subtitle">
-Trying out a variety of machine learning models to predict flight delays out of Madison, WI.
+<a href="../blog/2023-11-28-flights/index.html" class="no-external">Trying out a variety of machine learning models to predict flight delays out of Madison, WI.</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="../blog/2023-11-28-flights/index.html">
+<a href="../blog/2023-11-28-flights/index.html" class="no-external">
 <div class="listing-date">
 Nov 28, 2023
 </div>
 <div class="metadata-value listing-summary">
-
+&nbsp;
 </div>
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="6" data-listing-date-sort="1698123600000" data-listing-file-modified-sort="1699032765192" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3">
+<div class="quarto-post image-right" data-index="7" data-listing-date-sort="1698130800000" data-listing-file-modified-sort="1699032765192" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="487">
 <div class="thumbnail">
-<p><a href="../blog/2023-10-24-quarto-site/index.html"> <img data-src="../blog/2023-10-24-quarto-site/featured.jpg" class="thumbnail-image"> </a></p>
+<p><a href="../blog/2023-10-24-quarto-site/index.html" class="no-external"></a></p><a href="../blog/2023-10-24-quarto-site/index.html" class="no-external">
+<p><img loading="lazy" data-src="../blog/2023-10-24-quarto-site/featured.jpg" class="thumbnail-image"></p>
+</a><p><a href="../blog/2023-10-24-quarto-site/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="../blog/2023-10-24-quarto-site/index.html">
 <h3 class="no-anchor listing-title">
-Quarto!
+<a href="../blog/2023-10-24-quarto-site/index.html" class="no-external">Quarto!</a>
 </h3>
 <div class="listing-subtitle">
-I recently rebuilt this site with Quarto.
+<a href="../blog/2023-10-24-quarto-site/index.html" class="no-external">I recently rebuilt this site with Quarto.</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="../blog/2023-10-24-quarto-site/index.html">
+<a href="../blog/2023-10-24-quarto-site/index.html" class="no-external">
 <div class="listing-date">
 Oct 24, 2023
 </div>
 <div class="metadata-value listing-summary">
-
+&nbsp;
 </div>
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="7" data-listing-date-sort="1697000400000" data-listing-file-modified-sort="1698174921961" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="18">
+<div class="quarto-post image-right" data-index="8" data-listing-date-sort="1697007600000" data-listing-file-modified-sort="1698174921961" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="18" data-listing-word-count-sort="3478">
 <div class="thumbnail">
-<p><a href="../blog/2023-10-11-submodels-rabbit-hole/index.html"> <img data-src="../blog/2023-10-11-submodels-rabbit-hole/featured.png" class="thumbnail-image"> </a></p>
+<p><a href="../blog/2023-10-11-submodels-rabbit-hole/index.html" class="no-external"></a></p><a href="../blog/2023-10-11-submodels-rabbit-hole/index.html" class="no-external">
+<p><img loading="lazy" data-src="../blog/2023-10-11-submodels-rabbit-hole/featured.png" class="thumbnail-image"></p>
+</a><p><a href="../blog/2023-10-11-submodels-rabbit-hole/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="../blog/2023-10-11-submodels-rabbit-hole/index.html">
 <h3 class="no-anchor listing-title">
-Down the submodels rabbit hole with tidymodels
+<a href="../blog/2023-10-11-submodels-rabbit-hole/index.html" class="no-external">Down the submodels rabbit hole with tidymodels</a>
 </h3>
 <div class="listing-subtitle">
-Debugging something that turned out not to be a bug at all.
+<a href="../blog/2023-10-11-submodels-rabbit-hole/index.html" class="no-external">Debugging something that turned out not to be a bug at all.</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="../blog/2023-10-11-submodels-rabbit-hole/index.html">
+<a href="../blog/2023-10-11-submodels-rabbit-hole/index.html" class="no-external">
 <div class="listing-date">
 Oct 11, 2023
 </div>
 <div class="metadata-value listing-summary">
-
+&nbsp;
 </div>
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="8" data-listing-date-sort="1693544400000" data-listing-file-modified-sort="1698174921958" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="11">
+<div class="quarto-post image-right" data-index="9" data-listing-date-sort="1693551600000" data-listing-file-modified-sort="1698174921958" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="11" data-listing-word-count-sort="2028">
 <div class="thumbnail">
-<p><a href="../blog/2023-09-01-jmt-2023/index.html"> <img data-src="../blog/2023-09-01-jmt-2023/featured.jpg" class="thumbnail-image"> </a></p>
+<p><a href="../blog/2023-09-01-jmt-2023/index.html" class="no-external"></a></p><a href="../blog/2023-09-01-jmt-2023/index.html" class="no-external">
+<p><img loading="lazy" data-src="../blog/2023-09-01-jmt-2023/featured.jpg" class="thumbnail-image"></p>
+</a><p><a href="../blog/2023-09-01-jmt-2023/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="../blog/2023-09-01-jmt-2023/index.html">
 <h3 class="no-anchor listing-title">
-Hiking the 2023 John Muir Trail / Nüümü Poyo
+<a href="../blog/2023-09-01-jmt-2023/index.html" class="no-external">Hiking the 2023 John Muir Trail / Nüümü Poyo</a>
 </h3>
 <div class="listing-subtitle">
-A group of buddies and I walked 242 miles from Mt. Whitney to Yosemite Valley.
+<a href="../blog/2023-09-01-jmt-2023/index.html" class="no-external">A group of buddies and I walked 242 miles from Mt. Whitney to Yosemite Valley.</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="../blog/2023-09-01-jmt-2023/index.html">
+<a href="../blog/2023-09-01-jmt-2023/index.html" class="no-external">
 <div class="listing-date">
 Sep 1, 2023
 </div>
 <div class="metadata-value listing-summary">
-
+&nbsp;
 </div>
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="9" data-listing-date-sort="1691125200000" data-listing-file-modified-sort="1698174921786" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="19">
+<div class="quarto-post image-right" data-index="10" data-listing-date-sort="1691132400000" data-listing-file-modified-sort="1698174921786" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="19" data-listing-word-count-sort="3680">
 <div class="thumbnail">
-<p><a href="../blog/2023-08-04-parallel-racing/index.html"> <img data-src="../blog/2023-08-04-parallel-racing/featured.png" class="thumbnail-image"> </a></p>
+<p><a href="../blog/2023-08-04-parallel-racing/index.html" class="no-external"></a></p><a href="../blog/2023-08-04-parallel-racing/index.html" class="no-external">
+<p><img loading="lazy" data-src="../blog/2023-08-04-parallel-racing/featured.png" class="thumbnail-image"></p>
+</a><p><a href="../blog/2023-08-04-parallel-racing/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="../blog/2023-08-04-parallel-racing/index.html">
 <h3 class="no-anchor listing-title">
-Optimizing model parameters faster with tidymodels
+<a href="../blog/2023-08-04-parallel-racing/index.html" class="no-external">Optimizing model parameters faster with tidymodels</a>
 </h3>
 <div class="listing-subtitle">
-A couple small changes can greatly speed up the hyperparameter tuning process with tidymodels.
+<a href="../blog/2023-08-04-parallel-racing/index.html" class="no-external">A couple small changes can greatly speed up the hyperparameter tuning process with tidymodels.</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="../blog/2023-08-04-parallel-racing/index.html">
+<a href="../blog/2023-08-04-parallel-racing/index.html" class="no-external">
 <div class="listing-date">
 Aug 4, 2023
 </div>
 <div class="metadata-value listing-summary">
-
+&nbsp;
 </div>
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="10" data-listing-date-sort="1690520400000" data-listing-file-modified-sort="1698174921782" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3">
+<div class="quarto-post image-right" data-index="11" data-listing-date-sort="1690527600000" data-listing-file-modified-sort="1698174921782" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="463">
 <div class="thumbnail">
-<p><a href="../blog/2023-07-28-moving-on-s23/index.html"> <img data-src="../blog/2023-07-28-moving-on-s23/featured.png" class="thumbnail-image"> </a></p>
+<p><a href="../blog/2023-07-28-moving-on-s23/index.html" class="no-external"></a></p><a href="../blog/2023-07-28-moving-on-s23/index.html" class="no-external">
+<p><img loading="lazy" data-src="../blog/2023-07-28-moving-on-s23/featured.png" class="thumbnail-image"></p>
+</a><p><a href="../blog/2023-07-28-moving-on-s23/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="../blog/2023-07-28-moving-on-s23/index.html">
 <h3 class="no-anchor listing-title">
-Moving On From Baltimore
+<a href="../blog/2023-07-28-moving-on-s23/index.html" class="no-external">Moving On From Baltimore</a>
 </h3>
 <div class="listing-subtitle">
-After 2 years in Baltimore, I recently made the move to Chicago, IL.
+<a href="../blog/2023-07-28-moving-on-s23/index.html" class="no-external">After 2 years in Baltimore, I recently made the move to Chicago, IL.</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="../blog/2023-07-28-moving-on-s23/index.html">
+<a href="../blog/2023-07-28-moving-on-s23/index.html" class="no-external">
 <div class="listing-date">
 Jul 28, 2023
 </div>
 <div class="metadata-value listing-summary">
-
+&nbsp;
 </div>
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="11" data-listing-date-sort="1679634000000" data-listing-file-modified-sort="1698174921774" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="15">
+<div class="quarto-post image-right" data-index="12" data-listing-date-sort="1679641200000" data-listing-file-modified-sort="1698174921774" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="15" data-listing-word-count-sort="2994">
 <div class="thumbnail">
-<p><a href="../blog/2023-03-24-speedups-2023/index.html"> <img data-src="../blog/2023-03-24-speedups-2023/featured.png" class="thumbnail-image"> </a></p>
+<p><a href="../blog/2023-03-24-speedups-2023/index.html" class="no-external"></a></p><a href="../blog/2023-03-24-speedups-2023/index.html" class="no-external">
+<p><img loading="lazy" data-src="../blog/2023-03-24-speedups-2023/featured.png" class="thumbnail-image"></p>
+</a><p><a href="../blog/2023-03-24-speedups-2023/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="../blog/2023-03-24-speedups-2023/index.html">
 <h3 class="no-anchor listing-title">
-The tidymodels is getting a whole lot faster
+<a href="../blog/2023-03-24-speedups-2023/index.html" class="no-external">The tidymodels is getting a whole lot faster</a>
 </h3>
 <div class="listing-subtitle">
-Recent optimizations have made fits on small datasets much, much snappier.
+<a href="../blog/2023-03-24-speedups-2023/index.html" class="no-external">Recent optimizations have made fits on small datasets much, much snappier.</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="../blog/2023-03-24-speedups-2023/index.html">
+<a href="../blog/2023-03-24-speedups-2023/index.html" class="no-external">
 <div class="listing-date">
 Mar 24, 2023
 </div>
 <div class="metadata-value listing-summary">
-
+&nbsp;
 </div>
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="12" data-listing-date-sort="1669874400000" data-listing-file-modified-sort="1698174921745" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="16">
+<div class="quarto-post image-right" data-index="13" data-listing-date-sort="1669881600000" data-listing-file-modified-sort="1698174921745" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="16" data-listing-word-count-sort="3175">
 <div class="thumbnail">
-<p><a href="../blog/2022-12-01-listening-2022/index.html"> <img data-src="../blog/2022-12-01-listening-2022/featured.jpg" class="thumbnail-image"> </a></p>
+<p><a href="../blog/2022-12-01-listening-2022/index.html" class="no-external"></a></p><a href="../blog/2022-12-01-listening-2022/index.html" class="no-external">
+<p><img loading="lazy" data-src="../blog/2022-12-01-listening-2022/featured.jpg" class="thumbnail-image"></p>
+</a><p><a href="../blog/2022-12-01-listening-2022/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="../blog/2022-12-01-listening-2022/index.html">
 <h3 class="no-anchor listing-title">
-Analyzing my own music listening data with R and the tidyverse
+<a href="../blog/2022-12-01-listening-2022/index.html" class="no-external">Analyzing my own music listening data with R and the tidyverse</a>
 </h3>
 <div class="listing-subtitle">
-All of my friends are posting their Spotify Wrapped, and I’m jealous.
+<a href="../blog/2022-12-01-listening-2022/index.html" class="no-external">All of my friends are posting their Spotify Wrapped, and I’m jealous.</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="../blog/2022-12-01-listening-2022/index.html">
+<a href="../blog/2022-12-01-listening-2022/index.html" class="no-external">
 <div class="listing-date">
 Dec 1, 2022
 </div>
 <div class="metadata-value listing-summary">
-
+&nbsp;
 </div>
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="13" data-listing-date-sort="1658293200000" data-listing-file-modified-sort="1698174921743" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4">
+<div class="quarto-post image-right" data-index="14" data-listing-date-sort="1658300400000" data-listing-file-modified-sort="1698174921743" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="736">
 <div class="thumbnail">
-<p><a href="../blog/2022-07-20-netlify-subdomain-redirect/index.html"> <img data-src="../blog/2022-07-20-netlify-subdomain-redirect/featured.jpg" class="thumbnail-image"> </a></p>
+<p><a href="../blog/2022-07-20-netlify-subdomain-redirect/index.html" class="no-external"></a></p><a href="../blog/2022-07-20-netlify-subdomain-redirect/index.html" class="no-external">
+<p><img loading="lazy" data-src="../blog/2022-07-20-netlify-subdomain-redirect/featured.jpg" class="thumbnail-image"></p>
+</a><p><a href="../blog/2022-07-20-netlify-subdomain-redirect/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="../blog/2022-07-20-netlify-subdomain-redirect/index.html">
 <h3 class="no-anchor listing-title">
-Redirecting from sub-domains with Netlify
+<a href="../blog/2022-07-20-netlify-subdomain-redirect/index.html" class="no-external">Redirecting from sub-domains with Netlify</a>
 </h3>
 <div class="listing-subtitle">
-After merging two websites that deployed from different branches, I had to figure out how to redirect my old blog posts to their new home.
+<a href="../blog/2022-07-20-netlify-subdomain-redirect/index.html" class="no-external">After merging two websites that deployed from different branches, I had to figure out how to redirect my old blog posts to their new home.</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="../blog/2022-07-20-netlify-subdomain-redirect/index.html">
+<a href="../blog/2022-07-20-netlify-subdomain-redirect/index.html" class="no-external">
 <div class="listing-date">
 Jul 20, 2022
 </div>
 <div class="metadata-value listing-summary">
-
+&nbsp;
 </div>
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="14" data-listing-date-sort="1629522000000" data-listing-file-modified-sort="1698174921739" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3">
+<div class="quarto-post image-right" data-index="15" data-listing-date-sort="1629529200000" data-listing-file-modified-sort="1698174921739" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="590">
 <div class="thumbnail">
-<p><a href="../blog/2021-08-21-infer-v-1-0-0/index.html"> <img data-src="../blog/2021-08-21-infer-v-1-0-0/featured.jpg" class="thumbnail-image"> </a></p>
+<p><a href="../blog/2021-08-21-infer-v-1-0-0/index.html" class="no-external"></a></p><a href="../blog/2021-08-21-infer-v-1-0-0/index.html" class="no-external">
+<p><img loading="lazy" data-src="../blog/2021-08-21-infer-v-1-0-0/featured.jpg" class="thumbnail-image"></p>
+</a><p><a href="../blog/2021-08-21-infer-v-1-0-0/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="../blog/2021-08-21-infer-v-1-0-0/index.html">
 <h3 class="no-anchor listing-title">
-{infer} v1.0.0 is on CRAN
+<a href="../blog/2021-08-21-infer-v-1-0-0/index.html" class="no-external">{infer} v1.0.0 is on CRAN</a>
 </h3>
 <div class="listing-subtitle">
-Some short reflections on working on the {infer} R package.
+<a href="../blog/2021-08-21-infer-v-1-0-0/index.html" class="no-external">Some short reflections on working on the {infer} R package.</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="../blog/2021-08-21-infer-v-1-0-0/index.html">
+<a href="../blog/2021-08-21-infer-v-1-0-0/index.html" class="no-external">
 <div class="listing-date">
 Aug 21, 2021
 </div>
 <div class="metadata-value listing-summary">
-
+&nbsp;
 </div>
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="15" data-listing-date-sort="1627880400000" data-listing-file-modified-sort="1698174921736" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="15">
+<div class="quarto-post image-right" data-index="16" data-listing-date-sort="1627887600000" data-listing-file-modified-sort="1698174921736" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="15" data-listing-word-count-sort="2902">
 <div class="thumbnail">
-<p><a href="../blog/2021-08-02-apply-to-nsf-grfp/index.html"> <img data-src="../blog/2021-08-02-apply-to-nsf-grfp/featured.jpg" class="thumbnail-image"> </a></p>
+<p><a href="../blog/2021-08-02-apply-to-nsf-grfp/index.html" class="no-external"></a></p><a href="../blog/2021-08-02-apply-to-nsf-grfp/index.html" class="no-external">
+<p><img loading="lazy" data-src="../blog/2021-08-02-apply-to-nsf-grfp/featured.jpg" class="thumbnail-image"></p>
+</a><p><a href="../blog/2021-08-02-apply-to-nsf-grfp/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="../blog/2021-08-02-apply-to-nsf-grfp/index.html">
 <h3 class="no-anchor listing-title">
-Applying to the NSF Graduate Research Fellowship (GRFP)
+<a href="../blog/2021-08-02-apply-to-nsf-grfp/index.html" class="no-external">Applying to the NSF Graduate Research Fellowship (GRFP)</a>
 </h3>
 <div class="listing-subtitle">
-A compilation of the advice that made me feel most informed and confident while applying for the NSF Graduate Research Fellowship.
+<a href="../blog/2021-08-02-apply-to-nsf-grfp/index.html" class="no-external">A compilation of the advice that made me feel most informed and confident while applying for the NSF Graduate Research Fellowship.</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="../blog/2021-08-02-apply-to-nsf-grfp/index.html">
+<a href="../blog/2021-08-02-apply-to-nsf-grfp/index.html" class="no-external">
 <div class="listing-date">
 Aug 2, 2021
 </div>
 <div class="metadata-value listing-summary">
-
+&nbsp;
 </div>
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="16" data-listing-date-sort="1623301200000" data-listing-file-modified-sort="1698174921733" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9">
+<div class="quarto-post image-right" data-index="17" data-listing-date-sort="1623308400000" data-listing-file-modified-sort="1698174921733" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9" data-listing-word-count-sort="1767">
 <div class="thumbnail">
-<p><a href="../blog/2021-06-10-ggplot-pipe-plus/index.html"> <img data-src="../blog/2021-06-10-ggplot-pipe-plus/featured.jpg" class="thumbnail-image"> </a></p>
+<p><a href="../blog/2021-06-10-ggplot-pipe-plus/index.html" class="no-external"></a></p><a href="../blog/2021-06-10-ggplot-pipe-plus/index.html" class="no-external">
+<p><img loading="lazy" data-src="../blog/2021-06-10-ggplot-pipe-plus/featured.jpg" class="thumbnail-image"></p>
+</a><p><a href="../blog/2021-06-10-ggplot-pipe-plus/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="../blog/2021-06-10-ggplot-pipe-plus/index.html">
 <h3 class="no-anchor listing-title">
-Pipe-esque Programming with {ggplot2}’s Plus Operator
+<a href="../blog/2021-06-10-ggplot-pipe-plus/index.html" class="no-external">Pipe-esque Programming with {ggplot2}’s Plus Operator</a>
 </h3>
 <div class="listing-subtitle">
-Writing iterative code with ‘+’ rather than ‘%&gt;%’ was a tough transition my first time around.
+<a href="../blog/2021-06-10-ggplot-pipe-plus/index.html" class="no-external">Writing iterative code with ‘+’ rather than ‘%&gt;%’ was a tough transition my first time around.</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="../blog/2021-06-10-ggplot-pipe-plus/index.html">
+<a href="../blog/2021-06-10-ggplot-pipe-plus/index.html" class="no-external">
 <div class="listing-date">
 Jun 10, 2021
 </div>
 <div class="metadata-value listing-summary">
-
+&nbsp;
 </div>
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="17" data-listing-date-sort="1620882000000" data-listing-file-modified-sort="1698174921726" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="21">
+<div class="quarto-post image-right" data-index="18" data-listing-date-sort="1620889200000" data-listing-file-modified-sort="1698174921726" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="21" data-listing-word-count-sort="4188">
 <div class="thumbnail">
-<p><a href="../blog/2021-05-13-dev-docs-p4/index.html"> <img data-src="../blog/2021-05-13-dev-docs-p4/featured.jpg" class="thumbnail-image"> </a></p>
+<p><a href="../blog/2021-05-13-dev-docs-p4/index.html" class="no-external"></a></p><a href="../blog/2021-05-13-dev-docs-p4/index.html" class="no-external">
+<p><img loading="lazy" data-src="../blog/2021-05-13-dev-docs-p4/featured.jpg" class="thumbnail-image"></p>
+</a><p><a href="../blog/2021-05-13-dev-docs-p4/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="../blog/2021-05-13-dev-docs-p4/index.html">
 <h3 class="no-anchor listing-title">
-Big Things (Developer Documentation pt.&nbsp;4)
+<a href="../blog/2021-05-13-dev-docs-p4/index.html" class="no-external">Big Things (Developer Documentation pt.&nbsp;4)</a>
 </h3>
 <div class="listing-subtitle">
-On the tension between documenting R packages exhaustively and maintainably.
+<a href="../blog/2021-05-13-dev-docs-p4/index.html" class="no-external">On the tension between documenting R packages exhaustively and maintainably.</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="../blog/2021-05-13-dev-docs-p4/index.html">
+<a href="../blog/2021-05-13-dev-docs-p4/index.html" class="no-external">
 <div class="listing-date">
 May 13, 2021
 </div>
 <div class="metadata-value listing-summary">
-
+&nbsp;
 </div>
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="18" data-listing-date-sort="1620795600000" data-listing-file-modified-sort="1698174921724" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="17">
+<div class="quarto-post image-right" data-index="19" data-listing-date-sort="1620802800000" data-listing-file-modified-sort="1698174921724" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="17" data-listing-word-count-sort="3341">
 <div class="thumbnail">
-<p><a href="../blog/2021-05-12-dev-docs-p3/index.html"> <img data-src="../blog/2021-05-12-dev-docs-p3/featured.jpg" class="thumbnail-image"> </a></p>
+<p><a href="../blog/2021-05-12-dev-docs-p3/index.html" class="no-external"></a></p><a href="../blog/2021-05-12-dev-docs-p3/index.html" class="no-external">
+<p><img loading="lazy" data-src="../blog/2021-05-12-dev-docs-p3/featured.jpg" class="thumbnail-image"></p>
+</a><p><a href="../blog/2021-05-12-dev-docs-p3/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="../blog/2021-05-12-dev-docs-p3/index.html">
 <h3 class="no-anchor listing-title">
-Naming the Things (Developer Documentation pt.&nbsp;3)
+<a href="../blog/2021-05-12-dev-docs-p3/index.html" class="no-external">Naming the Things (Developer Documentation pt.&nbsp;3)</a>
 </h3>
 <div class="listing-subtitle">
-Weighing the pros and cons of several possible schemas for naming the core functions in {stacks}.
+<a href="../blog/2021-05-12-dev-docs-p3/index.html" class="no-external">Weighing the pros and cons of several possible schemas for naming the core functions in {stacks}.</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="../blog/2021-05-12-dev-docs-p3/index.html">
+<a href="../blog/2021-05-12-dev-docs-p3/index.html" class="no-external">
 <div class="listing-date">
 May 12, 2021
 </div>
 <div class="metadata-value listing-summary">
-
+&nbsp;
 </div>
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="19" data-listing-date-sort="1620709200000" data-listing-file-modified-sort="1698174921722" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="22">
+<div class="quarto-post image-right" data-index="20" data-listing-date-sort="1620716400000" data-listing-file-modified-sort="1698174921722" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="22" data-listing-word-count-sort="4386">
 <div class="thumbnail">
-<p><a href="../blog/2021-05-11-dev-docs-p2/index.html"> <img data-src="../blog/2021-05-11-dev-docs-p2/featured.jpg" class="thumbnail-image"> </a></p>
+<p><a href="../blog/2021-05-11-dev-docs-p2/index.html" class="no-external"></a></p><a href="../blog/2021-05-11-dev-docs-p2/index.html" class="no-external">
+<p><img loading="lazy" data-src="../blog/2021-05-11-dev-docs-p2/featured.jpg" class="thumbnail-image"></p>
+</a><p><a href="../blog/2021-05-11-dev-docs-p2/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="../blog/2021-05-11-dev-docs-p2/index.html">
 <h3 class="no-anchor listing-title">
-Splitting Things Up (Developer Documentation pt.&nbsp;2)
+<a href="../blog/2021-05-11-dev-docs-p2/index.html" class="no-external">Splitting Things Up (Developer Documentation pt.&nbsp;2)</a>
 </h3>
 <div class="listing-subtitle">
-Why {stacks} requires (at least) four separate functions to build an ensemble model rather than wrapping them all up into one.
+<a href="../blog/2021-05-11-dev-docs-p2/index.html" class="no-external">Why {stacks} requires (at least) four separate functions to build an ensemble model rather than wrapping them all up into one.</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="../blog/2021-05-11-dev-docs-p2/index.html">
+<a href="../blog/2021-05-11-dev-docs-p2/index.html" class="no-external">
 <div class="listing-date">
 May 11, 2021
 </div>
 <div class="metadata-value listing-summary">
-
+&nbsp;
 </div>
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="20" data-listing-date-sort="1620622800000" data-listing-file-modified-sort="1698174921720" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="6">
+<div class="quarto-post image-right" data-index="21" data-listing-date-sort="1620630000000" data-listing-file-modified-sort="1698174921720" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="6" data-listing-word-count-sort="1009">
 <div class="thumbnail">
-<p><a href="../blog/2021-05-10-dev-docs-p1/index.html"> <img data-src="../blog/2021-05-10-dev-docs-p1/featured.jpg" class="thumbnail-image"> </a></p>
+<p><a href="../blog/2021-05-10-dev-docs-p1/index.html" class="no-external"></a></p><a href="../blog/2021-05-10-dev-docs-p1/index.html" class="no-external">
+<p><img loading="lazy" data-src="../blog/2021-05-10-dev-docs-p1/featured.jpg" class="thumbnail-image"></p>
+</a><p><a href="../blog/2021-05-10-dev-docs-p1/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="../blog/2021-05-10-dev-docs-p1/index.html">
 <h3 class="no-anchor listing-title">
-How {stacks} Came To Be (Developer Documentation pt.&nbsp;1)
+<a href="../blog/2021-05-10-dev-docs-p1/index.html" class="no-external">How {stacks} Came To Be (Developer Documentation pt.&nbsp;1)</a>
 </h3>
 <div class="listing-subtitle">
-Introducing a set of blog posts reflecting on the development process of the {stacks} package.
+<a href="../blog/2021-05-10-dev-docs-p1/index.html" class="no-external">Introducing a set of blog posts reflecting on the development process of the {stacks} package.</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="../blog/2021-05-10-dev-docs-p1/index.html">
+<a href="../blog/2021-05-10-dev-docs-p1/index.html" class="no-external">
 <div class="listing-date">
 May 10, 2021
 </div>
 <div class="metadata-value listing-summary">
-
+&nbsp;
 </div>
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="21" data-listing-date-sort="1616475600000" data-listing-file-modified-sort="1698174921716" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2">
+<div class="quarto-post image-right" data-index="22" data-listing-date-sort="1616482800000" data-listing-file-modified-sort="1698174921716" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="321">
 <div class="thumbnail">
-<p><a href="../blog/2021-03-23-whats-next-s21/index.html"> <img data-src="../blog/2021-03-23-whats-next-s21/featured.jpg" class="thumbnail-image"> </a></p>
+<p><a href="../blog/2021-03-23-whats-next-s21/index.html" class="no-external"></a></p><a href="../blog/2021-03-23-whats-next-s21/index.html" class="no-external">
+<p><img loading="lazy" data-src="../blog/2021-03-23-whats-next-s21/featured.jpg" class="thumbnail-image"></p>
+</a><p><a href="../blog/2021-03-23-whats-next-s21/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="../blog/2021-03-23-whats-next-s21/index.html">
 <h3 class="no-anchor listing-title">
-What’s Next For Me
+<a href="../blog/2021-03-23-whats-next-s21/index.html" class="no-external">What’s Next For Me</a>
 </h3>
 <div class="listing-subtitle">
-
+<a href="../blog/2021-03-23-whats-next-s21/index.html" class="no-external"></a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="../blog/2021-03-23-whats-next-s21/index.html">
+<a href="../blog/2021-03-23-whats-next-s21/index.html" class="no-external">
 <div class="listing-date">
 Mar 23, 2021
 </div>
 <div class="metadata-value listing-summary">
-
+&nbsp;
 </div>
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="22" data-listing-date-sort="1615784400000" data-listing-file-modified-sort="1698174921711" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="28">
+<div class="quarto-post image-right" data-index="23" data-listing-date-sort="1615791600000" data-listing-file-modified-sort="1698174921711" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="28" data-listing-word-count-sort="5451">
 <div class="thumbnail">
-<p><a href="../blog/2021-03-15-apply-to-stats-grad-school/index.html"> <img data-src="../blog/2021-03-15-apply-to-stats-grad-school/featured.jpg" class="thumbnail-image"> </a></p>
+<p><a href="../blog/2021-03-15-apply-to-stats-grad-school/index.html" class="no-external"></a></p><a href="../blog/2021-03-15-apply-to-stats-grad-school/index.html" class="no-external">
+<p><img loading="lazy" data-src="../blog/2021-03-15-apply-to-stats-grad-school/featured.jpg" class="thumbnail-image"></p>
+</a><p><a href="../blog/2021-03-15-apply-to-stats-grad-school/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="../blog/2021-03-15-apply-to-stats-grad-school/index.html">
 <h3 class="no-anchor listing-title">
-Applying to Graduate School in Statistics and Biostatistics
+<a href="../blog/2021-03-15-apply-to-stats-grad-school/index.html" class="no-external">Applying to Graduate School in Statistics and Biostatistics</a>
 </h3>
 <div class="listing-subtitle">
-There were all sorts of tips and tricks about applying to grad school that I was only able to learn about via office hours, personal meetings, and Twitter DMs, and I thought it would be worth publicly compiling some lessons learned.
+<a href="../blog/2021-03-15-apply-to-stats-grad-school/index.html" class="no-external">There were all sorts of tips and tricks about applying to grad school that I was only able to learn about via office hours, personal meetings, and Twitter DMs, and I thought it would be worth publicly compiling some lessons learned.</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="../blog/2021-03-15-apply-to-stats-grad-school/index.html">
+<a href="../blog/2021-03-15-apply-to-stats-grad-school/index.html" class="no-external">
 <div class="listing-date">
 Mar 15, 2021
 </div>
 <div class="metadata-value listing-summary">
-
+&nbsp;
 </div>
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="23" data-listing-date-sort="1609048800000" data-listing-file-modified-sort="1698174921706" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="12">
+<div class="quarto-post image-right" data-index="24" data-listing-date-sort="1609056000000" data-listing-file-modified-sort="1698174921706" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="12" data-listing-word-count-sort="2225">
 <div class="thumbnail">
-<p><a href="../blog/2020-12-27-r-github-actions-commit/index.html"> <img data-src="../blog/2020-12-27-r-github-actions-commit/featured.jpg" class="thumbnail-image"> </a></p>
+<p><a href="../blog/2020-12-27-r-github-actions-commit/index.html" class="no-external"></a></p><a href="../blog/2020-12-27-r-github-actions-commit/index.html" class="no-external">
+<p><img loading="lazy" data-src="../blog/2020-12-27-r-github-actions-commit/featured.jpg" class="thumbnail-image"></p>
+</a><p><a href="../blog/2020-12-27-r-github-actions-commit/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="../blog/2020-12-27-r-github-actions-commit/index.html">
 <h3 class="no-anchor listing-title">
-Running R Scripts on a Schedule with GitHub Actions
+<a href="../blog/2020-12-27-r-github-actions-commit/index.html" class="no-external">Running R Scripts on a Schedule with GitHub Actions</a>
 </h3>
 <div class="listing-subtitle">
-Some pointers on running R scripts and committing their results to a GitHub repository on a regular interval using Actions.
+<a href="../blog/2020-12-27-r-github-actions-commit/index.html" class="no-external">Some pointers on running R scripts and committing their results to a GitHub repository on a regular interval using Actions.</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="../blog/2020-12-27-r-github-actions-commit/index.html">
+<a href="../blog/2020-12-27-r-github-actions-commit/index.html" class="no-external">
 <div class="listing-date">
 Dec 27, 2020
 </div>
 <div class="metadata-value listing-summary">
-
+&nbsp;
 </div>
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="24" data-listing-date-sort="1606716000000" data-listing-file-modified-sort="1698174921705" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1">
+<div class="quarto-post image-right" data-index="25" data-listing-date-sort="1606723200000" data-listing-file-modified-sort="1698174921705" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="149">
 <div class="thumbnail">
-<p><a href="../blog/2020-11-30-stacks-0-1-0/index.html"> <img data-src="../blog/2020-11-30-stacks-0-1-0/featured.jpg" class="thumbnail-image"> </a></p>
+<p><a href="../blog/2020-11-30-stacks-0-1-0/index.html" class="no-external"></a></p><a href="../blog/2020-11-30-stacks-0-1-0/index.html" class="no-external">
+<p><img loading="lazy" data-src="../blog/2020-11-30-stacks-0-1-0/featured.jpg" class="thumbnail-image"></p>
+</a><p><a href="../blog/2020-11-30-stacks-0-1-0/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="../blog/2020-11-30-stacks-0-1-0/index.html">
 <h3 class="no-anchor listing-title">
-{stacks} v0.1.0 is on CRAN!
+<a href="../blog/2020-11-30-stacks-0-1-0/index.html" class="no-external">{stacks} v0.1.0 is on CRAN!</a>
 </h3>
 <div class="listing-subtitle">
-Introducing ensemble learning to the tidymodels.
+<a href="../blog/2020-11-30-stacks-0-1-0/index.html" class="no-external">Introducing ensemble learning to the tidymodels.</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="../blog/2020-11-30-stacks-0-1-0/index.html">
+<a href="../blog/2020-11-30-stacks-0-1-0/index.html" class="no-external">
 <div class="listing-date">
 Nov 30, 2020
 </div>
 <div class="metadata-value listing-summary">
-
+&nbsp;
 </div>
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="25" data-listing-date-sort="1605160800000" data-listing-file-modified-sort="1698174921703" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="8">
+<div class="quarto-post image-right" data-index="26" data-listing-date-sort="1605168000000" data-listing-file-modified-sort="1698174921703" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="8" data-listing-word-count-sort="1579">
 <div class="thumbnail">
-<p><a href="../blog/2020-11-12-pdfs-from-data/index.html"> <img data-src="../blog/2020-11-12-pdfs-from-data/featured.png" class="thumbnail-image"> </a></p>
+<p><a href="../blog/2020-11-12-pdfs-from-data/index.html" class="no-external"></a></p><a href="../blog/2020-11-12-pdfs-from-data/index.html" class="no-external">
+<p><img loading="lazy" data-src="../blog/2020-11-12-pdfs-from-data/featured.png" class="thumbnail-image"></p>
+</a><p><a href="../blog/2020-11-12-pdfs-from-data/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="../blog/2020-11-12-pdfs-from-data/index.html">
 <h3 class="no-anchor listing-title">
-Programatically Generating PDF Reports with the Tidyverse
+<a href="../blog/2020-11-12-pdfs-from-data/index.html" class="no-external">Programatically Generating PDF Reports with the Tidyverse</a>
 </h3>
 <div class="listing-subtitle">
-In a few different roles over the past few years, I’ve come across the problem of programatically generating some kind of PDF reports from data. Here are some tips/tricks I’ve come across while making that happen.
+<a href="../blog/2020-11-12-pdfs-from-data/index.html" class="no-external">In a few different roles over the past few years, I’ve come across the problem of programatically generating some kind of PDF reports from data. Here are some tips/tricks I’ve come across while making that happen.</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="../blog/2020-11-12-pdfs-from-data/index.html">
+<a href="../blog/2020-11-12-pdfs-from-data/index.html" class="no-external">
 <div class="listing-date">
 Nov 12, 2020
 </div>
 <div class="metadata-value listing-summary">
-
+&nbsp;
 </div>
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="26" data-listing-date-sort="1603774800000" data-listing-file-modified-sort="1699484586634" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="19">
+<div class="quarto-post image-right" data-index="27" data-listing-date-sort="1603782000000" data-listing-file-modified-sort="1699484586634" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="19" data-listing-word-count-sort="3747">
 <div class="thumbnail">
-<p><a href="../blog/2020-10-27-gentle-intro-stacks/index.html"> <img data-src="../blog/2020-10-27-gentle-intro-stacks/featured.jpg" class="thumbnail-image"> </a></p>
+<p><a href="../blog/2020-10-27-gentle-intro-stacks/index.html" class="no-external"></a></p><a href="../blog/2020-10-27-gentle-intro-stacks/index.html" class="no-external">
+<p><img loading="lazy" data-src="../blog/2020-10-27-gentle-intro-stacks/featured.jpg" class="thumbnail-image"></p>
+</a><p><a href="../blog/2020-10-27-gentle-intro-stacks/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="../blog/2020-10-27-gentle-intro-stacks/index.html">
 <h3 class="no-anchor listing-title">
-A Gentle Introduction to Tidy Model Stacking
+<a href="../blog/2020-10-27-gentle-intro-stacks/index.html" class="no-external">A Gentle Introduction to Tidy Model Stacking</a>
 </h3>
 <div class="listing-subtitle">
-Model stacking is an ensembling technique that involves training a model to combine the outputs of many diverse statistical models. The stacks package implements a grammar for tidymodels-aligned model stacking.
+<a href="../blog/2020-10-27-gentle-intro-stacks/index.html" class="no-external">Model stacking is an ensembling technique that involves training a model to combine the outputs of many diverse statistical models. The stacks package implements a grammar for tidymodels-aligned model stacking.</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="../blog/2020-10-27-gentle-intro-stacks/index.html">
+<a href="../blog/2020-10-27-gentle-intro-stacks/index.html" class="no-external">
 <div class="listing-date">
 Oct 27, 2020
 </div>
 <div class="metadata-value listing-summary">
-
+&nbsp;
 </div>
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="27" data-listing-date-sort="1602392400000" data-listing-file-modified-sort="1698174921692" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1">
+<div class="quarto-post image-right" data-index="28" data-listing-date-sort="1602399600000" data-listing-file-modified-sort="1698174921692" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="68">
 <div class="thumbnail">
-<p><a href="../blog/2020-10-11-intro/index.html"> <img data-src="../blog/2020-10-11-intro/featured.jpg" class="thumbnail-image"> </a></p>
+<p><a href="../blog/2020-10-11-intro/index.html" class="no-external"></a></p><a href="../blog/2020-10-11-intro/index.html" class="no-external">
+<p><img loading="lazy" data-src="../blog/2020-10-11-intro/featured.jpg" class="thumbnail-image"></p>
+</a><p><a href="../blog/2020-10-11-intro/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="../blog/2020-10-11-intro/index.html">
 <h3 class="no-anchor listing-title">
-The Blog Thing! We’re Doing It!
+<a href="../blog/2020-10-11-intro/index.html" class="no-external">The Blog Thing! We’re Doing It!</a>
 </h3>
 <div class="listing-subtitle">
-For a while now, I’ve wished I had a place to share some short posts on what I’m up to related to R, data science, and statistics. I decided I’d take a Sunday to get this subdomain up and running!
+<a href="../blog/2020-10-11-intro/index.html" class="no-external">For a while now, I’ve wished I had a place to share some short posts on what I’m up to related to R, data science, and statistics. I decided I’d take a Sunday to get this subdomain up and running!</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="../blog/2020-10-11-intro/index.html">
+<a href="../blog/2020-10-11-intro/index.html" class="no-external">
 <div class="listing-date">
 Oct 11, 2020
 </div>
 <div class="metadata-value listing-summary">
-
+&nbsp;
 </div>
 </a>
 </div>
@@ -890,7 +950,7 @@ No matching items
 <nav id="listing-pagination" class="listing-pagination" aria-label="Page Navigation">
   <ul class="pagination"></ul>
 </nav>
-</div><div id="quarto-appendix" class="default"><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">Reuse</h2><div id="quarto-reuse" class="quarto-appendix-contents"><div><a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">https://creativecommons.org/licenses/by-sa/4.0/</a></div></div></section></div></main> <!-- /main -->
+</div><div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-reuse"><h2 class="anchored quarto-appendix-heading">Reuse</h2><div class="quarto-appendix-contents"><div><a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a></div></div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -926,18 +986,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -969,11 +1018,50 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
-  function tippyHover(el, contentFn) {
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/simonpcouch\.com");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -983,8 +1071,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -996,7 +1093,130 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -1040,6 +1260,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -1065,6 +1286,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -1127,7 +1374,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
-    <div class="nav-footer-left">© 2023 Simon P. Couch ∙ Made with <a href="https://quarto.org">Quarto</a></div>   
+    <div class="nav-footer-left">
+<p>© 2023 Simon P. Couch ∙ Made with <a href="https://quarto.org">Quarto</a></p>
+</div>   
     <div class="nav-footer-center">
       &nbsp;
     </div>
@@ -1136,6 +1385,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     </div>
   </div>
 </footer>
+
 
 
 
