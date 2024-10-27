@@ -1,5 +1,7 @@
 project:
   type: website
+  resources: 
+    - ".well-known/atproto-did"
   post-render: 
     - "cp -rv static/. _site" # source: https://github.com/quarto-dev/quarto-cli/discussions/4162#discussioncomment-4831352
 
