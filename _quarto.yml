@@ -32,7 +32,7 @@ website:
   
   page-footer:  
     left: >-
-     &#169; 2023 Simon P. Couch &#8729; Made with [Quarto](https://quarto.org)
+     &#169; 2024 Simon P. Couch &#8729; Made with [Quarto](https://quarto.org)
 
 format: 
   html:
