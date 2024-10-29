@@ -1,0 +1,34 @@
+---
+title: "Announcing a new book"
+date: '2024-10-29'
+tags:
+  - rstats
+  - tidymodels
+  - performance
+subtitle: "Today, during R/Pharma 2024, I open-sourced the draft of a book I've been working on."
+image: featured.png
+summary: ''
+---
+
+Over the last couple years, I've spent quite a bit of time focused on making tidymodels code run as fast as possible. Throughout, I've written about this work a good bit on this blog^[See [tidymodels is getting a whole lot faster](https://www.simonpcouch.com/blog/2023-03-24-speedups-2023), [Optimizing model parameters faster with tidymodels](https://www.simonpcouch.com/blog/2023-08-04-parallel-racing/), [How to best parallelize boosted tree model fits with tidymodels](https://www.simonpcouch.com/blog/2024-05-13-parallel/), and [Down the submodels rabbit hole with tidymodels](https://www.simonpcouch.com/blog/2023-10-11-submodels-rabbit-hole/).] and the tidyverse blog^[See [tune 1.2.0](https://www.tidyverse.org/blog/2024/04/tune-1-2-0/), [Tuning hyperparameters with tidymodels is a delight](https://www.tidyverse.org/blog/2023/04/tuning-delights/#speedups), and [Writing performant code with tidy tools](https://www.tidyverse.org/blog/2023/04/performant-packages/).].
+Early this year, I had the idea that maybe I ought to compile many of those learnings together in a book, focused on helping tidymodels users reduce the computational time needed to develop machine learning models without sacrificing predictive performance. I wrote portions of a couple chapters over the course of a couple weeks, and then mostly set the book aside for many months.
+
+Attending posit::conf(2024), though, renewed my excitement about the book. Some folks that had read my blog posts on tidymodels' performance over the years tracked me down to tell me that they found them really useful. One even told me something along the lines of:
+
+> I'm usually not able to read technical blogs in English, but your writing was so clear that I was able to understand yours.
+
+This really, really impacted me. Beyond that, others even approached me—knowing that I worked on tidymodels but not knowing that performance was an interest of mine—with questions about how to make their tidymodels code run faster. This renewed my sense that this was a book worth writing, and in the couple months since, I've tried to notch out a 4-hour stretch sometime each week to focus on the book. Today, during my R/Pharma 2024 talk, I open-sourced the current draft at [emlwr.org](https://emlwr.org)!
+
+```{=html}
+<div style="margin: 2rem auto; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px 0px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); width: 780px;">
+  <iframe width="780" height="500" src="https://emlwr.org/" title="Efficient Machine Learning with R" style="border: none;"></iframe>
+</div>
+```
+
+<!-- TODO: "blend" this in a bit? -->
+
+The book focuses on helping you adapt your tidymodels code to run faster while preserving predictive performance. For now, I'm calling it _Efficient Machine Learning with R_. No chapter is fully fleshed out, but the [introduction](https://emlwr.org/intro.html), [parallelism](https://emlwr.org/parallelism.html), and [submodel trick](https://emlwr.org/submodel.html) chapters have a good bit of content in them. If you'd like to be notified when new material is added, follow me on socials \@simonpcouch or watch the [source repository](https://github.com/simonpcouch/emlwr).
+
+While I'm actively working on the book, I have to balance writing it with the usual hum of development on tidymodels and other R packages; it will be a good while before this thing is finished. My hope is that the book will ultimately be published in print, though its content will always be freely available online. I'm hopeful that folks will find this book useful!
+
+Many thanks to those who have supported me along the way. 
