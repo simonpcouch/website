@@ -10,13 +10,21 @@
 <atom:link href="https://simonpcouch.com/blog/index.xml" rel="self" type="application/rss+xml"/>
 <description>A data science blog</description>
 <generator>quarto-1.5.57</generator>
-<lastBuildDate>Tue, 29 Oct 2024 05:00:00 GMT</lastBuildDate>
+<lastBuildDate>Mon, 23 Dec 2024 08:00:00 GMT</lastBuildDate>
+<item>
+  <title>Which names that are also names of countries are most common?</title>
+  <link>https://simonpcouch.com/blog/2024-12-23-names/</link>
+  <description><![CDATA[ Sitting around the living room over the weekend, someone asked “Which names that are also names of countries are most common?” We all gave guesses, and then I gave in to the urge to reach for my laptop and generate an answer that was authoritative enough for our purposes. ]]></description>
+  <guid>https://simonpcouch.com/blog/2024-12-23-names/</guid>
+  <pubDate>Mon, 23 Dec 2024 08:00:00 GMT</pubDate>
+  <media:content url="https://simonpcouch.com/blog/2024-12-23-names/featured.png" medium="image" type="image/png" height="134" width="144"/>
+</item>
 <item>
   <title>Announcing a new book</title>
   <link>https://simonpcouch.com/blog/2024-10-29-book/</link>
   <description><![CDATA[ Over the last couple years, I’ve spent quite a bit of time focused on making tidymodels code run as fast as possible. Throughout, I’ve written about this work a good bit on this blog<sup>1</sup> and the tidyverse blog<sup>2</sup>. Early this year, I had the idea that maybe I ought to compile many of those learnings together in a book, focused on helping tidymodels users reduce the computational time needed to develop machine learning models without sacrificing predictive performance. I wrote portions of a couple chapters over the course of a couple weeks, and then mostly set the book aside for many months. ]]></description>
   <guid>https://simonpcouch.com/blog/2024-10-29-book/</guid>
-  <pubDate>Tue, 29 Oct 2024 05:00:00 GMT</pubDate>
+  <pubDate>Tue, 29 Oct 2024 07:00:00 GMT</pubDate>
   <media:content url="https://simonpcouch.com/blog/2024-10-29-book/featured.png" medium="image" type="image/png" height="140" width="144"/>
 </item>
 <item>
@@ -24,7 +32,7 @@
   <link>https://simonpcouch.com/blog/2024-10-16-postprocessing/</link>
   <description><![CDATA[ This is a cross-post of <a href="https://www.tidyverse.org/blog/2024/10/postprocessing-preview/">a post of mine</a> on the tidyverse blog. ]]></description>
   <guid>https://simonpcouch.com/blog/2024-10-16-postprocessing/</guid>
-  <pubDate>Wed, 16 Oct 2024 05:00:00 GMT</pubDate>
+  <pubDate>Wed, 16 Oct 2024 07:00:00 GMT</pubDate>
   <media:content url="https://simonpcouch.com/blog/2024-10-16-postprocessing/featured.png" medium="image" type="image/png" height="131" width="144"/>
 </item>
 <item>
@@ -32,7 +40,7 @@
   <link>https://simonpcouch.com/blog/2024-07-15-syrup/</link>
   <description><![CDATA[ I’ve found that the following pattern looms large in content about parallel processing with R (including my own): ]]></description>
   <guid>https://simonpcouch.com/blog/2024-07-15-syrup/</guid>
-  <pubDate>Mon, 15 Jul 2024 05:00:00 GMT</pubDate>
+  <pubDate>Mon, 15 Jul 2024 07:00:00 GMT</pubDate>
   <media:content url="https://simonpcouch.com/blog/2024-07-15-syrup/featured.png" medium="image" type="image/png" height="148" width="144"/>
 </item>
 <item>
@@ -40,7 +48,7 @@
   <link>https://simonpcouch.com/blog/2024-05-13-parallel/</link>
   <description><![CDATA[ The <a href="https://xgboost.readthedocs.io/">XGBoost</a> and <a href="https://lightgbm.readthedocs.io/en/stable/">LightGBM</a> modeling engines both enable distributing the computations needed to train a single boosted tree model across several CPU cores. Similarly, the <a href="https://tidymodels.org">tidymodels framework</a> enables distributing model fits across cores. The natural question, then, is whether tidymodels users ought to make use of the engine’s parallelism implementation, tidymodels’ implementation, or both at the same time. This blog post is a scrappy attempt at finding which of those approaches will lead to the smallest elapsed time when fitting many models. ]]></description>
   <guid>https://simonpcouch.com/blog/2024-05-13-parallel/</guid>
-  <pubDate>Mon, 13 May 2024 05:00:00 GMT</pubDate>
+  <pubDate>Mon, 13 May 2024 07:00:00 GMT</pubDate>
   <media:content url="https://simonpcouch.com/blog/2024-05-13-parallel/featured.png" medium="image" type="image/png" height="145" width="144"/>
 </item>
 <item>
@@ -48,7 +56,7 @@
   <link>https://simonpcouch.com/blog/2024-04-08-fit-time/</link>
   <description><![CDATA[ <strong>tl;dr</strong>: The development versions of tidymodels packages include methods for a <a href="https://workflows.tidymodels.org/dev/reference/extract-workflow.html">new extract function</a>, <code>extract_fit_time()</code>, that returns the time required to train a workflow. Pass <code>extract_fit_time()</code> as a control option while tuning and run <code>collect_extracts()</code> to see training times for resampled workflows. In this example, we can identify a modeling workflow that trains more than 10x faster than the most performant model with very little decrease in predictive performance. ]]></description>
   <guid>https://simonpcouch.com/blog/2024-04-08-fit-time/</guid>
-  <pubDate>Mon, 08 Apr 2024 05:00:00 GMT</pubDate>
+  <pubDate>Mon, 08 Apr 2024 07:00:00 GMT</pubDate>
   <media:content url="https://simonpcouch.com/blog/2024-04-08-fit-time/featured.png" medium="image" type="image/png" height="144" width="144"/>
 </item>
 <item>
@@ -56,7 +64,7 @@
   <link>https://simonpcouch.com/blog/2024-03-14-oracle/</link>
   <description><![CDATA[ I recently sunk a few days into getting an Oracle database deployed on MacOS with an M1 chip in a docker container via Docker Desktop. The few solutions that I found recommended using the Docker Desktop alternative Colima and/or using publicly available, community-contributed images; I had various troubles getting these solutions to work, and found myself missing the bells and whistles of Docker Desktop along the way. This morning, I finally got this database deployed by building the image myself from the official Oracle source, in Docker Desktop rather than Colima, and thought it’d be worth writing up how I did so, especially given the countless GitHub issue comments, StackOverflow posts, and forum discussion I came across from others in my situation. ]]></description>
   <guid>https://simonpcouch.com/blog/2024-03-14-oracle/</guid>
-  <pubDate>Thu, 14 Mar 2024 05:00:00 GMT</pubDate>
+  <pubDate>Thu, 14 Mar 2024 07:00:00 GMT</pubDate>
   <media:content url="https://simonpcouch.com/blog/2024-03-14-oracle/featured.png" medium="image" type="image/png" height="144" width="144"/>
 </item>
 <item>
@@ -64,7 +72,7 @@
   <link>https://simonpcouch.com/blog/2023-11-30-listening-2023/</link>
   <description><![CDATA[ Aside from exchanging playlists with my partner every once in a while, I’m not much of a Spotify user. Around this time every year, though, all of my friends start posting their Spotify Wrapped, and I get jealous, as the platform that I listen to music on doesn’t have anything like it. Of course, though, it collects data about me (it’s 2023!); <a href="https://www.simonpcouch.com/blog/2022-12-01-listening-2022/">last year</a>, I got to wondering whether I could make a lo-fi knockoff of wrapped using R, the tidyverse, and the data that I have access to. You already know: ]]></description>
   <guid>https://simonpcouch.com/blog/2023-11-30-listening-2023/</guid>
-  <pubDate>Thu, 30 Nov 2023 06:00:00 GMT</pubDate>
+  <pubDate>Thu, 30 Nov 2023 08:00:00 GMT</pubDate>
   <media:content url="https://simonpcouch.com/blog/2023-11-30-listening-2023/featured.png" medium="image" type="image/png" height="156" width="144"/>
 </item>
 <item>
@@ -72,7 +80,7 @@
   <link>https://simonpcouch.com/blog/2023-11-28-flights/</link>
   <description><![CDATA[ <em>Last week, I virtually dropped by University of Wisconsin-Madison for a webinar on tidymodels. Heading into the holidays, I thought a fun example problem might be to try and predict flight delays using flights data from Madison’s airport. This is a very, very difficult modeling problem, and the results aren’t very impressive, but it’s a fun one nonetheless.</em> ]]></description>
   <guid>https://simonpcouch.com/blog/2023-11-28-flights/</guid>
-  <pubDate>Tue, 28 Nov 2023 06:00:00 GMT</pubDate>
+  <pubDate>Tue, 28 Nov 2023 08:00:00 GMT</pubDate>
   <media:content url="https://simonpcouch.com/blog/2023-11-28-flights/featured.png" medium="image" type="image/png" height="144" width="144"/>
 </item>
 <item>
@@ -80,7 +88,7 @@
   <link>https://simonpcouch.com/blog/2023-10-24-quarto-site/</link>
   <description><![CDATA[ When I was in college, a coworker at one of my jobs did web development gigs on the side. His personal website was a super slick single-page site, built with Flask. I had no idea how it worked, but I really liked it, so I asked if it was okay to fork his repository and took that site on as my own. Editing the site was painful, and I borked it at least hourly whenever I worked on it. It mostly functioned like a high-gloss CV, and didn’t have any sort of blogging component. It looked something like this: ]]></description>
   <guid>https://simonpcouch.com/blog/2023-10-24-quarto-site/</guid>
-  <pubDate>Tue, 24 Oct 2023 05:00:00 GMT</pubDate>
+  <pubDate>Tue, 24 Oct 2023 07:00:00 GMT</pubDate>
   <media:content url="https://simonpcouch.com/blog/2023-10-24-quarto-site/featured.jpg" medium="image" type="image/jpeg"/>
 </item>
 <item>
@@ -88,7 +96,7 @@
   <link>https://simonpcouch.com/blog/2023-10-11-submodels-rabbit-hole/</link>
   <description><![CDATA[ A familiar pastime—plotting <code>mtcars</code>: ]]></description>
   <guid>https://simonpcouch.com/blog/2023-10-11-submodels-rabbit-hole/</guid>
-  <pubDate>Wed, 11 Oct 2023 05:00:00 GMT</pubDate>
+  <pubDate>Wed, 11 Oct 2023 07:00:00 GMT</pubDate>
   <media:content url="https://simonpcouch.com/blog/2023-10-11-submodels-rabbit-hole/featured.png" medium="image" type="image/png" height="131" width="144"/>
 </item>
 <item>
@@ -96,7 +104,7 @@
   <link>https://simonpcouch.com/blog/2023-09-01-jmt-2023/</link>
   <description><![CDATA[ The John Muir Trail (JMT) is a backpacking trail through California’s Sierra Nevada. For folks heading northbound, the trail begins at the top of Mt. Whitney—the tallest mountain in the contiguous US—ascending 8 mountain passes over 214 miles to Yosemite Valley. The JMT’s route traces portions of Nüümü Poyo, or the People’s Trail: historically significant trade routes maintained by people indigenous to what is now California. ]]></description>
   <guid>https://simonpcouch.com/blog/2023-09-01-jmt-2023/</guid>
-  <pubDate>Fri, 01 Sep 2023 05:00:00 GMT</pubDate>
+  <pubDate>Fri, 01 Sep 2023 07:00:00 GMT</pubDate>
   <media:content url="https://simonpcouch.com/blog/2023-09-01-jmt-2023/featured.jpg" medium="image" type="image/jpeg"/>
 </item>
 <item>
@@ -104,7 +112,7 @@
   <link>https://simonpcouch.com/blog/2023-08-04-parallel-racing/</link>
   <description><![CDATA[ Especially for large amounts of data or large grids of parameters, the time and resources needed to tune statistical models can quickly become a barrier to getting machine learning models deployed. Many examples online demonstrating how to tune hyperparameters with tidymodels use <code>tune_grid()</code> on one CPU core. Making use of parallel processing and using a near-drop-in replacement for <code>tune_grid()</code> can speed up hyperparameter tuning by 20-30x! ]]></description>
   <guid>https://simonpcouch.com/blog/2023-08-04-parallel-racing/</guid>
-  <pubDate>Fri, 04 Aug 2023 05:00:00 GMT</pubDate>
+  <pubDate>Fri, 04 Aug 2023 07:00:00 GMT</pubDate>
   <media:content url="https://simonpcouch.com/blog/2023-08-04-parallel-racing/featured.png" medium="image" type="image/png" height="141" width="144"/>
 </item>
 <item>
@@ -112,7 +120,7 @@
   <link>https://simonpcouch.com/blog/2023-07-28-moving-on-s23/</link>
   <description><![CDATA[ 2 years ago, I sent out <a href="https://www.simonpcouch.com/blog/whats-next-s21/">a post</a> around the time I graduated from college. I wrote about my gratitude for my time in Oregon, my excitement to start a PhD program in Biostatistics at Johns Hopkins, and the joy of raising my then-very-young dog, Millie. Soon after, in summer 2021, I made the road trip to Baltimore, MD. ]]></description>
   <guid>https://simonpcouch.com/blog/2023-07-28-moving-on-s23/</guid>
-  <pubDate>Fri, 28 Jul 2023 05:00:00 GMT</pubDate>
+  <pubDate>Fri, 28 Jul 2023 07:00:00 GMT</pubDate>
   <media:content url="https://simonpcouch.com/blog/2023-07-28-moving-on-s23/featured.png" medium="image" type="image/png" height="135" width="144"/>
 </item>
 <item>
@@ -120,7 +128,7 @@
   <link>https://simonpcouch.com/blog/2023-03-24-speedups-2023/</link>
   <description><![CDATA[ The <a href="https://www.tidymodels.org/">tidymodels packages</a> provide a consistent, expressive, and safe interface to all sorts of modeling algorithms in R. ]]></description>
   <guid>https://simonpcouch.com/blog/2023-03-24-speedups-2023/</guid>
-  <pubDate>Fri, 24 Mar 2023 05:00:00 GMT</pubDate>
+  <pubDate>Fri, 24 Mar 2023 07:00:00 GMT</pubDate>
   <media:content url="https://simonpcouch.com/blog/2023-03-24-speedups-2023/featured.png" medium="image" type="image/png" height="152" width="144"/>
 </item>
 <item>
@@ -128,7 +136,7 @@
   <link>https://simonpcouch.com/blog/2022-12-01-listening-2022/</link>
   <description><![CDATA[ Aside from exchanging playlists with my partner every once in a while, I’m not much of a Spotify user. Around this time every year, though, all of my friends start posting their Spotify Wrapped, and I get jealous. ]]></description>
   <guid>https://simonpcouch.com/blog/2022-12-01-listening-2022/</guid>
-  <pubDate>Thu, 01 Dec 2022 06:00:00 GMT</pubDate>
+  <pubDate>Thu, 01 Dec 2022 08:00:00 GMT</pubDate>
   <media:content url="https://simonpcouch.com/blog/2022-12-01-listening-2022/featured.jpg" medium="image" type="image/jpeg"/>
 </item>
 <item>
@@ -136,7 +144,7 @@
   <link>https://simonpcouch.com/blog/2022-07-20-netlify-subdomain-redirect/</link>
   <description><![CDATA[ This post outlines how to redirect from a subdomain with Netflify for people who—like me—who don’t really understand what that means.🌝🌚 ]]></description>
   <guid>https://simonpcouch.com/blog/2022-07-20-netlify-subdomain-redirect/</guid>
-  <pubDate>Wed, 20 Jul 2022 05:00:00 GMT</pubDate>
+  <pubDate>Wed, 20 Jul 2022 07:00:00 GMT</pubDate>
   <media:content url="https://simonpcouch.com/blog/2022-07-20-netlify-subdomain-redirect/featured.jpg" medium="image" type="image/jpeg"/>
 </item>
 <item>
@@ -144,7 +152,7 @@
   <link>https://simonpcouch.com/blog/2021-08-21-infer-v-1-0-0/</link>
   <description><![CDATA[ In Fall 2017, during my first semester at Reed, I took an introductory statistics course. A prospective biology major, I was told learning how to code would be helpful later on in my coursework. I used R for the first time during the labs for that class, getting to know packages like {ggplot2} and {dplyr}. Another cornerstone of that class was {infer}, a package whose ubiquity I assumed was similar to {ggplot2} and {dplyr}. At the time, the thought that packages changed over time, or were written by people, or even had source code, had probably yet to occur to me. ]]></description>
   <guid>https://simonpcouch.com/blog/2021-08-21-infer-v-1-0-0/</guid>
-  <pubDate>Sat, 21 Aug 2021 05:00:00 GMT</pubDate>
+  <pubDate>Sat, 21 Aug 2021 07:00:00 GMT</pubDate>
   <media:content url="https://simonpcouch.com/blog/2021-08-21-infer-v-1-0-0/featured.jpg" medium="image" type="image/jpeg"/>
 </item>
 <item>
@@ -152,7 +160,7 @@
   <link>https://simonpcouch.com/blog/2021-08-02-apply-to-nsf-grfp/</link>
   <description><![CDATA[ Last fall, I applied to (and was awarded) the National Science Foundation’s Graduate Research Fellowship (NSF GRFP). Much of the advice that made me feel most informed and confident about the application process required some degree of access that it should not have—personal connections, institutional resources, and/or hindsight—and I feel this information should be publicly available. I’m far from an expert about how this all works, and can only speak to my personal experience, but I hope I can help others feel more confident in putting together their applications (or deciding whether or not to) by sharing my experience. The format (and, sometimes, content) of this post will follow from my <a href="https://blog.simonpcouch.com/blog/apply-to-stats-grad-school">post on applying to graduate school in statistics/biostatistics</a>. ]]></description>
   <guid>https://simonpcouch.com/blog/2021-08-02-apply-to-nsf-grfp/</guid>
-  <pubDate>Mon, 02 Aug 2021 05:00:00 GMT</pubDate>
+  <pubDate>Mon, 02 Aug 2021 07:00:00 GMT</pubDate>
   <media:content url="https://simonpcouch.com/blog/2021-08-02-apply-to-nsf-grfp/featured.jpg" medium="image" type="image/jpeg"/>
 </item>
 <item>
@@ -160,16 +168,8 @@
   <link>https://simonpcouch.com/blog/2021-06-10-ggplot-pipe-plus/</link>
   <description><![CDATA[ Writing iterative code with {ggplot2}’s plus (<code>+</code>) operator rather than {magrittr}’s pipe (<code>%&gt;%</code>) was a tough transition my first time around. ]]></description>
   <guid>https://simonpcouch.com/blog/2021-06-10-ggplot-pipe-plus/</guid>
-  <pubDate>Thu, 10 Jun 2021 05:00:00 GMT</pubDate>
+  <pubDate>Thu, 10 Jun 2021 07:00:00 GMT</pubDate>
   <media:content url="https://simonpcouch.com/blog/2021-06-10-ggplot-pipe-plus/featured.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
-  <title>Big Things (Developer Documentation pt. 4)</title>
-  <link>https://simonpcouch.com/blog/2021-05-13-dev-docs-p4/</link>
-  <description><![CDATA[ This is the last of four blog posts on the development process of the {stacks} package, excerpted from my Reed senior thesis project <em>Tidy Model Stacking with R</em>. ]]></description>
-  <guid>https://simonpcouch.com/blog/2021-05-13-dev-docs-p4/</guid>
-  <pubDate>Thu, 13 May 2021 05:00:00 GMT</pubDate>
-  <media:content url="https://simonpcouch.com/blog/2021-05-13-dev-docs-p4/featured.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>
