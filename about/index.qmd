@@ -46,11 +46,11 @@ format:
 <h1 class="title">I appreciate you dropping by.</h1>
 </div>
 
-  My name's Simon. I write software for statistical modeling at Posit (formerly called RStudio).
+  My name's Simon. I build tools for data scientists at Posit (formerly called RStudio).
   
   I studied statistics and sociology at Reed College, and had a brief stint in a PhD program in Biostatistics at Johns Hopkins. Throughout my career so far, I've had a deep and enduring interest in statistical software development---I think, done well, statistical software has an incredible impact on our ability to think intuitively about statistics and data science.
   
-  Most days, I'm working on maintaining R packages in the [tidymodels ecosystem](https://www.tidymodels.org/). My [GitHub profile](https://github.com/simonpcouch) links out to some of the projects I spend my time with.
+  Most days, I'm working on R packages for data analysis, machine learning, and LLM code-assist. My [GitHub profile](https://github.com/simonpcouch) links out to some of the projects I spend my time with.
 
   I'm currently based out of Chicago, IL. When I'm not working, I enjoy cooking, hanging with my dog Millie, and playing American folk music.
 

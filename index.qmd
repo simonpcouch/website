@@ -1,7 +1,7 @@
 ---
 title: "Simon P. Couch"
 pagetitle: "Simon P. Couch"
-subtitle: "Building software for statistical modeling at Posit (née RStudio)"
+subtitle: "Building tools for data scientists at Posit (née RStudio)"
 image: assets/avatar.png
 image-alt: "A portrait of me, smiling while sitting beside a trail in the woods."
 comments: false

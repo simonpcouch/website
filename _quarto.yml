@@ -8,7 +8,7 @@ project:
 website:
   title: "Simon P. Couch"
   site-url: https://simonpcouch.com
-  description: "Building software for statistical modeling at Posit (née RStudio)."
+  description: "Building tools for data scientists at Posit (née RStudio)."
   favicon: assets/cabin.png
   page-navigation: true
   back-to-top-navigation: true
