@@ -158,12 +158,14 @@ Each row in this data represents one paired comparison on an LLM eval task cente
 
 I let three models take a go at the eval and gave the same three each a turn at being the judge:
 
-
 ```{r}
 #| label: unique-models
 sort(unique(ggplot2_evals$config_a))
 sort(unique(ggplot2_evals$judge))
 ```
+
+If you're interested in poking at this data yourself, the raw data is [here](https://github.com/simonpcouch/website/blob/384e5b37028bcb4a99724e14f51ff867b80bbc23/blog/2025-01-30-llm-biases/data/ggplot2_evals.rda). It's worth saying that this data is very limited in its practical utility, and the analyses in this blog post are just for funsies.
+
 
 ## Position bias
 
@@ -171,6 +173,7 @@ LLMs tend to exhibit position bias when making paired comparisons, where they te
 
 ```{r}
 #| label: plot-position-bias
+#| fig-alt: "A ggplot2 stacked barplot, where three bars represent responses from three judges—Claude, GPT-4o, and Qwen 2.5. The bars are filled according to how often models chose the response presented first vs. the second. Each model chooses the response presented first about 75% of the time."
 ggplot2_evals %>%
   mutate(
     choice_position = if_else(choice == config_a, "First", "Second")
@@ -191,6 +194,7 @@ Another bias that many LLMs seem to demonstrate is verbosity bias, where longer 
 
 ```{r}
 #| label: plot-verbosity-bias
+#| fig-alt: "Another ggplot2 stacked barplot with judges on the x axis and a stacked fill on the y. This time, the proportion of times judges chose the longer response is on the y—each model chooses the longer response about 15% to 20% of the time."
 ggplot2_evals %>%
   mutate(
     chose_a = choice == config_a,
@@ -216,6 +220,7 @@ Another interesting effect is self-enhancement bias, where models are likely to 
 
 ```{r}
 #| label: plot-self-enhancement-bias
+#| fig-alt: "Another ggplot2 stacked barplot with judges on the x axis and a stacked fill on the y. This time, the fill represents how often judges chose their own responses--it's nearly exactly 50/50 for each model."
 ggplot2_evals %>%
   rowwise() %>%
   mutate(judged_itself = judge %in% c(config_a, config_b)) %>%

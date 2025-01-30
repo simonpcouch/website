@@ -296,6 +296,7 @@ $ response_judge &lt;chr&gt; "Best Response: [[A]]", "Best Response: [[A]]…</c
 <pre><code>[1] "Claude Sonnet 3.5" "OpenAI gpt-4o"     "Qwen2.5 14b"      </code></pre>
 </div>
 </div>
+<p>If you’re interested in poking at this data yourself, the raw data is <a href="https://github.com/simonpcouch/website/blob/384e5b37028bcb4a99724e14f51ff867b80bbc23/blog/2025-01-30-llm-biases/data/ggplot2_evals.rda">here</a>. It’s worth saying that this data is very limited in its practical utility, and the analyses in this blog post are just for funsies.</p>
 </section><section id="position-bias" class="level2"><h2 class="anchored" data-anchor-id="position-bias">Position bias</h2>
 <p>LLMs tend to exhibit position bias when making paired comparisons, where they tend to prefer the first response presented to them over the second (or vice versa) despite response quality <span class="citation" data-cites="wang2023largelanguagemodelsfair">(<a href="#ref-wang2023largelanguagemodelsfair" role="doc-biblioref">Wang et al. 2023</a>)</span>. For the purposes of this experiment, I just assign one model to be <code>config_a</code> and the other <code>config_b</code> randomly, though there’s some research out there proposing better ways to address this issue. We can see though that each of these three models seem to demonstrate substantial position bias:</p>
 <div class="cell">
@@ -309,7 +310,7 @@ $ response_judge &lt;chr&gt; "Best Response: [[A]]", "Best Response: [[A]]…</c
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Judge"</span>, y <span class="op">=</span> <span class="st">"Proportion"</span>, fill <span class="op">=</span> <span class="st">"Position"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
-<figure class="figure"><p><img src="index_files/figure-html/plot-position-bias-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figure class="figure"><p><img src="index_files/figure-html/plot-position-bias-1.png" class="img-fluid figure-img" style="width:100.0%" alt="A ggplot2 stacked barplot, where three bars represent responses from three judges—Claude, GPT-4o, and Qwen 2.5. The bars are filled according to how often models chose the response presented first vs. the second. Each model chooses the response presented first about 75% of the time."></p>
 </figure>
 </div>
 </div>
@@ -347,7 +348,7 @@ Note
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Judge"</span>, y <span class="op">=</span> <span class="st">"Proportion"</span>, fill <span class="op">=</span> <span class="st">"Preferred Length"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
-<figure class="figure"><p><img src="index_files/figure-html/plot-verbosity-bias-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figure class="figure"><p><img src="index_files/figure-html/plot-verbosity-bias-1.png" class="img-fluid figure-img" style="width:100.0%" alt="Another ggplot2 stacked barplot with judges on the x axis and a stacked fill on the y. This time, the proportion of times judges chose the longer response is on the y—each model chooses the longer response about 15% to 20% of the time."></p>
 </figure>
 </div>
 </div>
@@ -369,7 +370,7 @@ Note
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Judge"</span>, y <span class="op">=</span> <span class="st">"Proportion"</span>, fill <span class="op">=</span> <span class="st">"Choice"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
-<figure class="figure"><p><img src="index_files/figure-html/plot-self-enhancement-bias-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figure class="figure"><p><img src="index_files/figure-html/plot-self-enhancement-bias-1.png" class="img-fluid figure-img" style="width:100.0%" alt="Another ggplot2 stacked barplot with judges on the x axis and a stacked fill on the y. This time, the fill represents how often judges chose their own responses--it's nearly exactly 50/50 for each model."></p>
 </figure>
 </div>
 </div>
