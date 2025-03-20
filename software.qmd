@@ -1,0 +1,174 @@
+---
+title: "Software"
+toc: true
+comments: false
+---
+
+```{r}
+#| label: startup
+#| include: false
+library(tidyverse)
+library(lubridate)
+library(pkgsearch)
+library(DT)
+library(cranlogs)
+library(gh)
+```
+
+I've written a few [R packages](https://r-pkgs.org/) over the years and have contributed to many others. 
+
+The CRAN sections below enumerate packages on [CRAN](https://cran.r-project.org/). Download statistics are from the Posit mirror of CRAN and are current as of `r today()`, star statistics were generated at the same time.
+
+```{r}
+#| label: find-packages
+#| include: false
+
+check_authors <- function(x) {
+ if (any(names(x) == "Authors@R")) {
+  author_detail <- eval(parse(text = x$`Authors@R`))
+ } else {
+  author_detail <- x$Author
+ }
+ any(grepl("Simon.*Couch", author_detail))
+}
+
+pick_url <- function(x, pkg) {
+ if (is.na(x)) {
+  return(cli::format_inline("https://CRAN.R-project.org/package={pkg}"))
+ }
+ x = gsub("\n", "", x)
+ x <- strsplit(x, split = ",")[[1]]
+ pkgdown <- grepl("(\\.io)|(\\.org)", x)
+ if (any(pkgdown)) {
+  x <- x[pkgdown]
+ }
+ x[1]
+}
+
+couch_pkgs <-
+ advanced_search(Author = "couch", size = 100) %>%
+ as_tibble() %>%
+ mutate(its_a_me = map_lgl(package_data,check_authors)) %>%
+ filter(its_a_me) %>%
+ select(package, title, maintainer = maintainer_name, 
+        `reverse dependencies` = revdeps, url) %>%
+ mutate(
+  url = map2_chr(url, package, pick_url),
+  topic = glue::glue("<a href='{url}' target='_blank'>{package}</a>")
+ ) %>% 
+ mutate(package = factor(package)) %>%
+ arrange(package)
+
+downloads <-
+ cran_downloads(couch_pkgs$package, from = ymd("2005-01-01"), to = today()) %>%
+ summarize(downloads = sum(count), .by = c(package))
+
+couch_pkgs <- 
+ full_join(couch_pkgs, downloads, by = "package") %>%
+ mutate(downloads = format(downloads, big.mark = ","))
+```
+
+<br>
+
+## CRAN Packages Maintained By Me
+
+```{r}
+#| label: simon
+#| echo: false
+couch_pkgs %>% 
+ filter(maintainer %in% c("Simon Couch", "Simon P. Couch")) %>% 
+ select(package = topic, title, downloads) %>% 
+ datatable(rownames = FALSE,
+           class = 'cell-border stripe',
+           filter = 'top',
+           escape = FALSE,
+           options = list(pageLength = 100, lengthChange = FALSE))
+```
+
+
+<br>
+
+## CRAN Packages Maintained By Others
+
+These packages are those that I have either originally maintained, significantly contributed to directly, or my code was included enough to be listed as a co-author:
+
+```{r}
+#| label: others
+#| echo: false
+couch_pkgs %>% 
+ filter(!maintainer %in% c("Simon Couch", "Simon P. Couch")) %>% 
+ select(package = topic, title, maintainer, downloads) %>% 
+ datatable(rownames = FALSE,
+           class = 'cell-border stripe',
+           filter = 'top',
+           escape = FALSE,
+           options = list(pageLength = 100, lengthChange = FALSE))
+```
+
+I've also worked on many [tidymodels packages](https://github.com/tidymodels) that I'm not listed as an author on.
+
+
+<br>
+
+## GitHub-Only Packages
+
+I've also prototyped some other packages that haven't made it to CRAN.
+
+```{r}
+#| label: github-packages
+#| echo: false
+repos <- gh("/users/simonpcouch/repos", .limit = 100) %>%
+  tibble::tibble(
+    name = map_chr(., "name"),
+    description = map_chr(., "description", .default = NA_character_),
+    html_url = map_chr(., "html_url"),
+    updated_at = map_chr(., "updated_at"),
+    language = map_chr(., "language", .default = NA_character_),
+    fork = map_lgl(., "fork")
+  ) %>%
+  filter(!fork)
+
+has_description <- function(repo) {
+  tryCatch({
+    contents <- gh("/repos/simonpcouch/{repo}/contents", repo = repo)
+    any(map_chr(contents, "name") == "DESCRIPTION")
+  }, error = function(e) {
+    FALSE
+  })
+}
+
+github_only_pkgs <- repos %>%
+  mutate(has_desc = map_lgl(name, has_description)) %>%
+  filter(has_desc) %>%
+  filter(!name %in% couch_pkgs$package) %>%
+  mutate(
+    url = html_url,
+    package = glue::glue("<a href='{url}' target='_blank'>{name}</a>"),
+    stars = map_int(name, ~{
+      tryCatch({
+        repo_data <- gh("/repos/simonpcouch/{repo}", repo = .x)
+        as.integer(repo_data$stargazers_count)
+      }, error = function(e) {
+        0L
+      })
+    })
+  ) %>%
+  arrange(desc(stars), name)
+
+github_only_pkgs %>%
+  select(package, description, stars, updated = updated_at) %>%
+  filter(!grepl("slides", description)) %>%
+  mutate(updated = as.Date(updated)) %>%
+  filter(updated > "2021-12-31") %>%
+  filter(!is.na(description)) %>%
+  arrange(desc(updated)) %>%
+  datatable(rownames = FALSE,
+            class = 'cell-border stripe',
+            filter = 'top',
+            escape = FALSE,
+            options = list(pageLength = 100, lengthChange = FALSE))
+```
+
+----
+
+The source code from this page was adapted from [Max Kuhn's website](https://github.com/topepo/max-kuhn.org/blob/195694ce465a1773d583877fdab4a01f16bc6c0d/software.qmd).

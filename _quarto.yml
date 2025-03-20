@@ -29,6 +29,9 @@ website:
       - text: Blog
         aria-label: "Some Pitter Patters With R"
         href: blog/index.qmd
+      - text: Software
+        aria-label: "Software"
+        href: software.qmd
   
   page-footer:  
     left: >-

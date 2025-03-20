@@ -1020,5 +1020,33 @@
     "title": "Exploring Biases in GPT-4o, Claude, and Qwen2.5 Judgements",
     "section": "Self-enhancement bias",
     "text": "Self-enhancement bias\nAnother interesting effect is self-enhancement bias, where models are likely to prefer their own answer over one supplied by another model, even when they don’t know where a given response arises from (Ye et al. 2024).\n\nggplot2_evals %&gt;%\n  rowwise() %&gt;%\n  mutate(judged_itself = judge %in% c(config_a, config_b)) %&gt;%\n  filter(judged_itself) %&gt;%\n  mutate(\n    choice_self = if_else(judge == choice, \"Itself\", \"Other Model\")\n  ) %&gt;%\n  ggplot() +\n  aes(x = judge, fill = choice_self) +\n  geom_bar(position = \"fill\") +\n  labs(x = \"Judge\", y = \"Proportion\", fill = \"Choice\")\n\n\n\n\n\n\n\nIn this case, we really don’t see that at all. It may be the case in this example that, given there are generally a limited set of ways to get to the “right” answer in this eval, models don’t have much of an opportunity to display their “taste,” which is presumably the thing they’re exhibiting when they display this bias."
+  },
+  {
+    "objectID": "software.html",
+    "href": "software.html",
+    "title": "Software",
+    "section": "",
+    "text": "I’ve written a few R packages over the years and have contributed to many others.\nThe CRAN sections below enumerate packages on CRAN. Download statistics are from the Posit mirror of CRAN and are current as of 2025-03-20, star statistics were generated at the same time."
+  },
+  {
+    "objectID": "software.html#cran-packages-maintained-by-me",
+    "href": "software.html#cran-packages-maintained-by-me",
+    "title": "Software",
+    "section": "CRAN Packages Maintained By Me",
+    "text": "CRAN Packages Maintained By Me"
+  },
+  {
+    "objectID": "software.html#cran-packages-maintained-by-others",
+    "href": "software.html#cran-packages-maintained-by-others",
+    "title": "Software",
+    "section": "CRAN Packages Maintained By Others",
+    "text": "CRAN Packages Maintained By Others\nThese packages are those that I have either originally maintained, significantly contributed to directly, or my code was included enough to be listed as a co-author:\n\n\n\n\n\n\nI’ve also worked on many tidymodels packages that I’m not listed as an author on."
+  },
+  {
+    "objectID": "software.html#github-only-packages",
+    "href": "software.html#github-only-packages",
+    "title": "Software",
+    "section": "GitHub-Only Packages",
+    "text": "GitHub-Only Packages\nI’ve also prototyped some other packages that haven’t made it to CRAN.\n\n\n\n\n\n\n\nThe source code from this page was adapted from Max Kuhn’s website."
   }
 ]
