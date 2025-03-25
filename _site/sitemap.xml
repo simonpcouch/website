@@ -1,60 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://simonpcouch.com/software.html</loc>
+    <lastmod>2025-03-20T19:37:22.913Z</lastmod>
+  </url>
+  <url>
     <loc>https://simonpcouch.com/blog/2024-05-13-parallel/index.html</loc>
-    <lastmod>2024-05-13T13:08:06.572Z</lastmod>
+    <lastmod>2024-05-13T13:07:58.877Z</lastmod>
   </url>
   <url>
-    <loc>https://simonpcouch.com/blog/2020-11-12-pdfs-from-data/index.html</loc>
-    <lastmod>2024-05-10T21:13:37.968Z</lastmod>
+    <loc>https://simonpcouch.com/blog/2024-07-15-syrup/index.html</loc>
+    <lastmod>2024-10-02T20:22:36.869Z</lastmod>
   </url>
   <url>
-    <loc>https://simonpcouch.com/blog/2022-07-20-netlify-subdomain-redirect/index.html</loc>
-    <lastmod>2024-05-10T21:13:36.224Z</lastmod>
+    <loc>https://simonpcouch.com/blog/2021-05-12-dev-docs-p3/index.html</loc>
+    <lastmod>2023-10-24T19:15:21.724Z</lastmod>
   </url>
   <url>
-    <loc>https://simonpcouch.com/blog/2023-11-30-listening-2023/index.html</loc>
-    <lastmod>2024-05-10T21:13:34.406Z</lastmod>
+    <loc>https://simonpcouch.com/blog/2021-05-11-dev-docs-p2/index.html</loc>
+    <lastmod>2023-10-24T19:15:21.722Z</lastmod>
   </url>
   <url>
-    <loc>https://simonpcouch.com/blog/2021-05-10-dev-docs-p1/index.html</loc>
-    <lastmod>2024-05-10T21:13:31.423Z</lastmod>
+    <loc>https://simonpcouch.com/blog/2023-10-11-submodels-rabbit-hole/index.html</loc>
+    <lastmod>2023-10-24T19:15:21.961Z</lastmod>
   </url>
   <url>
-    <loc>https://simonpcouch.com/blog/2023-10-24-quarto-site/index.html</loc>
-    <lastmod>2024-05-10T21:13:30.387Z</lastmod>
+    <loc>https://simonpcouch.com/blog/2024-03-14-oracle/index.html</loc>
+    <lastmod>2024-03-14T20:20:08.055Z</lastmod>
   </url>
   <url>
-    <loc>https://simonpcouch.com/blog/2021-08-02-apply-to-nsf-grfp/index.html</loc>
-    <lastmod>2024-05-10T21:13:29.288Z</lastmod>
+    <loc>https://simonpcouch.com/blog/2020-10-11-intro/index.html</loc>
+    <lastmod>2023-10-24T19:15:21.692Z</lastmod>
   </url>
   <url>
-    <loc>https://simonpcouch.com/blog/2023-11-28-flights/index.html</loc>
-    <lastmod>2024-05-10T21:13:27.936Z</lastmod>
+    <loc>https://simonpcouch.com/blog/2020-11-30-stacks-0-1-0/index.html</loc>
+    <lastmod>2023-10-24T19:15:21.705Z</lastmod>
   </url>
   <url>
-    <loc>https://simonpcouch.com/blog/index.html</loc>
-    <lastmod>2023-10-25T13:32:09.451Z</lastmod>
+    <loc>https://simonpcouch.com/blog/2021-05-13-dev-docs-p4/index.html</loc>
+    <lastmod>2023-10-24T19:15:21.726Z</lastmod>
   </url>
   <url>
-    <loc>https://simonpcouch.com/blog/2024-04-08-fit-time/index.html</loc>
-    <lastmod>2024-12-23T01:27:04.552Z</lastmod>
+    <loc>https://simonpcouch.com/blog/2021-08-21-infer-v-1-0-0/index.html</loc>
+    <lastmod>2023-10-24T19:15:21.739Z</lastmod>
   </url>
   <url>
-    <loc>https://simonpcouch.com/blog/2023-07-28-moving-on-s23/index.html</loc>
-    <lastmod>2024-05-10T21:13:14.502Z</lastmod>
+    <loc>https://simonpcouch.com/blog/2025-01-30-llm-biases/index.html</loc>
+    <lastmod>2025-01-30T15:25:00.404Z</lastmod>
   </url>
   <url>
-    <loc>https://simonpcouch.com/blog/2021-03-23-whats-next-s21/index.html</loc>
-    <lastmod>2024-05-10T21:13:13.369Z</lastmod>
+    <loc>https://simonpcouch.com/blog/2021-03-15-apply-to-stats-grad-school/index.html</loc>
+    <lastmod>2023-10-24T19:15:21.711Z</lastmod>
   </url>
   <url>
-    <loc>https://simonpcouch.com/blog/2020-12-27-r-github-actions-commit/index.html</loc>
-    <lastmod>2024-05-10T21:13:12.295Z</lastmod>
+    <loc>https://simonpcouch.com/blog/2020-10-27-gentle-intro-stacks/index.html</loc>
+    <lastmod>2023-11-08T23:03:06.634Z</lastmod>
   </url>
   <url>
-    <loc>https://simonpcouch.com/blog/2021-06-10-ggplot-pipe-plus/index.html</loc>
-    <lastmod>2024-05-10T21:13:10.990Z</lastmod>
+    <loc>https://simonpcouch.com/blog/2023-08-04-parallel-racing/index.html</loc>
+    <lastmod>2023-10-24T19:15:21.786Z</lastmod>
+  </url>
+  <url>
+    <loc>https://simonpcouch.com/blog/2022-12-01-listening-2022/index.html</loc>
+    <lastmod>2023-10-24T19:15:21.745Z</lastmod>
+  </url>
+  <url>
+    <loc>https://simonpcouch.com/blog/2024-12-23-names/index.html</loc>
+    <lastmod>2024-12-23T14:45:04.299Z</lastmod>
   </url>
   <url>
     <loc>https://simonpcouch.com/index.html</loc>
@@ -66,94 +78,70 @@
   </url>
   <url>
     <loc>https://simonpcouch.com/blog/2023-03-24-speedups-2023/index.html</loc>
-    <lastmod>2024-05-10T21:13:10.260Z</lastmod>
+    <lastmod>2023-10-24T19:15:21.774Z</lastmod>
   </url>
   <url>
-    <loc>https://simonpcouch.com/blog/2022-12-01-listening-2022/index.html</loc>
-    <lastmod>2024-05-10T21:13:11.699Z</lastmod>
+    <loc>https://simonpcouch.com/blog/2021-06-10-ggplot-pipe-plus/index.html</loc>
+    <lastmod>2023-10-24T19:15:21.733Z</lastmod>
   </url>
   <url>
-    <loc>https://simonpcouch.com/blog/2023-08-04-parallel-racing/index.html</loc>
-    <lastmod>2024-05-10T21:13:13.048Z</lastmod>
+    <loc>https://simonpcouch.com/blog/2020-12-27-r-github-actions-commit/index.html</loc>
+    <lastmod>2023-10-24T19:15:21.706Z</lastmod>
   </url>
   <url>
-    <loc>https://simonpcouch.com/blog/2020-10-27-gentle-intro-stacks/index.html</loc>
-    <lastmod>2024-05-10T21:13:14.138Z</lastmod>
+    <loc>https://simonpcouch.com/blog/2021-03-23-whats-next-s21/index.html</loc>
+    <lastmod>2023-10-24T19:15:21.716Z</lastmod>
   </url>
   <url>
-    <loc>https://simonpcouch.com/blog/2021-03-15-apply-to-stats-grad-school/index.html</loc>
-    <lastmod>2024-05-10T21:13:15.987Z</lastmod>
+    <loc>https://simonpcouch.com/blog/2023-07-28-moving-on-s23/index.html</loc>
+    <lastmod>2023-10-24T19:15:21.782Z</lastmod>
   </url>
   <url>
-    <loc>https://simonpcouch.com/blog/2021-08-21-infer-v-1-0-0/index.html</loc>
-    <lastmod>2024-05-10T21:13:18.845Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2021-05-13-dev-docs-p4/index.html</loc>
-    <lastmod>2024-05-10T21:13:21.601Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2020-11-30-stacks-0-1-0/index.html</loc>
-    <lastmod>2024-05-10T21:13:28.412Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2020-10-11-intro/index.html</loc>
-    <lastmod>2024-05-10T21:13:29.612Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2024-03-14-oracle/index.html</loc>
-    <lastmod>2024-05-10T21:13:31.025Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2023-10-11-submodels-rabbit-hole/index.html</loc>
-    <lastmod>2024-05-10T21:13:32.173Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2021-05-11-dev-docs-p2/index.html</loc>
-    <lastmod>2024-05-10T21:13:35.616Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2021-05-12-dev-docs-p3/index.html</loc>
-    <lastmod>2024-05-10T21:13:37.295Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2023-09-01-jmt-2023/index.html</loc>
-    <lastmod>2024-05-10T21:13:38.632Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2024-07-16-syrup/index.html</loc>
-    <lastmod>2024-07-10T17:03:23.216Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2024-07-15-syrup/index.html</loc>
-    <lastmod>2024-07-15T13:47:21.432Z</lastmod>
+    <loc>https://simonpcouch.com/blog/2024-04-08-fit-time/index.html</loc>
+    <lastmod>2024-12-23T01:27:04.552Z</lastmod>
   </url>
   <url>
     <loc>https://simonpcouch.com/blog/2024-10-16-postprocessing/index.html</loc>
     <lastmod>2024-10-16T13:10:03.901Z</lastmod>
   </url>
   <url>
-    <loc>https://simonpcouch.com/blog/2024-10-28-book/index.html</loc>
-    <lastmod>2024-10-28T16:20:06.489Z</lastmod>
+    <loc>https://simonpcouch.com/blog/index.html</loc>
+    <lastmod>2023-10-25T13:32:09.451Z</lastmod>
+  </url>
+  <url>
+    <loc>https://simonpcouch.com/blog/2023-11-28-flights/index.html</loc>
+    <lastmod>2023-11-28T18:53:59.992Z</lastmod>
+  </url>
+  <url>
+    <loc>https://simonpcouch.com/blog/2021-08-02-apply-to-nsf-grfp/index.html</loc>
+    <lastmod>2023-10-24T19:15:21.736Z</lastmod>
+  </url>
+  <url>
+    <loc>https://simonpcouch.com/blog/2023-10-24-quarto-site/index.html</loc>
+    <lastmod>2023-11-03T17:32:45.192Z</lastmod>
+  </url>
+  <url>
+    <loc>https://simonpcouch.com/blog/2021-05-10-dev-docs-p1/index.html</loc>
+    <lastmod>2023-10-24T19:15:21.720Z</lastmod>
+  </url>
+  <url>
+    <loc>https://simonpcouch.com/blog/2023-11-30-listening-2023/index.html</loc>
+    <lastmod>2023-11-30T14:35:25.523Z</lastmod>
+  </url>
+  <url>
+    <loc>https://simonpcouch.com/blog/2022-07-20-netlify-subdomain-redirect/index.html</loc>
+    <lastmod>2023-10-24T19:15:21.743Z</lastmod>
+  </url>
+  <url>
+    <loc>https://simonpcouch.com/blog/2020-11-12-pdfs-from-data/index.html</loc>
+    <lastmod>2023-10-24T19:15:21.703Z</lastmod>
+  </url>
+  <url>
+    <loc>https://simonpcouch.com/blog/2023-09-01-jmt-2023/index.html</loc>
+    <lastmod>2023-10-24T19:15:21.958Z</lastmod>
   </url>
   <url>
     <loc>https://simonpcouch.com/blog/2024-10-29-book/index.html</loc>
     <lastmod>2024-10-28T16:22:50.903Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2024-12-23-names/index.html</loc>
-    <lastmod>2024-12-23T14:45:04.299Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2025-01-30-llm-self-enhancement/index.html</loc>
-    <lastmod>2025-01-29T21:28:50.797Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2025-01-30-llm-biases/index.html</loc>
-    <lastmod>2025-01-30T15:25:00.404Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/software.html</loc>
-    <lastmod>2025-03-20T19:37:22.913Z</lastmod>
   </url>
 </urlset>
