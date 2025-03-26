@@ -5,7 +5,7 @@ tags:
   - ai
   - claude
   - rstats
-subtitle: "I've come to really appreciate having Claude Claude as part of my LLM toolkit, but it's taken a bit of getting used to."
+subtitle: "I've come to really appreciate having Claude Code as part of my LLM toolkit, but it's taken a bit of getting used to."
 image: featured.png
 summary: ''
 ---
