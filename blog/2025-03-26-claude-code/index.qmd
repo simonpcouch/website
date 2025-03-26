@@ -1,0 +1,59 @@
+---
+title: "How I'm Using Claude Code to Develop R Packages"
+date: '2025-03-26'
+tags:
+  - ai
+  - claude
+  - rstats
+subtitle: "I've come to really appreciate having Claude Claude as part of my LLM toolkit, but it's taken a bit of getting used to."
+image: featured.png
+summary: ''
+---
+
+Since the release of [Claude Code](https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/overview) a few weeks ago, I've been experimenting with using the tool to develop R packages. I've come to really appreciate it as part of my LLM toolkit, but it's definitely taken a bit of getting used to.
+
+## Vibes
+
+Claude Code is a LLM coding-assistance tool that can interface with your project directory. It can read and modify files (without you explicitly asking it to do so), run bash commands, and use git. Claude Code is interfaced with via a cli, though once you initialize it with `claude`, you can mostly just interact with it via plain-language from there.
+
+I use Claude Code in my day-to-day working on R packages. Claude Code is one of a few different ways I interface with LLMs:
+
+* Claude Code: here we are!
+* The [claude.ai](https://claude.ai/) web interface
+* Via Claude/Deepseek/Gemini/OpenAI APIs 
+	* From R using ellmer
+		* When programming, just via ellmer's Chat class
+		* For a chat-like interface that has access to my R environment, using [`btw::btw_app()`](https://posit-dev.github.io/btw/reference/btw_client.html)
+		* A few specialized tools that I've built on top of ellmer, like [gander](https://simonpcouch.github.io/gander/) and [chores]
+	* From Positron, the IDE I'm usually working in, using [Continue](https://www.continue.dev/)
+
+I've mostly found that I haven't converted to using Claude Code for any tasks that I used to use another interface for. For example, I still tend to use Continue to ask questions about specific files in codebases, and I still use gander for little syntactical things that would take me a minute or so to write out myself. That said, using Claude Code has opened up a new mode of interaction with LLMs for me; I've started to lean on models for writing and refactoring tasks that used to take me something like 15 minutes. This is a context where I used to not attempt to use models at all, suspecting that I'd probably spend more time debugging slop than it would have taken me to write the code myself. That said, even for these 15ish-minute tasks, there are still situations where I've found I'm better off working through changes myself.
+
+## Prompting
+
+Other than vibes, the only thing I really have to contribute in this blog post is a version of the `CLAUDE.md` I've been situating in my R package directories. `CLAUDE.md` is sort of a `README.md` specifically for the model. The Claude Code documentation suggests folks use a model to draft a `CLAUDE.md` using `\init`—I'd recommend doing this once just to see the kinds of things they suggest including in the document, but in general, models tend to churn through a good few tokens at this step to generate slightly-off instructions on how to navigate the structure of an R package.
+
+At the moment, my `CLAUDE.md` files are composed of a few pieces:
+
+* **How R package development works**: e.g. where the source files are, where the corresponding test files are, how to run the tests. I had initially assumed that there would be enough "this is how R packages are structured" baked into the weights that I wouldn't have to do this, but this doesn't seem to be the case.
+* **My taste**: 
+	* I tell the thing to read a source file and a test file I've written that I like by pointing it to the relative paths of the files.
+	* The thing _really_ wants to add code comments that speak to the "what" rather than the "why." I have two mentions of "please don't add new code comments and don't remove old ones" in my `CLAUDE.md` files, and I've also gotten into the habit of appending "no new code comments" to every first message I send in a Claude Code chat, and yet I'm still consistently asking the model to remove them from output.
+* **Context**: This is one lesson from interacting with Claude that I've gotten a ton of value out of. If something I'm working on has an oft-used dependency that isn't likely to be well-represented in the training data, I supply [`btw::btw()`](https://posit-dev.github.io/btw/index.html) output about the dependency into `CLAUDE.md`. For example, I'm working on a package right now that makes heavy use of [ellmer Chat]((https://ellmer.tidyverse.org/reference/Chat.html)) objects. Instead of supplying context that I feel is probably relevant whenever it's needed, I've just pasted the output of `btw::btw("?ellmer::Chat", "{ellmer}")` into my `CLAUDE.md`. That output (see below) has the [help page for `?ellmer::Chat`](https://ellmer.tidyverse.org/reference/Chat.html) and the package-level help page inlined into plain-text. Since adding that output, Claude Code has almost been a more proficient user of ellmer than I am.
+
+**Here's [an example](https://gist.github.com/simonpcouch/fcb6d4d2b6dc4df79f91cd1f0c2e7f52) `CLAUDE.md`** that I've used recently.
+
+## Workflow
+
+One note on an (anti-)pattern for interfacing with Claude Code... The tool has a weird relationship with unit tests. It _really_ wants them to pass, so much so that it will add problematic mocking or even remove tests entirely that it can't get to pass rather than asking you for input or revisiting the issues in source files. For that reason, I often opt to pause Claude Code when it notes it's going to a run a test and instead run it myself, pasting output from the test along with my own interpretation of the issue if there are any failures.
+
+## 💰💰💰
+
+One of the most common observations I see when people talk about Claude Code is how expensive it is. [Their website reads](https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/overview#manage-costs-effectively) "Typical usage costs range from $5-10 per developer per day, but can exceed $100 per hour during intensive use." $100 per hour would be _wild_. That said, I haven't really felt that Claude Code's churned through an inordinate number of tokens.
+
+I've found that:
+
+* **The absolute cost has been in the ballpark of other LLM interfaces.** I pay something like 20 bucks a month to Anthropic for the web interface to their models, and I think OpenAI's base paid plan is similar. Similarly, via BYO-key tools like [Continue](https://www.continue.dev/) used in Positron and [`btw_client()`](https://posit-dev.github.io/btw/reference/btw_client.html) (and also some GitHub Actions), I churn through something like 20 bucks a month in tokens between the Claude/Deepseek/Gemini/OpenAI APIs. **Since March 1st (25 days ago as I write this), I've spent about $30 on my Claude Code API key.** Again, I'm not using Claude Code all day every day, but just in those times where 1) I'm actively working on code and 2) it seems like the best tool for the job.
+* **I'm happy with the value per dollar.** What I don't mean here is that Claude Code is the best value per dollar for every task. Very seldomly will I use Claude Code for something that would only take a couple minutes for me to do; in that case, I'm either doing the thing myself or using some interface to an LLM that is lower-friction to get started up. What I do mean is that Claude Code is capable of accomplishing 15-ish minute tasks, albeit with a couple minutes of prompting, in a way that other LLM interfaces are not, and I'm happy to pay for that.
+
+Your feelings on what is A Lot Of Money to spend on LLMs likely differ from mine. I write software for a living, and I do so in the USA, both of which greatly effect what I think of as "cheap."

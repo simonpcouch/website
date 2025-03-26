@@ -10,7 +10,15 @@
 <atom:link href="https://simonpcouch.com/blog/index.xml" rel="self" type="application/rss+xml"/>
 <description>A data science blog</description>
 <generator>quarto-1.6.40</generator>
-<lastBuildDate>Thu, 30 Jan 2025 06:00:00 GMT</lastBuildDate>
+<lastBuildDate>Wed, 26 Mar 2025 05:00:00 GMT</lastBuildDate>
+<item>
+  <title>How I’m Using Claude Code to Develop R Packages</title>
+  <link>https://simonpcouch.com/blog/2025-03-26-claude-code/</link>
+  <description><![CDATA[ Since the release of <a href="https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/overview">Claude Code</a> a few weeks ago, I’ve been experimenting with using the tool to develop R packages. I’ve come to really appreciate it as part of my LLM toolkit, but it’s definitely taken a bit of getting used to. ]]></description>
+  <guid>https://simonpcouch.com/blog/2025-03-26-claude-code/</guid>
+  <pubDate>Wed, 26 Mar 2025 05:00:00 GMT</pubDate>
+  <media:content url="https://simonpcouch.com/blog/2025-03-26-claude-code/featured.png" medium="image" type="image/png" height="143" width="144"/>
+</item>
 <item>
   <title>Exploring Biases in GPT-4o, Claude, and Qwen2.5 Judgements</title>
   <link>https://simonpcouch.com/blog/2025-01-30-llm-biases/</link>
@@ -162,14 +170,6 @@
   <guid>https://simonpcouch.com/blog/2021-08-21-infer-v-1-0-0/</guid>
   <pubDate>Sat, 21 Aug 2021 05:00:00 GMT</pubDate>
   <media:content url="https://simonpcouch.com/blog/2021-08-21-infer-v-1-0-0/featured.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
-  <title>Applying to the NSF Graduate Research Fellowship (GRFP)</title>
-  <link>https://simonpcouch.com/blog/2021-08-02-apply-to-nsf-grfp/</link>
-  <description><![CDATA[ Last fall, I applied to (and was awarded) the National Science Foundation’s Graduate Research Fellowship (NSF GRFP). Much of the advice that made me feel most informed and confident about the application process required some degree of access that it should not have—personal connections, institutional resources, and/or hindsight—and I feel this information should be publicly available. I’m far from an expert about how this all works, and can only speak to my personal experience, but I hope I can help others feel more confident in putting together their applications (or deciding whether or not to) by sharing my experience. The format (and, sometimes, content) of this post will follow from my <a href="https://blog.simonpcouch.com/blog/apply-to-stats-grad-school">post on applying to graduate school in statistics/biostatistics</a>. ]]></description>
-  <guid>https://simonpcouch.com/blog/2021-08-02-apply-to-nsf-grfp/</guid>
-  <pubDate>Mon, 02 Aug 2021 05:00:00 GMT</pubDate>
-  <media:content url="https://simonpcouch.com/blog/2021-08-02-apply-to-nsf-grfp/featured.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>
