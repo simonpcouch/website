@@ -49,7 +49,7 @@
   <description><![CDATA[ This is a cross-post of <a href="https://www.tidyverse.org/blog/2024/10/postprocessing-preview/">a post of mine</a> on the tidyverse blog. ]]></description>
   <guid>https://simonpcouch.com/blog/2024-10-16-postprocessing/</guid>
   <pubDate>Wed, 16 Oct 2024 05:00:00 GMT</pubDate>
-  <media:content url="https://simonpcouch.com/blog/2024-10-16-postprocessing/featured.png" medium="image" type="image/png" height="131" width="144"/>
+  <media:content url="https://simonpcouch.com/blog/2024-10-16-postprocessing/featured.png" medium="image" type="image/png" height="130" width="144"/>
 </item>
 <item>
   <title>A new package for profiling parallel R code</title>
