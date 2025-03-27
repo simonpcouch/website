@@ -10,6 +10,32 @@ image: featured.png
 summary: ''
 ---
 
+```{r}
+#| eval: false
+#| include: false
+# use this to resize the thumbnail image for the blog post
+optimize_image <- function(
+	image_path, 
+	target_width = 500, 
+	target_quality = 85, 
+	output_format = "png"
+  ) {
+  img <- magick::image_read(image_path)
+  
+  dims <- magick::image_info(img)
+  
+  if (dims$width > target_width) {
+    img <- magick::image_resize(img, paste0(target_width, "x"))
+  }
+  
+  img <- magick::image_write(
+	img, image_path, format = output_format, quality = target_quality
+  )
+  
+  invisible(img)
+}
+```
+
 Since the release of [Claude Code](https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/overview) a few weeks ago, I've been experimenting with using the tool to develop R packages. I've come to really appreciate it as part of my LLM toolkit, but it's definitely taken a bit of getting used to.
 
 ## Vibes
