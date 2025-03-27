@@ -1,13 +1,10 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
-
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta name="generator" content="quarto-1.6.40">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-
 <meta name="dcterms.date" content="2025-03-26">
-
 <title>How I’m Using Claude Code to Develop R Packages | Simon P. Couch – Simon P. Couch</title>
 <style>
 code{white-space: pre-wrap;}
@@ -22,7 +19,6 @@ ul.task-list li input[type="checkbox"] {
   vertical-align: middle;
 }
 </style>
-
 
 <script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../../site_libs/quarto-nav/headroom.min.js"></script>
@@ -40,8 +36,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-a2d2da6447bc21d3e680c795c75d6b9d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
-<script id="quarto-search-options" type="application/json">{
+<link href="../../site_libs/bootstrap/bootstrap-a2d2da6447bc21d3e680c795c75d6b9d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
   "collapse-after": 3,
@@ -67,30 +62,21 @@ ul.task-list li input[type="checkbox"] {
     "search-submit-button-title": "Submit",
     "search-label": "Search"
   }
-}</script>
-<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-DDB8R0B1ZW"></script>
-
-<script type="text/javascript">
+}</script><script async="" src="https://www.googletagmanager.com/gtag/js?id=G-DDB8R0B1ZW"></script><script type="text/javascript">
 
 window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 </script>
-
-
 </head>
-
 <body class="nav-fixed fullcontent">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top quarto-banner">
-    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
-      <div class="navbar-container container-fluid">
+  <header id="quarto-header" class="headroom fixed-top quarto-banner"><nav class="navbar navbar-expand-lg " data-bs-theme="dark"><div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="../../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../../assets/cabin.png" alt="" class="navbar-logo">
-    </a>
+    <img src="../../assets/cabin.png" alt="" class="navbar-logo"></a>
     <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Simon P. Couch</span>
     </a>
@@ -101,7 +87,7 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
-  <li class="nav-item">
+<li class="nav-item">
     <a class="nav-link" href="../../about/index.html"> 
 <span class="menu-text">About</span></a>
   </li>  
@@ -114,16 +100,12 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 <span class="menu-text">Software</span></a>
   </li>  
 </ul>
-          </div> <!-- /navcollapse -->
+</div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
     <a href="https://www.github.com/simonpcouch/website" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
 </div>
       </div> <!-- /container-fluid -->
-    </nav>
-</header>
-<!-- content -->
-<header id="title-block-header" class="quarto-title-block default page-columns page-full">
-  <div class="quarto-title-banner page-columns page-full">
+    </nav></header><!-- content --><header id="title-block-header" class="quarto-title-block default page-columns page-full"><div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
       <h1 class="title">How I’m Using Claude Code to Develop R Packages</h1>
             <p class="subtitle lead">I’ve come to really appreciate having Claude Code as part of my LLM toolkit, but it’s taken a bit of getting used to.</p>
@@ -150,15 +132,8 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 <!-- margin-sidebar -->
     
 <!-- main -->
-<main class="content quarto-banner-title-block" id="quarto-document-content">
-
-
-
-
-
-<p>Since the release of <a href="https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/overview">Claude Code</a> a few weeks ago, I’ve been experimenting with using the tool to develop R packages. I’ve come to really appreciate it as part of my LLM toolkit, but it’s definitely taken a bit of getting used to.</p>
-<section id="vibes" class="level2">
-<h2 class="anchored" data-anchor-id="vibes">Vibes</h2>
+<main class="content quarto-banner-title-block" id="quarto-document-content"><p>Since the release of <a href="https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/overview">Claude Code</a> a few weeks ago, I’ve been experimenting with using the tool to develop R packages. I’ve come to really appreciate it as part of my LLM toolkit, but it’s definitely taken a bit of getting used to.</p>
+<section id="vibes" class="level2"><h2 class="anchored" data-anchor-id="vibes">Vibes</h2>
 <p>Claude Code is a LLM coding-assistance tool that can interface with your project directory. It can read and modify files (without you explicitly asking it to do so), run bash commands, and use git. Claude Code is interfaced with via a cli, though once you initialize it with <code>claude</code>, you can mostly just interact with it via plain-language from there.</p>
 <p>I use Claude Code in my day-to-day working on R packages. Claude Code is one of a few different ways I interface with LLMs:</p>
 <ul>
@@ -169,48 +144,49 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 <li>From R using ellmer
 <ul>
 <li>When programming, just via ellmer’s Chat class</li>
-<li>For a chat-like interface that has access to my R environment, using <a href="https://posit-dev.github.io/btw/reference/btw_client.html"><code>btw::btw_app()</code></a></li>
+<li>For a chat-like interface that has access to my R environment, using <a href="https://posit-dev.github.io/btw/reference/btw_client.html"><code>btw::btw_app()</code></a>
+</li>
 <li>A few specialized tools that I’ve built on top of ellmer, like <a href="https://simonpcouch.github.io/gander/">gander</a> and [chores]</li>
-</ul></li>
-<li>From Positron, the IDE I’m usually working in, using <a href="https://www.continue.dev/">Continue</a></li>
-</ul></li>
+</ul>
+</li>
+<li>From Positron, the IDE I’m usually working in, using <a href="https://www.continue.dev/">Continue</a>
+</li>
+</ul>
+</li>
 </ul>
 <p>I’ve mostly found that I haven’t converted to using Claude Code for any tasks that I used to use another interface for. For example, I still tend to use Continue to ask questions about specific files in codebases, and I still use gander for little syntactical things that would take me a minute or so to write out myself. That said, using Claude Code has opened up a new mode of interaction with LLMs for me; I’ve started to lean on models for writing and refactoring tasks that used to take me something like 15 minutes. This is a context where I used to not attempt to use models at all, suspecting that I’d probably spend more time debugging slop than it would have taken me to write the code myself. That said, even for these 15ish-minute tasks, there are still situations where I’ve found I’m better off working through changes myself.</p>
-</section>
-<section id="prompting" class="level2">
-<h2 class="anchored" data-anchor-id="prompting">Prompting</h2>
+</section><section id="prompting" class="level2"><h2 class="anchored" data-anchor-id="prompting">Prompting</h2>
 <p>Other than vibes, the only thing I really have to contribute in this blog post is a version of the <code>CLAUDE.md</code> I’ve been situating in my R package directories. <code>CLAUDE.md</code> is sort of a <code>README.md</code> specifically for the model. The Claude Code documentation suggests folks use a model to draft a <code>CLAUDE.md</code> using <code>\init</code>—I’d recommend doing this once just to see the kinds of things they suggest including in the document, but in general, models tend to churn through a good few tokens at this step to generate slightly-off instructions on how to navigate the structure of an R package.</p>
 <p>At the moment, my <code>CLAUDE.md</code> files are composed of a few pieces:</p>
 <ul>
-<li><strong>How R package development works</strong>: e.g.&nbsp;where the source files are, where the corresponding test files are, how to run the tests. I had initially assumed that there would be enough “this is how R packages are structured” baked into the weights that I wouldn’t have to do this, but this doesn’t seem to be the case.</li>
-<li><strong>My taste</strong>:
+<li>
+<strong>How R package development works</strong>: e.g.&nbsp;where the source files are, where the corresponding test files are, how to run the tests. I had initially assumed that there would be enough “this is how R packages are structured” baked into the weights that I wouldn’t have to do this, but this doesn’t seem to be the case.</li>
+<li>
+<strong>My taste</strong>:
 <ul>
 <li>I tell the thing to read a source file and a test file I’ve written that I like by pointing it to the relative paths of the files.</li>
 <li>The thing <em>really</em> wants to add code comments that speak to the “what” rather than the “why.” I have two mentions of “please don’t add new code comments and don’t remove old ones” in my <code>CLAUDE.md</code> files, and I’ve also gotten into the habit of appending “no new code comments” to every first message I send in a Claude Code chat, and yet I’m still consistently asking the model to remove them from output.</li>
-</ul></li>
-<li><strong>Context</strong>: This is one lesson from interacting with Claude that I’ve gotten a ton of value out of. If something I’m working on has an oft-used dependency that isn’t likely to be well-represented in the training data, I supply <a href="https://posit-dev.github.io/btw/index.html"><code>btw::btw()</code></a> output about the dependency into <code>CLAUDE.md</code>. For example, I’m working on a package right now that makes heavy use of <a href="(https://ellmer.tidyverse.org/reference/Chat.html)">ellmer Chat</a> objects. Instead of supplying context that I feel is probably relevant whenever it’s needed, I’ve just pasted the output of <code>btw::btw("?ellmer::Chat", "{ellmer}")</code> into my <code>CLAUDE.md</code>. That output (see below) has the <a href="https://ellmer.tidyverse.org/reference/Chat.html">help page for <code>?ellmer::Chat</code></a> and the package-level help page inlined into plain-text. Since adding that output, Claude Code has almost been a more proficient user of ellmer than I am.</li>
+</ul>
+</li>
+<li>
+<strong>Context</strong>: This is one lesson from interacting with Claude that I’ve gotten a ton of value out of. If something I’m working on has an oft-used dependency that isn’t likely to be well-represented in the training data, I supply <a href="https://posit-dev.github.io/btw/index.html"><code>btw::btw()</code></a> output about the dependency into <code>CLAUDE.md</code>. For example, I’m working on a package right now that makes heavy use of <a href="(https://ellmer.tidyverse.org/reference/Chat.html)">ellmer Chat</a> objects. Instead of supplying context that I feel is probably relevant whenever it’s needed, I’ve just pasted the output of <code>btw::btw("?ellmer::Chat", "{ellmer}")</code> into my <code>CLAUDE.md</code>. That output (see below) has the <a href="https://ellmer.tidyverse.org/reference/Chat.html">help page for <code>?ellmer::Chat</code></a> and the package-level help page inlined into plain-text. Since adding that output, Claude Code has almost been a more proficient user of ellmer than I am.</li>
 </ul>
 <p><strong>Here’s <a href="https://gist.github.com/simonpcouch/fcb6d4d2b6dc4df79f91cd1f0c2e7f52">an example</a> <code>CLAUDE.md</code></strong> that I’ve used recently.</p>
-</section>
-<section id="workflow" class="level2">
-<h2 class="anchored" data-anchor-id="workflow">Workflow</h2>
+</section><section id="workflow" class="level2"><h2 class="anchored" data-anchor-id="workflow">Workflow</h2>
 <p>One note on an (anti-)pattern for interfacing with Claude Code… The tool has a weird relationship with unit tests. It <em>really</em> wants them to pass, so much so that it will add problematic mocking or even remove tests entirely that it can’t get to pass rather than asking you for input or revisiting the issues in source files. For that reason, I often opt to pause Claude Code when it notes it’s going to a run a test and instead run it myself, pasting output from the test along with my own interpretation of the issue if there are any failures.</p>
-</section>
-<section id="section" class="level2">
-<h2 class="anchored" data-anchor-id="section">💰💰💰</h2>
+</section><section id="section" class="level2"><h2 class="anchored" data-anchor-id="section">💰💰💰</h2>
 <p>One of the most common observations I see when people talk about Claude Code is how expensive it is. <a href="https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/overview#manage-costs-effectively">Their website reads</a> “Typical usage costs range from $5-10 per developer per day, but can exceed $100 per hour during intensive use.” $100 per hour would be <em>wild</em>. That said, I haven’t really felt that Claude Code’s churned through an inordinate number of tokens.</p>
 <p>I’ve found that:</p>
 <ul>
-<li><strong>The absolute cost has been in the ballpark of other LLM interfaces.</strong> I pay something like 20 bucks a month to Anthropic for the web interface to their models, and I think OpenAI’s base paid plan is similar. Similarly, via BYO-key tools like <a href="https://www.continue.dev/">Continue</a> used in Positron and <a href="https://posit-dev.github.io/btw/reference/btw_client.html"><code>btw_client()</code></a> (and also some GitHub Actions), I churn through something like 20 bucks a month in tokens between the Claude/Deepseek/Gemini/OpenAI APIs. <strong>Since March 1st (25 days ago as I write this), I’ve spent about $30 on my Claude Code API key.</strong> Again, I’m not using Claude Code all day every day, but just in those times where 1) I’m actively working on code and 2) it seems like the best tool for the job.</li>
-<li><strong>I’m happy with the value per dollar.</strong> What I don’t mean here is that Claude Code is the best value per dollar for every task. Very seldomly will I use Claude Code for something that would only take a couple minutes for me to do; in that case, I’m either doing the thing myself or using some interface to an LLM that is lower-friction to get started up. What I do mean is that Claude Code is capable of accomplishing 15-ish minute tasks, albeit with a couple minutes of prompting, in a way that other LLM interfaces are not, and I’m happy to pay for that.</li>
+<li>
+<strong>The absolute cost has been in the ballpark of other LLM interfaces.</strong> I pay something like 20 bucks a month to Anthropic for the web interface to their models, and I think OpenAI’s base paid plan is similar. Similarly, via BYO-key tools like <a href="https://www.continue.dev/">Continue</a> used in Positron and <a href="https://posit-dev.github.io/btw/reference/btw_client.html"><code>btw_client()</code></a> (and also some GitHub Actions), I churn through something like 20 bucks a month in tokens between the Claude/Deepseek/Gemini/OpenAI APIs. <strong>Since March 1st (25 days ago as I write this), I’ve spent about $30 on my Claude Code API key.</strong> Again, I’m not using Claude Code all day every day, but just in those times where 1) I’m actively working on code and 2) it seems like the best tool for the job.</li>
+<li>
+<strong>I’m happy with the value per dollar.</strong> What I don’t mean here is that Claude Code is the best value per dollar for every task. Very seldomly will I use Claude Code for something that would only take a couple minutes for me to do; in that case, I’m either doing the thing myself or using some interface to an LLM that is lower-friction to get started up. What I do mean is that Claude Code is capable of accomplishing 15-ish minute tasks, albeit with a couple minutes of prompting, in a way that other LLM interfaces are not, and I’m happy to pay for that.</li>
 </ul>
 <p>Your feelings on what is A Lot Of Money to spend on LLMs likely differ from mine. I write software for a living, and I do so in the USA, both of which greatly effect what I think of as “cheap.”</p>
 
 
-</section>
-
-<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a><div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-reuse"><h2 class="anchored quarto-appendix-heading">Reuse</h2><div class="quarto-appendix-contents"><div><a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a></div></div></section></div></main> <!-- /main -->
-<script id="quarto-html-after-body" type="application/javascript">
+</section><a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a><div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-reuse"><h2 class="anchored quarto-appendix-heading">Reuse</h2><div class="quarto-appendix-contents"><div><a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a></div></div></section></div></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
@@ -626,12 +602,10 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
 });
-</script>
-<script src="https://utteranc.es/client.js" repo="simonpcouch/website" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script><script src="https://utteranc.es/client.js" repo="simonpcouch/website" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
 </script>
 </div> <!-- /content -->
-<footer class="footer">
-  <div class="nav-footer">
+<footer class="footer"><div class="nav-footer">
     <div class="nav-footer-left">
 <p>© 2024 Simon P. Couch ∙ Made with <a href="https://quarto.org">Quarto</a></p>
 </div>   
@@ -643,8 +617,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     </div>
   </div>
 </footer>
-
-
 
 
 </body></html>
