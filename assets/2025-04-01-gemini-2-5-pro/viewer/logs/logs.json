@@ -1,0 +1,334 @@
+{
+  "2025-04-02T09-55-57-05-00_An-R-Eval_db9a4f19dcbe84079ad841.json": {
+    "version": 2,
+    "status": "success",
+    "eval": {
+      "run_id": "YiPqxqJwuokT7uKyvcVZsZ",
+      "created": "2025-04-02T09:55:57-05:00",
+      "task": "An R Eval",
+      "task_id": "db9a4f19dcbe84079ad841",
+      "task_version": 0,
+      "task_file": "/Users/simoncouch/Documents/rrr/website_new/blog/2025-04-01-gemini-2-5-pro/index.qmd",
+      "task_attribs": {},
+      "task_args": {},
+      "dataset": {
+        "samples": 28,
+        "sample_ids": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28],
+        "shuffled": false
+      },
+      "model": "gemini-2.5-pro-exp-03-25",
+      "model_args": {},
+      "config": {},
+      "revision": {
+        "type": "git",
+        "origin": "https://github.com/UKGovernmentBEIS/inspect_ai.git",
+        "commit": "9140d8a2"
+      },
+      "packages": {
+        "inspect_ai": "0.3.63"
+      },
+      "scorers": [
+        {
+          "name": "model_graded_qa(scorer_chat = claude_sonnet_3_7, partial_credit = TRUE)",
+          "options": {},
+          "metrics": [
+            {
+              "name": "mean",
+              "options": {}
+            }
+          ],
+          "metadata": {}
+        }
+      ]
+    },
+    "plan": {
+      "name": "plan",
+      "steps": [
+        {
+          "solver": "generate()",
+          "params": {
+            "1": "as.list(self$samples$input)",
+            "solver_chat": "gemini_2_5_pro"
+          }
+        }
+      ],
+      "config": {}
+    },
+    "results": {
+      "total_samples": 84,
+      "completed_samples": 84,
+      "scores": [
+        {
+          "name": "model_graded_qa(scorer_chat = claude_sonnet_3_7, partial_credit = TRUE)",
+          "scorer": "model_graded_qa(scorer_chat = claude_sonnet_3_7, partial_credit = TRUE)",
+          "params": {},
+          "metrics": {
+            "accuracy": {
+              "name": "accuracy",
+              "value": 58.9286,
+              "params": {
+                "1": "numeric_scores"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "stats": {
+      "started_at": "2025-03-31T16:03:19-05:00",
+      "completed_at": "2025-04-02T09:55:57-05:00",
+      "model_usage": {}
+    }
+  },
+  "2025-04-02T09-56-09-05-00_An-R-Eval_db9a4f19dcbe84079ad841.json": {
+    "version": 2,
+    "status": "success",
+    "eval": {
+      "run_id": "w1438tU63kO6k76yEUCvgU",
+      "created": "2025-04-02T09:56:09-05:00",
+      "task": "An R Eval",
+      "task_id": "db9a4f19dcbe84079ad841",
+      "task_version": 0,
+      "task_file": "/Users/simoncouch/Documents/rrr/website_new/blog/2025-04-01-gemini-2-5-pro/index.qmd",
+      "task_attribs": {},
+      "task_args": {},
+      "dataset": {
+        "samples": 28,
+        "sample_ids": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28],
+        "shuffled": false
+      },
+      "model": "gemini-2.0-flash",
+      "model_args": {},
+      "config": {},
+      "revision": {
+        "type": "git",
+        "origin": "https://github.com/UKGovernmentBEIS/inspect_ai.git",
+        "commit": "9140d8a2"
+      },
+      "packages": {
+        "inspect_ai": "0.3.63"
+      },
+      "scorers": [
+        {
+          "name": "model_graded_qa(scorer_chat = claude_sonnet_3_7, partial_credit = TRUE)",
+          "options": {},
+          "metrics": [
+            {
+              "name": "mean",
+              "options": {}
+            }
+          ],
+          "metadata": {}
+        }
+      ]
+    },
+    "plan": {
+      "name": "plan",
+      "steps": [
+        {
+          "solver": "generate()",
+          "params": {
+            "1": "as.list(self$samples$input)",
+            "solver_chat": "gemini_2_0_flash"
+          }
+        }
+      ],
+      "config": {}
+    },
+    "results": {
+      "total_samples": 84,
+      "completed_samples": 84,
+      "scores": [
+        {
+          "name": "model_graded_qa(scorer_chat = claude_sonnet_3_7, partial_credit = TRUE)",
+          "scorer": "model_graded_qa(scorer_chat = claude_sonnet_3_7, partial_credit = TRUE)",
+          "params": {},
+          "metrics": {
+            "accuracy": {
+              "name": "accuracy",
+              "value": 39.2857,
+              "params": {
+                "1": "numeric_scores"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "stats": {
+      "started_at": "2025-04-02T07:53:30-05:00",
+      "completed_at": "2025-04-02T08:00:22-05:00",
+      "model_usage": {}
+    }
+  },
+  "2025-04-02T09-56-28-05-00_An-R-Eval_db9a4f19dcbe84079ad841.json": {
+    "version": 2,
+    "status": "success",
+    "eval": {
+      "run_id": "okNT0ZriCH7JUrNVfKsGpN",
+      "created": "2025-04-02T09:56:28-05:00",
+      "task": "An R Eval",
+      "task_id": "db9a4f19dcbe84079ad841",
+      "task_version": 0,
+      "task_file": "/Users/simoncouch/Documents/rrr/website_new/blog/2025-04-01-gemini-2-5-pro/index.qmd",
+      "task_attribs": {},
+      "task_args": {},
+      "dataset": {
+        "samples": 28,
+        "sample_ids": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28],
+        "shuffled": false
+      },
+      "model": "o3-mini-2025-01-31",
+      "model_args": {},
+      "config": {},
+      "revision": {
+        "type": "git",
+        "origin": "https://github.com/UKGovernmentBEIS/inspect_ai.git",
+        "commit": "9140d8a2"
+      },
+      "packages": {
+        "inspect_ai": "0.3.63"
+      },
+      "scorers": [
+        {
+          "name": "model_graded_qa(scorer_chat = claude_sonnet_3_7, partial_credit = TRUE)",
+          "options": {},
+          "metrics": [
+            {
+              "name": "mean",
+              "options": {}
+            }
+          ],
+          "metadata": {}
+        }
+      ]
+    },
+    "plan": {
+      "name": "plan",
+      "steps": [
+        {
+          "solver": "generate()",
+          "params": {
+            "1": "as.list(self$samples$input)",
+            "solver_chat": "o3_mini_high"
+          }
+        }
+      ],
+      "config": {}
+    },
+    "results": {
+      "total_samples": 84,
+      "completed_samples": 84,
+      "scores": [
+        {
+          "name": "model_graded_qa(scorer_chat = claude_sonnet_3_7, partial_credit = TRUE)",
+          "scorer": "model_graded_qa(scorer_chat = claude_sonnet_3_7, partial_credit = TRUE)",
+          "params": {},
+          "metrics": {
+            "accuracy": {
+              "name": "accuracy",
+              "value": 53.5714,
+              "params": {
+                "1": "numeric_scores"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "stats": {
+      "started_at": "2025-03-31T17:22:35-05:00",
+      "completed_at": "2025-04-02T09:56:28-05:00",
+      "model_usage": {}
+    }
+  },
+  "2025-04-02T09-56-34-05-00_An-R-Eval_db9a4f19dcbe84079ad841.json": {
+    "version": 2,
+    "status": "success",
+    "eval": {
+      "run_id": "B2yvmNXdYu7EES2fPgunPq",
+      "created": "2025-04-02T09:56:34-05:00",
+      "task": "An R Eval",
+      "task_id": "db9a4f19dcbe84079ad841",
+      "task_version": 0,
+      "task_file": "/Users/simoncouch/Documents/rrr/website_new/blog/2025-04-01-gemini-2-5-pro/index.qmd",
+      "task_attribs": {},
+      "task_args": {},
+      "dataset": {
+        "samples": 28,
+        "sample_ids": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28],
+        "shuffled": false
+      },
+      "model": "claude-3-7-sonnet-20250219",
+      "model_args": {},
+      "config": {},
+      "revision": {
+        "type": "git",
+        "origin": "https://github.com/UKGovernmentBEIS/inspect_ai.git",
+        "commit": "9140d8a2"
+      },
+      "packages": {
+        "inspect_ai": "0.3.63"
+      },
+      "scorers": [
+        {
+          "name": "model_graded_qa(scorer_chat = claude_sonnet_3_7, partial_credit = TRUE)",
+          "options": {},
+          "metrics": [
+            {
+              "name": "mean",
+              "options": {}
+            }
+          ],
+          "metadata": {}
+        }
+      ]
+    },
+    "plan": {
+      "name": "plan",
+      "steps": [
+        {
+          "solver": "generate()",
+          "params": {
+            "1": "as.list(self$samples$input)",
+            "solver_chat": "claude_sonnet_3_7"
+          }
+        }
+      ],
+      "config": {}
+    },
+    "results": {
+      "total_samples": 84,
+      "completed_samples": 84,
+      "scores": [
+        {
+          "name": "model_graded_qa(scorer_chat = claude_sonnet_3_7, partial_credit = TRUE)",
+          "scorer": "model_graded_qa(scorer_chat = claude_sonnet_3_7, partial_credit = TRUE)",
+          "params": {},
+          "metrics": {
+            "accuracy": {
+              "name": "accuracy",
+              "value": 58.3333,
+              "params": {
+                "1": "numeric_scores"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "stats": {
+      "started_at": "2025-03-31T18:43:15-05:00",
+      "completed_at": "2025-04-02T09:56:34-05:00",
+      "model_usage": {
+        "claude-3-7-sonnet-20250219": {
+          "input_tokens": 45885,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "output_tokens": 35209,
+          "total_tokens": 81094
+        }
+      }
+    }
+  }
+}

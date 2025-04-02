@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.40">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta name="dcterms.date" content="2025-04-02">
+<title>How Good Is Gemini 2.5 Pro at Writing R Code? | Simon P. Couch – Simon P. Couch</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../assets/cabin.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-a2d2da6447bc21d3e680c795c75d6b9d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script><script async="" src="https://www.googletagmanager.com/gtag/js?id=G-DDB8R0B1ZW"></script><script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
+</script>
+</head>
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner"><nav class="navbar navbar-expand-lg " data-bs-theme="dark"><div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../assets/cabin.png" alt="" class="navbar-logo"></a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Simon P. Couch</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+<li class="nav-item">
+    <a class="nav-link" href="../../about/index.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog/index.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../software.html"> 
+<span class="menu-text">Software</span></a>
+  </li>  
+</ul>
+</div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+    <a href="https://www.github.com/simonpcouch/website" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav></header><!-- content --><header id="title-block-header" class="quarto-title-block default page-columns page-full"><div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">How Good Is Gemini 2.5 Pro at Writing R Code?</h1>
+            <p class="subtitle lead">Since Gemini 2.5 Pro’s release last week, I’ve been seeing a lot of hype claiming that the model is the new state of the art. How well does it know R?</p>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">April 2, 2025</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content"><p>Since Gemini 2.5 Pro Experimental’s <a href="https://blog.google/technology/google-deepmind/gemini-model-thinking-updates-march-2025/">release</a> last week, I’ve been seeing a <a href="https://thezvi.substack.com/p/gemini-25-is-the-new-sota?utm_source=post-email-title&amp;publication_id=573100&amp;post_id=160014258&amp;utm_campaign=email-post-title&amp;isFreemail=true&amp;r=21np6y&amp;triedRedirect=true&amp;utm_medium=email">lot</a> <a href="https://simonwillison.net/2025/Mar/25/gemini/">of</a> <a href="https://www.youtube.com/watch?v=A0V4km88tFc&amp;t=700s">hype</a> claiming that the model is the new state of the art. I’ve been wondering—how good is this model at writing R code?</p>
+<p>As it happens, I’ve been working on <a href="https://simonpcouch.github.io/rinspect/">a new tool</a> for large language model evaluation in R. The package is still pretty early on in it’s development, but I figured this might be a good opportunity to kick the tires publicly.</p>
+<blockquote class="blockquote">
+<p><em>tl;dr</em>:</p>
+<ul>
+<li>Gemini 2.5 Pro is definitely an improvement over Gemini 2.0 Flash.</li>
+<li>Gemini 2.5 Pro seems “up there” with Claude Sonnet 3.7 and o3-Mini High.</li>
+<li>If Gemini 2.5 Pro ends up being as cheap as Gemini 2.0 Flash over the API, I would seriously consider transitioning to Gemini for most of what I currently use Claude for.</li>
+</ul>
+</blockquote>
+<section id="introducing-rinspect" class="level2"><h2 class="anchored" data-anchor-id="introducing-rinspect">Introducing rinspect</h2>
+<p>rinspect is an R port of the widely adopted Python framework <a href="https://inspect.ai-safety-institute.org.uk/">Inspect</a>. While the package doesn’t integrate with Inspect directly, it allows users to interface with the <a href="https://inspect.ai-safety-institute.org.uk/log-viewer.html">Inspect log viewer</a> and shares much of its grammar and philosophy.</p>
+<p>rinspect describes LLM evals in three core components:</p>
+<ol type="1">
+<li>
+<strong>Datasets</strong> contain a set of labelled samples. Datasets are just a tibble with columns <code>input</code> and <code>target</code>, where <code>input</code> is a prompt and <code>target</code> is either literal value(s) or grading guidance.</li>
+<li>
+<strong>Solvers</strong> evaluate the <code>input</code> in the dataset and produce a final result (hopefully) approximating <code>target</code>. In rinspect, the simplest solver is just an ellmer chat (e.g.&nbsp;<a href="https://ellmer.tidyverse.org/reference/chat_claude.html"><code>ellmer::chat_claude()</code></a>) wrapped in <code><a href="https://simonpcouch.github.io/rinspect/reference/generate.html">generate()</a></code>, i.e.&nbsp;<code>generate(ellmer::chat_claude())</code>), which will call the <a href="https://ellmer.tidyverse.org/reference/Chat.html#method-Chat-chat">Chat object’s <code>$chat()</code> method</a> and return whatever it returns.</li>
+<li>
+<strong>Scorers</strong> evaluate the final output of solvers. They may use text comparisons, model grading, or other custom schemes to determine how well the solver approximated the <code>target</code> based on the <code>input</code>.</li>
+</ol>
+<p>In this blog post, we’ll apply a solver powered by four different models to a dataset of R coding problems. Google’s Gemini 2.5 Pro Experimental will be the first. We’ll compare that model to its previous generation, Gemini 2.0 Flash. Otherwise, it’s a bit difficult to determine reasonable “peers” to the model without knowing what the model’s API cost will be, but we could use <a href="https://openai.com/index/openai-o3-mini/">OpenAI’s o3-mini-high</a> and <a href="https://www.anthropic.com/news/claude-3-7-sonnet">Anthropic’s Claude Sonnet 3.7 Extended Thinking</a> as peer models since Google used them in the linked release post. We’ll then use the same scorer to evaluate how well each model performed.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>I was unable to get Claude Sonnet 3.7’s “thinking” enabled properly with ellmer; an apples-to-apples comparison would use that setting.</p>
+</div>
+</div>
+<p>In ellmer, here’s how we define those model connections:</p>
+<div class="cell">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ellmer.tidyverse.org">ellmer</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">gemini_2_5_pro</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ellmer.tidyverse.org/reference/chat_gemini.html">chat_gemini</a></span><span class="op">(</span>model <span class="op">=</span> <span class="st">"gemini-2.5-pro-exp-03-25"</span><span class="op">)</span></span>
+<span><span class="va">gemini_2_0_flash</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ellmer.tidyverse.org/reference/chat_gemini.html">chat_gemini</a></span><span class="op">(</span>model <span class="op">=</span> <span class="st">"gemini-2.0-flash"</span><span class="op">)</span></span>
+<span><span class="va">o3_mini_high</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ellmer.tidyverse.org/reference/chat_openai.html">chat_openai</a></span><span class="op">(</span></span>
+<span>  model <span class="op">=</span> <span class="st">"o3-mini"</span>, </span>
+<span>  api_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>reasoning_effort <span class="op">=</span> <span class="st">"high"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">claude_sonnet_3_7</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ellmer.tidyverse.org/reference/chat_claude.html">chat_claude</a></span><span class="op">(</span>model <span class="op">=</span> <span class="st">"claude-3-7-sonnet-latest"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Note that I needed to configure a <code>GOOGLE_API_KEY</code>, <code>OPENAI_API_KEY</code>, and <code>ANTHROPIC_API_KEY</code> to connect to these models, respectively. Gemini 2.5 Pro Experimental is currently free but heavily rate-limited. Here are the prices per million tokens for the other models<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 3
+  Name              Input Output
+  &lt;chr&gt;             &lt;chr&gt; &lt;chr&gt; 
+1 Gemini 2.0 Flash  $0.10 $0.40 
+2 ChatGPT o3-mini   $1.10 $4.40 
+3 Claude 3.7 Sonnet $3.00 $15.00</code></pre>
+</div>
+</div>
+</section><section id="an-r-eval-dataset" class="level2"><h2 class="anchored" data-anchor-id="an-r-eval-dataset">An R Eval dataset</h2>
+<div class="cell">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/simonpcouch/rinspect">rinspect</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We’ll use a dataset that ships with rinspect called <code>are</code>, or “An R Eval.” From the <code>are</code> docs:</p>
+<blockquote class="blockquote">
+<p>An R Eval is a dataset of challenging R coding problems. Each <code>input</code> is a question about R code which could be solved on first-read only by human experts and, with a chance to read documentation and run some code, by fluent data scientists. Solutions are in <code>target</code> and enable a fluent data scientist to evaluate whether the solution deserves full, partial, or no credit.</p>
+</blockquote>
+<div class="cell">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">are</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 28
+Columns: 7
+$ title     &lt;chr&gt; "after-stat-bar-heights", "conditional-grouped-sum…
+$ input     &lt;chr&gt; "This bar chart shows the count of different cuts …
+$ target    &lt;chr&gt; "Preferably: \n\n```\nggplot(data = diamonds) + \n…
+$ domain    &lt;chr&gt; "Data analysis", "Data analysis", "Data analysis",…
+$ task      &lt;chr&gt; "New code", "New code", "New code", "Debugging", "…
+$ source    &lt;chr&gt; "https://jrnold.github.io/r4ds-exercise-solutions/…
+$ knowledge &lt;list&gt; "tidyverse", "tidyverse", "tidyverse", "r-lib", "…</code></pre>
+</div>
+</div>
+<p>At a high level:</p>
+<ul>
+<li>
+<code>title</code>: A unique identifier for the problem.</li>
+<li>
+<code>input</code>: The question to be answered.</li>
+<li>
+<code>target</code>: The solution, often with a description of notable features of a correct solution.</li>
+<li>
+<code>domain</code>, <code>task</code>, and <code>knowledge</code> are pieces of metadata describing the kind of R coding challenge.</li>
+<li>
+<code>source</code>: Where the problem came from, as a URL. Many of these coding problems are adapted “from the wild” and include the kinds of context usually available to those answering questions.</li>
+</ul>
+<p>For the purposes of actually carrying out the initial evaluation, we’re specifically interested in the <code>input</code> and <code>target</code> columns. Let’s print out the first entry in full so you can get a taste of a typical problem in this dataset:</p>
+<div class="cell">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="va">are</span><span class="op">$</span><span class="va">input</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>This bar chart shows the count of different cuts of diamonds,
+and each bar is stacked and filled according to clarity:
+
+```
+ggplot(data = diamonds) +
+geom_bar(mapping = aes(x = cut, fill = clarity))
+```
+
+Could you change this code so that the proportion of diamonds
+with a given cut corresponds to the bar height and not the
+count? Each bar should still be filled according to clarity.</code></pre>
+</div>
+</div>
+<p>Here’s the suggested solution:</p>
+<div class="cell">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="va">are</span><span class="op">$</span><span class="va">target</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Preferably:
+
+```
+ggplot(data = diamonds) +
+geom_bar(aes(x = cut, y = after_stat(count) /
+sum(after_stat(count)), fill = clarity))
+```
+
+The dot-dot notation (`..count..`) was deprecated in ggplot2
+3.4.0, but it still works:
+
+```
+ggplot(data = diamonds) +
+geom_bar(aes(x = cut, y = ..count.. / sum(..count..), fill =
+clarity))
+```
+
+Simply setting `position = "fill" will result in each bar
+having a height of 1 and is not correct.</code></pre>
+</div>
+</div>
+<p>For now, <code>are</code> was publicly shared after the knowledge cutoff of each of these models, so the answers to these questions (likely) aren’t yet incorporated into the models’ weights.</p>
+</section><section id="evaluating-gemini" class="level2"><h2 class="anchored" data-anchor-id="evaluating-gemini">Evaluating Gemini</h2>
+<p>LLM evaluation with rinspect happens in two main steps:</p>
+<p><strong>First</strong>, use <code>Task$new()</code> to situate a dataset, solver, and scorer in a <code>Task</code>. <a href="https://simonpcouch.github.io/rinspect/reference/Task.html">Tasks</a> are R6 objects that define important methods and data structures for LLM evaluation. Below, I use <code><a href="https://simonpcouch.github.io/rinspect/reference/generate.html">generate()</a></code> as a solver, currently the only built-in solver supplied by the package. Think of it like Chat objects’ <code>$chat()</code> method with some bells and whistles—parallel requests, some nice progress functionality, and lots of logging. <code><a href="https://simonpcouch.github.io/rinspect/reference/generate.html">generate()</a></code> returns a function that has one argument, <code>solver_chat</code>, which takes an ellmer Chat; you can set a default Chat by supplying it to <code><a href="https://simonpcouch.github.io/rinspect/reference/generate.html">generate()</a></code> itself. The scorer, <code><a href="https://simonpcouch.github.io/rinspect/reference/scorer_model.html">model_graded_qa()</a></code>, uses model grading (or “LLM-as-a-judge”) to score the solver’s responses. Different models exhibit different behaviors as judges, so I use the same model (Claude Sonnet 3.7) as the judge regardless of which model is being evaluated.</p>
+<div class="cell">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">are_task</span> <span class="op">&lt;-</span> <span class="va"><a href="https://simonpcouch.github.io/rinspect/reference/Task.html">Task</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
+<span>  dataset <span class="op">=</span> <span class="va">are</span>,</span>
+<span>  solver <span class="op">=</span> <span class="fu"><a href="https://simonpcouch.github.io/rinspect/reference/generate.html">generate</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  scorer <span class="op">=</span> <span class="fu"><a href="https://simonpcouch.github.io/rinspect/reference/scorer_model.html">model_graded_qa</a></span><span class="op">(</span></span>
+<span>    scorer_chat <span class="op">=</span> <span class="va">claude_sonnet_3_7</span>, </span>
+<span>    partial_credit <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  name <span class="op">=</span> <span class="st">"An R Eval"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">are_task</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>An evaluation task An R Eval.</code></pre>
+</div>
+</div>
+<p><strong>Second</strong>, use <code>Task$eval()</code> to evaluate the solver, evaluate the scorer, and then explore a persistent log of the results in an interactive viewer.</p>
+<div class="cell">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">are_task_gemini_2_5</span> <span class="op">&lt;-</span> <span class="va">are_task</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">are_task_gemini_2_5</span><span class="op">$</span><span class="fu">eval</span><span class="op">(</span></span>
+<span>  solver_chat <span class="op">=</span> <span class="va">gemini_2_5_pro</span>,</span>
+<span>  epochs <span class="op">=</span> <span class="fl">3</span></span>
+<span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>You can also run <code>$eval()</code> step-by-step, if you want; <code>$eval()</code> just calls <code>$solve()</code>, <code>$score()</code>, <code>$log()</code>, and <code>$view()</code> in sequence.</p>
+</div>
+</div>
+<p>After evaluation, the task contains information from the solving and scoring steps. Here’s what the model responded to that first question with:</p>
+<div class="cell">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="va">are_task_gemini_2_5</span><span class="op">$</span><span class="va">samples</span><span class="op">$</span><span class="va">result</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Okay, you can achieve this by changing the `position` argument
+within `geom_bar`. The default is `"stack"`, which stacks the
+raw counts. You want `"fill"`, which stacks the proportions so
+that each bar sums to 1 (or 100%).
+
+Here's the modified code:
+
+```R
+# Load the ggplot2 library if you haven't already
+# library(ggplot2)
+# The diamonds dataset is built into ggplot2
+
+ggplot(data = diamonds) +
+geom_bar(mapping = aes(x = cut, fill = clarity), position =
+"fill") +
+labs(y = "Proportion", title = "Proportion of Clarity Levels
+within each Diamond Cut") # Optional: Add informative labels
+```
+
+**Explanation:**
+
+1.  `ggplot(data = diamonds)`: Initializes the plot using the
+`diamonds` dataset.
+2.  `geom_bar(...)`: Specifies that you want a bar chart.
+3.  `mapping = aes(x = cut, fill = clarity)`: Maps the `cut`
+variable to the x-axis and the `clarity` variable to the fill
+color of the bars.
+4.  `position = "fill"`: This is the key change. It tells
+`geom_bar` to calculate the count for each `fill` category
+(clarity) within each `x` category (cut), but then normalizes
+these counts so that the total height of each bar represents 1
+(or 100%). The segments within the bar then show the
+*proportion* of each clarity level for that specific cut.
+5.  `labs(y = "Proportion", ...)`: (Optional but recommended)
+Changes the default y-axis label from "count" to "Proportion"
+to accurately reflect what the axis now represents, and adds a
+title.</code></pre>
+</div>
+</div>
+<p>Then, since we’ve supplied <code><a href="https://simonpcouch.github.io/rinspect/reference/scorer_model.html">model_graded_qa()</a></code> as the scorer, Claude Sonnet 3.7 will be supplied the input question, the grading guidance, and the solver’s output, and asked to determine whether the solution is incorrect, partially correct, or correct. Here’s Claude’s grading transcript for the solver’s first answer:</p>
+<div class="cell">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="va">are_task_gemini_2_5</span><span class="op">$</span><span class="va">samples</span><span class="op">$</span><span class="va">scorer_chat</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="fu">last_turn</span><span class="op">(</span><span class="op">)</span><span class="op">@</span><span class="va">text</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>I need to assess whether the submitted answer meets the
+criterion, which specifies that the proportion of diamonds
+with a given cut should correspond to the bar height.
+
+The criterion clearly states that the correct approach is to
+use:
+```
+ggplot(data = diamonds) +
+geom_bar(aes(x = cut, y = after_stat(count) /
+sum(after_stat(count)), fill = clarity))
+```
+
+The submission instead recommends using:
+```
+ggplot(data = diamonds) +
+geom_bar(mapping = aes(x = cut, fill = clarity), position =
+"fill")
+```
+
+The criterion explicitly states that "Simply setting `position
+= "fill"` will result in each bar having a height of 1 and is
+not correct." This is because `position = "fill"` normalizes
+within each cut category, making each bar the same height
+(1.0), with the segments showing the proportions of clarity
+within each cut.
+
+In contrast, the approach specified in the criterion uses
+`after_stat(count) / sum(after_stat(count))` to calculate the
+proportion of each cut relative to the total number of
+diamonds. This ensures that the bar heights represent the
+proportion of diamonds with each cut, while still maintaining
+the clarity breakdown within each bar.
+
+Since the submission provides a solution that contradicts what
+the criterion explicitly identifies as incorrect, the answer
+does not meet the requirements.
+
+GRADE: I</code></pre>
+</div>
+</div>
+<p>rinspect ships with the Inspect Log Viewer, a small .js app that allows you to interactively explore evaluation logs. Especially the first few times you run an eval, the tool is super helpful for uncovering unexpected behavior in solving and scoring. I’ve embedded the viewer in this post so you can check out the problems in <em>An R Eval</em> and how effectively Gemini 2.5 Pro Experimental handled them:</p>
+<div class="cell">
+<div class="cell-output-display">
+<iframe src="../../assets/2025-04-01-gemini-2-5-pro/viewer/index.html" width="100%" height="600px" style="border-radius: 10px; box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);"></iframe>
+</div>
+</div>
+<p>I’d encourage you to poke around in this app! You’ll certainly see some bugs that I’ve still yet to work out and some surprising behavior from the scorer, but there’s lots to be learned about how these models work from evaluation logs.</p>
+</section><section id="evaluating-comparison-models" class="level2"><h2 class="anchored" data-anchor-id="evaluating-comparison-models">Evaluating Comparison Models</h2>
+<p>We can evaluate the remaining models by cloning the original task and running <code>$eval()</code> with a new solver chat. First, to evaluate the previous Gemini generation, Gemini 2.0 Flash:</p>
+<div class="cell">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">are_task_gemini_2_0</span> <span class="op">&lt;-</span> <span class="va">are_task</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">are_task_gemini_2_0</span><span class="op">$</span><span class="fu">eval</span><span class="op">(</span></span>
+<span>  solver_chat <span class="op">=</span> <span class="va">gemini_2_0_flash</span>,</span>
+<span>  epochs <span class="op">=</span> <span class="fl">3</span></span>
+<span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>For o3-mini high:</p>
+<div class="cell">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">are_task_o3_mini_high</span> <span class="op">&lt;-</span> <span class="va">are_task</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">are_task_o3_mini_high</span><span class="op">$</span><span class="fu">eval</span><span class="op">(</span></span>
+<span>  solver_chat <span class="op">=</span> <span class="va">o3_mini_high</span>,</span>
+<span>  epochs <span class="op">=</span> <span class="fl">3</span></span>
+<span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Finally, for Claude Sonnet 3.7:</p>
+<div class="cell">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">are_task_claude_sonnet_3_7</span> <span class="op">&lt;-</span> <span class="va">are_task</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">are_task_claude_sonnet_3_7</span><span class="op">$</span><span class="fu">eval</span><span class="op">(</span></span>
+<span>  solver_chat <span class="op">=</span> <span class="va">claude_sonnet_3_7</span>,</span>
+<span>  epochs <span class="op">=</span> <span class="fl">3</span></span>
+<span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>I’ve also situated the logs for both of the above evaluations in the above app—just click the three stacked bars in the top right of the app to check out the logs for 2.0 Flash, o3-mini and Sonnet 3.7.</p>
+</section><section id="analysis" class="level2"><h2 class="anchored" data-anchor-id="analysis">Analysis</h2>
+<p>At evaluation time, rinspect does a naive accuracy calculation that you can see displayed in the app, but in general is quite restrained in its analysis functionality. Instead, the package aims to get analysts to Happy Data Frame Land as quickly as possible using <code><a href="https://simonpcouch.github.io/rinspect/reference/inspect_bind.html">inspect_bind()</a></code>:</p>
+<div class="cell">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">are_eval</span> <span class="op">&lt;-</span> </span>
+<span>  <span class="fu"><a href="https://simonpcouch.github.io/rinspect/reference/inspect_bind.html">inspect_bind</a></span><span class="op">(</span></span>
+<span>    `Gemini 2.5 Pro Experimental` <span class="op">=</span> <span class="va">are_task_gemini_2_5</span>,</span>
+<span>    `Gemini 2.0 Flash` <span class="op">=</span> <span class="va">are_task_gemini_2_0</span>,</span>
+<span>    `o3-Mini High` <span class="op">=</span> <span class="va">are_task_o3_mini_high</span>,</span>
+<span>    `Claude Sonnet 3.7 (No Thinking)` <span class="op">=</span> <span class="va">are_task_claude_sonnet_3_7</span>,</span>
+<span>  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">task</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
+<span>    model <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">model</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span></span>
+<span>      <span class="st">"Gemini 2.5 Pro Experimental"</span>, </span>
+<span>      <span class="st">"Gemini 2.0 Flash"</span>, </span>
+<span>      <span class="st">"o3-Mini High"</span>, </span>
+<span>      <span class="st">"Claude Sonnet 3.7 (No Thinking)"</span></span>
+<span>    <span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="va">are_eval</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 336 × 5
+   model                          id epoch score metadata         
+   &lt;fct&gt;                       &lt;int&gt; &lt;int&gt; &lt;ord&gt; &lt;list&gt;           
+ 1 Gemini 2.5 Pro Experimental     1     1 I     &lt;tibble [1 × 11]&gt;
+ 2 Gemini 2.5 Pro Experimental     1     2 I     &lt;tibble [1 × 11]&gt;
+ 3 Gemini 2.5 Pro Experimental     1     3 I     &lt;tibble [1 × 11]&gt;
+ 4 Gemini 2.5 Pro Experimental     2     1 I     &lt;tibble [1 × 11]&gt;
+ 5 Gemini 2.5 Pro Experimental     2     2 P     &lt;tibble [1 × 11]&gt;
+ 6 Gemini 2.5 Pro Experimental     2     3 I     &lt;tibble [1 × 11]&gt;
+ 7 Gemini 2.5 Pro Experimental     3     1 C     &lt;tibble [1 × 11]&gt;
+ 8 Gemini 2.5 Pro Experimental     3     2 C     &lt;tibble [1 × 11]&gt;
+ 9 Gemini 2.5 Pro Experimental     3     3 P     &lt;tibble [1 × 11]&gt;
+10 Gemini 2.5 Pro Experimental     4     1 I     &lt;tibble [1 × 11]&gt;
+# ℹ 326 more rows</code></pre>
+</div>
+</div>
+<p>In this dataset, each row represents a single time a solver is invoked to answer a question:</p>
+<ul>
+<li><p><code>model</code> gives the model used to solve a given question</p></li>
+<li><p><code>id</code> gives the question id</p></li>
+<li><p><code>epoch</code> identifies the run/resample of the given question</p></li>
+<li><p><code>scores</code> shows whether the scoring model (Claude Sonnet 3.7) identified the solver’s answer as Incorrect, Partially Correct, or Correct. It’s an ordinal factor with <code>I &lt; P &lt; C</code>.</p></li>
+<li><p><code>metadata</code> is a list column containing just about all of the information that rinspect collects during the evaluation process.</p></li>
+</ul>
+<p>We’re interested in which of these three models are right more often. We have 28 unique questions, each resampled across 3 epochs for each of 4 models. For a cursory analysis, we could do the canonical Bar Chart Dodged By Model visualization:</p>
+<div class="cell">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">are_eval</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
+<span>    score <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/fct_rev.html">fct_rev</a></span><span class="op">(</span><span class="va">score</span><span class="op">)</span>,</span>
+<span>    score <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/fct_recode.html">fct_recode</a></span><span class="op">(</span></span>
+<span>      <span class="va">score</span>, </span>
+<span>      <span class="st">"Correct"</span> <span class="op">=</span> <span class="st">"C"</span>, <span class="st">"Partially Correct"</span> <span class="op">=</span> <span class="st">"P"</span>, <span class="st">"Incorrect"</span> <span class="op">=</span> <span class="st">"I"</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">score</span>, fill <span class="op">=</span> <span class="va">model</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">geom_bar</a></span><span class="op">(</span>position <span class="op">=</span> <span class="st">"dodge"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span></span>
+<span>    <span class="st">"Gemini 2.5 Pro Experimental"</span> <span class="op">=</span> <span class="st">"#5CB85C"</span>, </span>
+<span>    <span class="st">"Gemini 2.0 Flash"</span> <span class="op">=</span> <span class="st">"#8BC34A"</span>,</span>
+<span>    <span class="st">"o3-Mini High"</span> <span class="op">=</span> <span class="st">"#69b1cf"</span>, </span>
+<span>    <span class="st">"Claude Sonnet 3.7 (No Thinking)"</span> <span class="op">=</span> <span class="st">"#d6941a"</span></span>
+<span>  <span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span></span>
+<span>    x <span class="op">=</span> <span class="st">"Score"</span>, y <span class="op">=</span> <span class="st">"Count"</span>, </span>
+<span>    title <span class="op">=</span> <span class="st">"An R Eval"</span>,</span>
+<span>    subtitle <span class="op">=</span> </span>
+<span>      <span class="st">"The newest Gemini release is a substantial improvement on the previous\ngeneration and is a contender with Claude and o3-mini on R coding problems."</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>plot.subtitle <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>face <span class="op">=</span> <span class="st">"italic"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="index_files/figure-html/plot-are-eval-1.png" class="img-fluid figure-img" style="width:100.0%" alt="A ggplot2 bar plot showing the counts of correct, partially correct, and incorrect answers from various LLMs on R coding problems. Generally, Gemini Pro 2.5, o3-mini High, and Claude Sonnet 3.7 get around half of the problems correct. Gemini 2.0 Flash is more like a third."></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Could the differences we’re seeing be attributed to random noise, though? We can use a hierarchical modeling technique called a mixed model to model the probability of each score (i.e., correct, etc.) as a function of the LLM. In this case, observations are not independent; some questions may be harder than others, and we’re repeating each question multiple times since we’ve set <code>epochs = 3</code>. A random intercept on the question <code>id</code> can help account for this variation. Since <code>score</code> is ordinal, we use a cumulative link mixed model rather than the usual suspect <code><a href="https://rdrr.io/pkg/lme4/man/glmer.html">lme4::glmer()</a></code>:</p>
+<div class="cell">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/runehaubo/ordinal">ordinal</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">are_mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ordinal/man/clmm.html">clmm</a></span><span class="op">(</span><span class="va">score</span> <span class="op">~</span> <span class="va">model</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span><span class="op">|</span><span class="va">id</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">are_eval</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">are_mod</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Cumulative Link Mixed Model fitted with the Laplace approximation
+
+formula: score ~ model + (1 | id)
+data:    are_eval
+
+ link  threshold nobs logLik  AIC    niter     max.grad cond.H 
+ logit flexible  336  -257.80 527.59 213(1039) 1.59e-04 4.6e+01
+
+Random effects:
+ Groups Name        Variance Std.Dev.
+ id     (Intercept) 7.561    2.75    
+Number of groups:  id 28 
+
+Coefficients:
+                                     Estimate Std. Error z value
+modelGemini 2.0 Flash                -1.48455    0.38106  -3.896
+modelo3-Mini High                    -0.29653    0.37041  -0.801
+modelClaude Sonnet 3.7 (No Thinking) -0.04314    0.36520  -0.118
+                                     Pr(&gt;|z|)    
+modelGemini 2.0 Flash                9.79e-05 ***
+modelo3-Mini High                       0.423    
+modelClaude Sonnet 3.7 (No Thinking)    0.906    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Threshold coefficients:
+    Estimate Std. Error z value
+I|P  -1.4919     0.6059  -2.462
+P|C   0.2869     0.5975   0.480</code></pre>
+</div>
+</div>
+<p>Gemini 2.0 Flash performs notably worse than the reference Gemini 2.5 Pro Experimental model (-1.485, p &lt; 0.001), with an odds ratio of 0.23, indicating substantially lower odds of achieving higher rating categories. 2.5 Pro’s peers, o3-Mini High and Claude Sonnet 3.7, show largely comparable performance to 2.5 Pro. The substantial random effect variance indicates that question difficulty varies considerably and has a strong influence on performance. With threshold values of -1.49 (I|P) and 0.29 (P|C), the model suggests a larger gap between Incorrect and Partially Correct responses than between Partially Correct and Correct ones.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Keep an eye out for a rinspect vignette with a more thorough model-based analysis than this one in the near future.</p>
+</div>
+</div>
+<p>Based on those results, it seems like we can make a few conclusions:</p>
+<ul>
+<li>Gemini 2.5 Pro is certainly an improvement over Gemini 2.0 Flash.</li>
+<li>Gemini 2.5 Pro seems “up there” with Claude Sonnet 3.7 and o3-Mini High when it comes to writing R code.</li>
+<li>
+<em>An R Eval</em>, and the scoring functionality I associate it with, definitely needs some more work. :)</li>
+</ul>
+<p>Again, Google has yet to announce API pricing for Gemini 2.5 Pro. If Gemini 2.5 Pro’s API is comparable to Gemini 2.0 Flash’s, I might agree that we have a new SoTA on our hands! In that case, I might consider switching my go-to coding assistance model from Claude more seriously.</p>
+<hr>
+<p><em>Thank you to Max Kuhn for advising on the model-based analysis here, and to Hadley Wickham for suggesting that I also evaluate against the previous Gemini model. Grateful for your mentorship.</em></p>
+
+
+</section><a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a><div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+<ol>
+<li id="fn1"><p>Altogether, the data underlying this blog post took around $3 USD to generate.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol></section><section class="quarto-appendix-contents" id="quarto-reuse"><h2 class="anchored quarto-appendix-heading">Reuse</h2><div class="quarto-appendix-contents"><div><a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a></div></div></section></div></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/simonpcouch\.com");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><script src="https://utteranc.es/client.js" repo="simonpcouch/website" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script>
+</div> <!-- /content -->
+<footer class="footer"><div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© 2024 Simon P. Couch ∙ Made with <a href="https://quarto.org">Quarto</a></p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+</body></html>

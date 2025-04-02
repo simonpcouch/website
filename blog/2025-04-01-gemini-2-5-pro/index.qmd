@@ -1,0 +1,408 @@
+---
+title: "How Good Is Gemini 2.5 Pro at Writing R Code?"
+date: '2025-04-02'
+tags:
+  - ai
+  - gemini
+  - rinspect
+  - rstats
+subtitle: "Since Gemini 2.5 Pro's release last week, I've been seeing a lot of hype claiming that the model is the new state of the art. How well does it know R?"
+image: featured.png
+summary: ''
+---
+
+```{r setup}
+#| include: false
+options(ellmer_timeout_s = 1000)
+Sys.setenv(INSPECT_LOG_DIR = "blog/2025-04-01-gemini-2-5-pro/logs")
+should_eval <- FALSE
+
+task_files <- list.files(here::here("blog/2025-04-01-gemini-2-5-pro/tasks"), full.names = TRUE)
+for (file in task_files) {
+  load(file)
+}
+
+options(width = 70)
+
+knitr::opts_chunk$set(
+  fig.width = 6, 
+  fig.asp = 0.618, 
+  out.width = "100%", 
+  message = FALSE, 
+  warning = FALSE
+)
+
+library(ggplot2)
+theme_set(
+  theme_bw() +
+  theme(
+    panel.border = element_blank(),
+    panel.background = element_rect(fill = "#f8f8f1", color = NA),
+    plot.background = element_rect(fill = "#f8f8f1", color = NA),
+    legend.background = element_rect(fill = "#F3F3EE", color = NA)
+  )
+)
+
+options(
+  ggplot2.discrete.colour = c(
+    "#ccb118", "#4A7862", "#8B4513", "#B0B0B0", "#000000"
+  ),
+  ggplot2.discrete.fill = c(
+    "#ccb118", "#4A7862", "#8B4513", "#B0B0B0", "#000000"
+  )
+)
+
+library(broom)
+
+cat <- function(x, width = 0.9 * getOption("width")) {
+  lines <- unlist(strsplit(x, "\n"))
+  wrapped <- unlist(lapply(lines, strwrap, width = width))
+  base::cat(wrapped, sep = "\n")
+}
+
+# use this to resize the thumbnail image for the blog post
+optimize_image <- function(
+	image_path, 
+	target_width = 500, 
+	target_quality = 85, 
+	output_format = "png"
+  ) {
+  img <- magick::image_read(image_path)
+  
+  dims <- magick::image_info(img)
+  
+  if (dims$width > target_width) {
+    img <- magick::image_resize(img, paste0(target_width, "x"))
+  }
+  
+  img <- magick::image_write(
+	img, image_path, format = output_format, quality = target_quality
+  )
+  
+  invisible(img)
+}
+```
+
+Since Gemini 2.5 Pro Experimental's [release](https://blog.google/technology/google-deepmind/gemini-model-thinking-updates-march-2025/) last week, I've been seeing a [lot](https://thezvi.substack.com/p/gemini-25-is-the-new-sota?utm_source=post-email-title&publication_id=573100&post_id=160014258&utm_campaign=email-post-title&isFreemail=true&r=21np6y&triedRedirect=true&utm_medium=email) [of](https://simonwillison.net/2025/Mar/25/gemini/) [hype](https://www.youtube.com/watch?v=A0V4km88tFc&t=700s) claiming that the model is the new state of the art. I've been wondering—how good is this model at writing R code?
+
+As it happens, I've been working on [a new tool](https://simonpcouch.github.io/rinspect/) for large language model evaluation in R. The package is still pretty early on in it's development, but I figured this might be a good opportunity to kick the tires publicly.
+
+> _tl;dr_:
+> 
+> * Gemini 2.5 Pro is definitely an improvement over Gemini 2.0 Flash.
+> * Gemini 2.5 Pro seems "up there" with Claude Sonnet 3.7 and o3-Mini High.
+> * If Gemini 2.5 Pro ends up being as cheap as Gemini 2.0 Flash over the API, I would seriously consider transitioning to Gemini for most of what I currently use Claude for.
+
+
+## Introducing rinspect
+
+rinspect is an R port of the widely adopted Python framework [Inspect](https://inspect.ai-safety-institute.org.uk/). While the package doesn't integrate with Inspect directly, it allows users to interface with the [Inspect log viewer](https://inspect.ai-safety-institute.org.uk/log-viewer.html) and shares much of its grammar and philosophy.
+
+rinspect describes LLM evals in three core components:
+
+1)  **Datasets** contain a set of labelled samples. Datasets are just a tibble with columns `input` and `target`, where `input` is a prompt and `target` is either literal value(s) or grading guidance.
+2)  **Solvers** evaluate the `input` in the dataset and produce a final result (hopefully) approximating `target`. In rinspect, the simplest solver is just an ellmer chat (e.g. [`ellmer::chat_claude()`](https://ellmer.tidyverse.org/reference/chat_claude.html)) wrapped in `generate()`, i.e. `generate(ellmer::chat_claude())`), which will call the [Chat object's `$chat()` method](https://ellmer.tidyverse.org/reference/Chat.html#method-Chat-chat) and return whatever it returns.
+3)  **Scorers** evaluate the final output of solvers. They may use text comparisons, model grading, or other custom schemes to determine how well the solver approximated the `target` based on the `input`.
+
+In this blog post, we'll apply a solver powered by four different models to a dataset of R coding problems. Google's Gemini 2.5 Pro Experimental will be the first. We'll compare that model to its previous generation, Gemini 2.0 Flash. Otherwise, it's a bit difficult to determine reasonable "peers" to the model without knowing what the model's API cost will be, but we could use [OpenAI's o3-mini-high](https://openai.com/index/openai-o3-mini/) and [Anthropic's Claude Sonnet 3.7 Extended Thinking](https://www.anthropic.com/news/claude-3-7-sonnet) as peer models since Google used them in the linked release post. We'll then use the same scorer to evaluate how well each model performed.
+
+::: callout-important
+I was unable to get Claude Sonnet 3.7's "thinking" enabled properly with ellmer; an apples-to-apples comparison would use that setting.
+:::
+
+In ellmer, here's how we define those model connections:
+
+```{r candidates}
+library(ellmer)
+
+gemini_2_5_pro <- chat_gemini(model = "gemini-2.5-pro-exp-03-25")
+gemini_2_0_flash <- chat_gemini(model = "gemini-2.0-flash")
+o3_mini_high <- chat_openai(
+  model = "o3-mini", 
+  api_args = list(reasoning_effort = "high")
+)
+claude_sonnet_3_7 <- chat_claude(model = "claude-3-7-sonnet-latest")
+```
+
+Note that I needed to configure a `GOOGLE_API_KEY`, `OPENAI_API_KEY`, and `ANTHROPIC_API_KEY` to connect to these models, respectively. Gemini 2.5 Pro Experimental is currently free but heavily rate-limited. Here are the prices per million tokens for the other models^[Altogether, the data underlying this blog post took around $3 USD to generate.]:
+
+```{r pricing}
+#| echo: false
+tibble::tibble(
+  Name = c("Gemini 2.0 Flash", "ChatGPT o3-mini", "Claude 3.7 Sonnet"),
+  Input = c("$0.10", "$1.10", "$3.00"),
+  Output = c("$0.40", "$4.40", "$15.00")
+)
+```
+
+
+## An R Eval dataset
+
+```{r load-pkgs}
+library(rinspect)
+library(tidyverse)
+```
+
+We'll use a dataset that ships with rinspect called `are`, or "An R Eval." From the `are` docs:
+
+> An R Eval is a dataset of challenging R coding problems. Each `input` is a question about R code which could be solved on first-read only by human experts and, with a chance to read documentation and run some code, by fluent data scientists. Solutions are in `target` and enable a fluent data scientist to evaluate whether the solution deserves full, partial, or no credit.
+
+```{r explore-dataset}
+glimpse(are)
+```
+
+At a high level:
+
+-   `title`: A unique identifier for the problem.
+-   `input`: The question to be answered.
+-   `target`: The solution, often with a description of notable features of a correct solution.
+-   `domain`, `task`, and `knowledge` are pieces of metadata describing the kind of R coding challenge.
+-   `source`: Where the problem came from, as a URL. Many of these coding problems are adapted "from the wild" and include the kinds of context usually available to those answering questions.
+
+For the purposes of actually carrying out the initial evaluation, we're specifically interested in the `input` and `target` columns. Let's print out the first entry in full so you can get a taste of a typical problem in this dataset:
+
+```{r input-1}
+cat(are$input[1])
+```
+
+Here's the suggested solution:
+
+```{r target-1}
+cat(are$target[1])
+```
+
+For now, `are` was publicly shared after the knowledge cutoff of each of these models, so the answers to these questions (likely) aren't yet incorporated into the models' weights.
+
+## Evaluating Gemini
+
+LLM evaluation with rinspect happens in two main steps:
+
+**First**, use `Task$new()` to situate a dataset, solver, and scorer in a `Task`. [Tasks](https://simonpcouch.github.io/rinspect/reference/Task.html) are R6 objects that define important methods and data structures for LLM evaluation. Below, I use `generate()` as a solver, currently the only built-in solver supplied by the package. Think of it like Chat objects' `$chat()` method with some bells and whistles—parallel requests, some nice progress functionality, and lots of logging. `generate()` returns a function that has one argument, `solver_chat`, which takes an ellmer Chat; you can set a default Chat by supplying it to `generate()` itself. The scorer, `model_graded_qa()`, uses model grading (or "LLM-as-a-judge") to score the solver's responses. Different models exhibit different behaviors as judges, so I use the same model (Claude Sonnet 3.7) as the judge regardless of which model is being evaluated.
+
+```{r create-task}
+are_task <- Task$new(
+  dataset = are,
+  solver = generate(),
+  scorer = model_graded_qa(
+    scorer_chat = claude_sonnet_3_7, 
+    partial_credit = TRUE
+  ),
+  name = "An R Eval"
+)
+
+are_task
+```
+
+**Second**, use `Task$eval()` to evaluate the solver, evaluate the scorer, and then explore a persistent log of the results in an interactive viewer.
+
+```{r eval-gemini-2-5, eval = should_eval}
+are_task_gemini_2_5 <- are_task$clone()
+are_task_gemini_2_5$eval(
+  solver_chat = gemini_2_5_pro,
+  epochs = 3
+)
+```
+
+:::callout-note
+You can also run `$eval()` step-by-step, if you want; `$eval()` just calls `$solve()`, `$score()`, `$log()`, and `$view()` in sequence.
+:::
+
+```{r mock-gemini-save}
+#| include: false
+#| eval: false
+# had to do this to get Gemini to log successfully:
+testthat::local_mocked_bindings(translate_to_model_usage = function(...) list(), .package = "rinspect")
+testthat::local_mocked_bindings(rename_token_fields = function(...) list(), .package = "rinspect")
+```
+
+```{r save-gemini-2-5, eval = should_eval}
+#| include: false
+if (should_eval) {
+  save(are_task_gemini_2_5, file = "are_task_gemini_2_5.rda")
+}
+```
+
+After evaluation, the task contains information from the solving and scoring steps. Here's what the model responded to that first question with:
+
+```{r output-1}
+cat(are_task_gemini_2_5$samples$result[1])
+```
+
+Then, since we've supplied `model_graded_qa()` as the scorer, Claude Sonnet 3.7 will be supplied the input question, the grading guidance, and the solver's output, and asked to determine whether the solution is incorrect, partially correct, or correct. Here's Claude's grading transcript for the solver's first answer:
+
+```{r grading-1}
+cat(are_task_gemini_2_5$samples$scorer_chat[[1]]$last_turn()@text)
+```
+
+rinspect ships with the Inspect Log Viewer, a small .js app that allows you to interactively explore evaluation logs. Especially the first few times you run an eval, the tool is super helpful for uncovering unexpected behavior in solving and scoring. I've embedded the viewer in this post so you can check out the problems in *An R Eval* and how effectively Gemini 2.5 Pro Experimental handled them:
+
+```{r viewer}
+#| echo: false
+htmltools::tags$iframe(
+  src = "/assets/2025-04-01-gemini-2-5-pro/viewer/index.html",
+  width = "100%", 
+  height = "600px",
+  style = "border-radius: 10px; box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);"
+) 
+```
+
+I'd encourage you to poke around in this app! You'll certainly see some bugs that I've still yet to work out and some surprising behavior from the scorer, but there's lots to be learned about how these models work from evaluation logs.
+
+## Evaluating Comparison Models
+
+We can evaluate the remaining models by cloning the original task and running `$eval()` with a new solver chat. First, to evaluate the previous Gemini generation, Gemini 2.0 Flash:
+
+```{r eval-gemini-2-0, eval = should_eval}
+are_task_gemini_2_0 <- are_task$clone()
+are_task_gemini_2_0$eval(
+  solver_chat = gemini_2_0_flash,
+  epochs = 3
+)
+```
+
+```{r save-gemini-2-0, eval = should_eval}
+#| include: false
+if (should_eval) {
+  save(are_task_gemini_2_0, file = "are_task_gemini_2_0.rda")
+}
+```
+
+For o3-mini high:
+
+```{r eval-o3, eval = should_eval}
+are_task_o3_mini_high <- are_task$clone()
+are_task_o3_mini_high$eval(
+  solver_chat = o3_mini_high,
+  epochs = 3
+)
+```
+
+```{r save-o3, eval = should_eval}
+#| include: false
+if (should_eval) {
+  save(are_task_o3_mini_high, file = "are_task_o3_mini_high.rda")
+}
+```
+
+Finally, for Claude Sonnet 3.7:
+
+```{r eval-claude, eval = should_eval}
+are_task_claude_sonnet_3_7 <- are_task$clone()
+are_task_claude_sonnet_3_7$eval(
+  solver_chat = claude_sonnet_3_7,
+  epochs = 3
+)
+```
+
+```{r save-claude, eval = should_eval}
+#| include: false
+if (should_eval) {
+  save(are_task_claude_sonnet_3_7, file = "are_task_claude_sonnet_3_7.rda")
+}
+```
+
+```{r bundle, eval = should_eval}
+#| include: false
+inspect_bundle(
+  "blog/2025-04-01-gemini-2-5-pro/logs", 
+  "assets/2025-04-01-gemini-2-5-pro/viewer"
+)
+```
+
+I've also situated the logs for both of the above evaluations in the above app—just click the three stacked bars in the top right of the app to check out the logs for 2.0 Flash, o3-mini and Sonnet 3.7.
+
+## Analysis
+
+At evaluation time, rinspect does a naive accuracy calculation that you can see displayed in the app, but in general is quite restrained in its analysis functionality. Instead, the package aims to get analysts to Happy Data Frame Land as quickly as possible using `inspect_bind()`:
+
+```{r are-eval}
+are_eval <- 
+  inspect_bind(
+    `Gemini 2.5 Pro Experimental` = are_task_gemini_2_5,
+    `Gemini 2.0 Flash` = are_task_gemini_2_0,
+    `o3-Mini High` = are_task_o3_mini_high,
+    `Claude Sonnet 3.7 (No Thinking)` = are_task_claude_sonnet_3_7,
+  ) %>%
+  rename(model = task) %>%
+  mutate(
+    model = factor(model, levels = c(
+      "Gemini 2.5 Pro Experimental", 
+      "Gemini 2.0 Flash", 
+      "o3-Mini High", 
+      "Claude Sonnet 3.7 (No Thinking)"
+    ))
+  )
+
+are_eval
+```
+
+In this dataset, each row represents a single time a solver is invoked to answer a question:
+
+-   `model` gives the model used to solve a given question
+
+-   `id` gives the question id
+
+-   `epoch` identifies the run/resample of the given question
+
+-   `scores` shows whether the scoring model (Claude Sonnet 3.7) identified the solver's answer as Incorrect, Partially Correct, or Correct. It's an ordinal factor with `I < P < C`.
+
+-   `metadata` is a list column containing just about all of the information that rinspect collects during the evaluation process.
+
+We're interested in which of these three models are right more often. We have 28 unique questions, each resampled across 3 epochs for each of 4 models. For a cursory analysis, we could do the canonical Bar Chart Dodged By Model visualization:
+
+```{r plot-are-eval}
+#| fig-alt: "A ggplot2 bar plot showing the counts of correct, partially correct, and incorrect answers from various LLMs on R coding problems. Generally, Gemini Pro 2.5, o3-mini High, and Claude Sonnet 3.7 get around half of the problems correct. Gemini 2.0 Flash is more like a third."
+are_eval %>%
+  mutate(
+    score = fct_rev(score),
+    score = fct_recode(
+      score, 
+      "Correct" = "C", "Partially Correct" = "P", "Incorrect" = "I"
+    )
+  ) %>%
+  ggplot(aes(x = score, fill = model)) +
+  geom_bar(position = "dodge") +
+  scale_fill_manual(values = c(
+    "Gemini 2.5 Pro Experimental" = "#5CB85C", 
+    "Gemini 2.0 Flash" = "#8BC34A",
+    "o3-Mini High" = "#69b1cf", 
+    "Claude Sonnet 3.7 (No Thinking)" = "#d6941a"
+  )) +
+  labs(
+    x = "Score", y = "Count", 
+    title = "An R Eval",
+    subtitle = 
+      "The newest Gemini release is a substantial improvement on the previous\ngeneration and is a contender with Claude and o3-mini on R coding problems."
+  ) +
+  theme(plot.subtitle = element_text(face = "italic"))
+```
+
+Could the differences we're seeing be attributed to random noise, though? We can use a hierarchical modeling technique called a mixed model to model the probability of each score (i.e., correct, etc.) as a function of the LLM. In this case, observations are not independent; some questions may be harder than others, and we're repeating each question multiple times since we've set `epochs = 3`. A random intercept on the question `id` can help account for this variation. Since `score` is ordinal, we use a cumulative link mixed model rather than the usual suspect `lme4::glmer()`:
+
+```{r are-mod}
+library(ordinal)
+
+are_mod <- clmm(score ~ model + (1|id), data = are_eval)
+```
+
+```{r summary-are-mod}
+summary(are_mod)
+```
+
+Gemini 2.0 Flash performs notably worse than the reference Gemini 2.5 Pro Experimental model (`r round(are_mod$beta[1], 3)`, p < 0.001), with an odds ratio of `r round(exp(are_mod$beta[1]), 2)`, indicating substantially lower odds of achieving higher rating categories. 2.5 Pro's peers, o3-Mini High and Claude Sonnet 3.7, show largely comparable performance to 2.5 Pro. The substantial random effect variance indicates that question difficulty varies considerably and has a strong influence on performance. With threshold values of `r round(are_mod$alpha[1], 2)` (I|P) and `r round(are_mod$alpha[2], 2)` (P|C), the model suggests a larger gap between Incorrect and Partially Correct responses than between Partially Correct and Correct ones.
+
+:::callout-note
+Keep an eye out for a rinspect vignette with a more thorough model-based analysis than this one in the near future.
+:::
+
+Based on those results, it seems like we can make a few conclusions:
+
+* Gemini 2.5 Pro is certainly an improvement over Gemini 2.0 Flash.
+* Gemini 2.5 Pro seems "up there" with Claude Sonnet 3.7 and o3-Mini High when it comes to writing R code.
+* _An R Eval_, and the scoring functionality I associate it with, definitely needs some more work. :)
+
+Again, Google has yet to announce API pricing for Gemini 2.5 Pro. If Gemini 2.5 Pro's API is comparable to Gemini 2.0 Flash's, I might agree that we have a new SoTA on our hands! In that case, I might consider switching my go-to coding assistance model from Claude more seriously.
+
+----
+
+_Thank you to Max Kuhn for advising on the model-based analysis here, and to Hadley Wickham for suggesting that I also evaluate against the previous Gemini model. Grateful for your mentorship._

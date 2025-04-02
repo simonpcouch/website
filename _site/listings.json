@@ -1,7 +1,12 @@
 [
   {
+    "listing": "/about/index.html",
+    "items": []
+  },
+  {
     "listing": "/blog/index.html",
     "items": [
+      "/blog/2025-04-01-gemini-2-5-pro/index.html",
       "/blog/2025-03-26-claude-code/index.html",
       "/blog/2025-01-30-llm-biases/index.html",
       "/blog/2024-12-23-names/index.html",
@@ -36,9 +41,5 @@
       "/blog/2020-10-27-gentle-intro-stacks/index.html",
       "/blog/2020-10-11-intro/index.html"
     ]
-  },
-  {
-    "listing": "/about/index.html",
-    "items": []
   }
 ]

@@ -10,7 +10,15 @@
 <atom:link href="https://simonpcouch.com/blog/index.xml" rel="self" type="application/rss+xml"/>
 <description>A data science blog</description>
 <generator>quarto-1.6.40</generator>
-<lastBuildDate>Wed, 26 Mar 2025 05:00:00 GMT</lastBuildDate>
+<lastBuildDate>Wed, 02 Apr 2025 05:00:00 GMT</lastBuildDate>
+<item>
+  <title>How Good Is Gemini 2.5 Pro at Writing R Code?</title>
+  <link>https://simonpcouch.com/blog/2025-04-01-gemini-2-5-pro/</link>
+  <description><![CDATA[ Since Gemini 2.5 Pro Experimental’s <a href="https://blog.google/technology/google-deepmind/gemini-model-thinking-updates-march-2025/">release</a> last week, I’ve been seeing a <a href="https://thezvi.substack.com/p/gemini-25-is-the-new-sota?utm_source=post-email-title&amp;publication_id=573100&amp;post_id=160014258&amp;utm_campaign=email-post-title&amp;isFreemail=true&amp;r=21np6y&amp;triedRedirect=true&amp;utm_medium=email">lot</a> <a href="https://simonwillison.net/2025/Mar/25/gemini/">of</a> <a href="https://www.youtube.com/watch?v=A0V4km88tFc&amp;t=700s">hype</a> claiming that the model is the new state of the art. I’ve been wondering—how good is this model at writing R code? ]]></description>
+  <guid>https://simonpcouch.com/blog/2025-04-01-gemini-2-5-pro/</guid>
+  <pubDate>Wed, 02 Apr 2025 05:00:00 GMT</pubDate>
+  <media:content url="https://simonpcouch.com/blog/2025-04-01-gemini-2-5-pro/featured.png" medium="image" type="image/png" height="147" width="144"/>
+</item>
 <item>
   <title>How I’m Using Claude Code to Develop R Packages</title>
   <link>https://simonpcouch.com/blog/2025-03-26-claude-code/</link>
@@ -162,14 +170,6 @@
   <guid>https://simonpcouch.com/blog/2022-07-20-netlify-subdomain-redirect/</guid>
   <pubDate>Wed, 20 Jul 2022 05:00:00 GMT</pubDate>
   <media:content url="https://simonpcouch.com/blog/2022-07-20-netlify-subdomain-redirect/featured.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
-  <title>{infer} v1.0.0 is on CRAN</title>
-  <link>https://simonpcouch.com/blog/2021-08-21-infer-v-1-0-0/</link>
-  <description><![CDATA[ In Fall 2017, during my first semester at Reed, I took an introductory statistics course. A prospective biology major, I was told learning how to code would be helpful later on in my coursework. I used R for the first time during the labs for that class, getting to know packages like {ggplot2} and {dplyr}. Another cornerstone of that class was {infer}, a package whose ubiquity I assumed was similar to {ggplot2} and {dplyr}. At the time, the thought that packages changed over time, or were written by people, or even had source code, had probably yet to occur to me. ]]></description>
-  <guid>https://simonpcouch.com/blog/2021-08-21-infer-v-1-0-0/</guid>
-  <pubDate>Sat, 21 Aug 2021 05:00:00 GMT</pubDate>
-  <media:content url="https://simonpcouch.com/blog/2021-08-21-infer-v-1-0-0/featured.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>
