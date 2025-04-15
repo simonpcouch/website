@@ -1,0 +1,447 @@
+{
+  "2025-04-14T20-34-37-05-00_AnREval_76637178e8679e1c9641d0.json": {
+    "version": 2,
+    "status": "success",
+    "eval": {
+      "run_id": "oUTHWmehHseOSJlZoTyg0A",
+      "created": "2025-04-14T20:34:37-05:00",
+      "task": "AnREval",
+      "task_id": "76637178e8679e1c9641d0",
+      "task_version": 0,
+      "task_file": "/Users/simoncouch/Documents/rrr/website_new/blog/2025-04-15-gpt-4-1/index.qmd",
+      "task_attribs": {},
+      "task_args": {},
+      "dataset": {
+        "samples": 26,
+        "sample_ids": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26],
+        "shuffled": false
+      },
+      "model": "claude-3-7-sonnet-latest",
+      "model_args": {},
+      "config": {},
+      "revision": {
+        "type": "git",
+        "origin": "https://github.com/UKGovernmentBEIS/inspect_ai.git",
+        "commit": "9140d8a2"
+      },
+      "packages": {
+        "inspect_ai": "0.3.63"
+      },
+      "scorers": [
+        {
+          "name": "model_graded_qa(scorer_chat = sonnet_3_7, partial_credit = TRUE)",
+          "options": {},
+          "metrics": [
+            {
+              "name": "mean",
+              "options": {}
+            }
+          ],
+          "metadata": {}
+        }
+      ]
+    },
+    "plan": {
+      "name": "plan",
+      "steps": [
+        {
+          "solver": "generate()",
+          "params": {
+            "1": "self$samples$input",
+            "solver_chat": "sonnet_3_7"
+          }
+        }
+      ],
+      "config": {}
+    },
+    "results": {
+      "total_samples": 78,
+      "completed_samples": 78,
+      "scores": [
+        {
+          "name": "model_graded_qa(scorer_chat = sonnet_3_7, partial_credit = TRUE)",
+          "scorer": "model_graded_qa(scorer_chat = sonnet_3_7, partial_credit = TRUE)",
+          "params": {},
+          "metrics": {
+            "accuracy": {
+              "name": "accuracy",
+              "value": 62.1795,
+              "params": {
+                "1": "numeric_scores"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "stats": {
+      "started_at": "2025-04-14T20:17:05-05:00",
+      "completed_at": "2025-04-14T20:33:12-05:00",
+      "model_usage": {
+        "claude-3-7-sonnet-latest": {
+          "input_tokens": 34479,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "output_tokens": 35071,
+          "total_tokens": 69550
+        }
+      }
+    }
+  },
+  "2025-04-14T20-52-52-05-00_AnREval_76637178e8679e1c9641d0.json": {
+    "version": 2,
+    "status": "success",
+    "eval": {
+      "run_id": "EwAh1ebZScSqkhiazSwrux",
+      "created": "2025-04-14T20:52:52-05:00",
+      "task": "AnREval",
+      "task_id": "76637178e8679e1c9641d0",
+      "task_version": 0,
+      "task_file": "/Users/simoncouch/Documents/rrr/website_new/blog/2025-04-15-gpt-4-1/index.qmd",
+      "task_attribs": {},
+      "task_args": {},
+      "dataset": {
+        "samples": 26,
+        "sample_ids": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26],
+        "shuffled": false
+      },
+      "model": "gpt-4o",
+      "model_args": {},
+      "config": {},
+      "revision": {
+        "type": "git",
+        "origin": "https://github.com/UKGovernmentBEIS/inspect_ai.git",
+        "commit": "9140d8a2"
+      },
+      "packages": {
+        "inspect_ai": "0.3.63"
+      },
+      "scorers": [
+        {
+          "name": "model_graded_qa(scorer_chat = sonnet_3_7, partial_credit = TRUE)",
+          "options": {},
+          "metrics": [
+            {
+              "name": "mean",
+              "options": {}
+            }
+          ],
+          "metadata": {}
+        }
+      ]
+    },
+    "plan": {
+      "name": "plan",
+      "steps": [
+        {
+          "solver": "generate()",
+          "params": {
+            "1": "self$samples$input",
+            "solver_chat": "gpt_4o"
+          }
+        }
+      ],
+      "config": {}
+    },
+    "results": {
+      "total_samples": 78,
+      "completed_samples": 78,
+      "scores": [
+        {
+          "name": "model_graded_qa(scorer_chat = sonnet_3_7, partial_credit = TRUE)",
+          "scorer": "model_graded_qa(scorer_chat = sonnet_3_7, partial_credit = TRUE)",
+          "params": {},
+          "metrics": {
+            "accuracy": {
+              "name": "accuracy",
+              "value": 37.1795,
+              "params": {
+                "1": "numeric_scores"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "stats": {
+      "started_at": "2025-04-14T20:34:58-05:00",
+      "completed_at": "2025-04-14T20:50:01-05:00",
+      "model_usage": {
+        "gpt-4o": {
+          "input_tokens": 29679,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "output_tokens": 30622,
+          "total_tokens": 60301
+        }
+      }
+    }
+  },
+  "2025-04-14T21-12-04-05-00_AnREval_76637178e8679e1c9641d0.json": {
+    "version": 2,
+    "status": "success",
+    "eval": {
+      "run_id": "4ooXsOFcmskzK0jR4bMT7p",
+      "created": "2025-04-14T21:12:04-05:00",
+      "task": "AnREval",
+      "task_id": "76637178e8679e1c9641d0",
+      "task_version": 0,
+      "task_file": "/Users/simoncouch/Documents/rrr/website_new/blog/2025-04-15-gpt-4-1/index.qmd",
+      "task_attribs": {},
+      "task_args": {},
+      "dataset": {
+        "samples": 26,
+        "sample_ids": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26],
+        "shuffled": false
+      },
+      "model": "gpt-4.1",
+      "model_args": {},
+      "config": {},
+      "revision": {
+        "type": "git",
+        "origin": "https://github.com/UKGovernmentBEIS/inspect_ai.git",
+        "commit": "9140d8a2"
+      },
+      "packages": {
+        "inspect_ai": "0.3.63"
+      },
+      "scorers": [
+        {
+          "name": "model_graded_qa(scorer_chat = sonnet_3_7, partial_credit = TRUE)",
+          "options": {},
+          "metrics": [
+            {
+              "name": "mean",
+              "options": {}
+            }
+          ],
+          "metadata": {}
+        }
+      ]
+    },
+    "plan": {
+      "name": "plan",
+      "steps": [
+        {
+          "solver": "generate()",
+          "params": {
+            "1": "self$samples$input",
+            "solver_chat": "gpt_4_1"
+          }
+        }
+      ],
+      "config": {}
+    },
+    "results": {
+      "total_samples": 78,
+      "completed_samples": 78,
+      "scores": [
+        {
+          "name": "model_graded_qa(scorer_chat = sonnet_3_7, partial_credit = TRUE)",
+          "scorer": "model_graded_qa(scorer_chat = sonnet_3_7, partial_credit = TRUE)",
+          "params": {},
+          "metrics": {
+            "accuracy": {
+              "name": "accuracy",
+              "value": 48.7179,
+              "params": {
+                "1": "numeric_scores"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "stats": {
+      "started_at": "2025-04-14T20:54:32-05:00",
+      "completed_at": "2025-04-14T21:12:04-05:00",
+      "model_usage": {
+        "gpt-4.1": {
+          "input_tokens": 29679,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "output_tokens": 44994,
+          "total_tokens": 74673
+        }
+      }
+    }
+  },
+  "2025-04-14T21-24-56-05-00_AnREval_76637178e8679e1c9641d0.json": {
+    "version": 2,
+    "status": "success",
+    "eval": {
+      "run_id": "VwEFSJCRhgekCxjbMsPJxh",
+      "created": "2025-04-14T21:24:56-05:00",
+      "task": "AnREval",
+      "task_id": "76637178e8679e1c9641d0",
+      "task_version": 0,
+      "task_file": "/Users/simoncouch/Documents/rrr/website_new/blog/2025-04-15-gpt-4-1/index.qmd",
+      "task_attribs": {},
+      "task_args": {},
+      "dataset": {
+        "samples": 26,
+        "sample_ids": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26],
+        "shuffled": false
+      },
+      "model": "gpt-4.1-mini",
+      "model_args": {},
+      "config": {},
+      "revision": {
+        "type": "git",
+        "origin": "https://github.com/UKGovernmentBEIS/inspect_ai.git",
+        "commit": "9140d8a2"
+      },
+      "packages": {
+        "inspect_ai": "0.3.63"
+      },
+      "scorers": [
+        {
+          "name": "model_graded_qa(scorer_chat = sonnet_3_7, partial_credit = TRUE)",
+          "options": {},
+          "metrics": [
+            {
+              "name": "mean",
+              "options": {}
+            }
+          ],
+          "metadata": {}
+        }
+      ]
+    },
+    "plan": {
+      "name": "plan",
+      "steps": [
+        {
+          "solver": "generate()",
+          "params": {
+            "1": "self$samples$input",
+            "solver_chat": "gpt_4_1_mini"
+          }
+        }
+      ],
+      "config": {}
+    },
+    "results": {
+      "total_samples": 78,
+      "completed_samples": 78,
+      "scores": [
+        {
+          "name": "model_graded_qa(scorer_chat = sonnet_3_7, partial_credit = TRUE)",
+          "scorer": "model_graded_qa(scorer_chat = sonnet_3_7, partial_credit = TRUE)",
+          "params": {},
+          "metrics": {
+            "accuracy": {
+              "name": "accuracy",
+              "value": 44.8718,
+              "params": {
+                "1": "numeric_scores"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "stats": {
+      "started_at": "2025-04-14T21:12:05-05:00",
+      "completed_at": "2025-04-14T21:24:56-05:00",
+      "model_usage": {
+        "gpt-4.1-mini": {
+          "input_tokens": 29679,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "output_tokens": 41255,
+          "total_tokens": 70934
+        }
+      }
+    }
+  },
+  "2025-04-14T21-37-28-05-00_AnREval_76637178e8679e1c9641d0.json": {
+    "version": 2,
+    "status": "success",
+    "eval": {
+      "run_id": "o6XM9gLcpdNrG7MlGHm4cc",
+      "created": "2025-04-14T21:37:28-05:00",
+      "task": "AnREval",
+      "task_id": "76637178e8679e1c9641d0",
+      "task_version": 0,
+      "task_file": "/Users/simoncouch/Documents/rrr/website_new/blog/2025-04-15-gpt-4-1/index.qmd",
+      "task_attribs": {},
+      "task_args": {},
+      "dataset": {
+        "samples": 26,
+        "sample_ids": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26],
+        "shuffled": false
+      },
+      "model": "gpt-4.1-nano",
+      "model_args": {},
+      "config": {},
+      "revision": {
+        "type": "git",
+        "origin": "https://github.com/UKGovernmentBEIS/inspect_ai.git",
+        "commit": "9140d8a2"
+      },
+      "packages": {
+        "inspect_ai": "0.3.63"
+      },
+      "scorers": [
+        {
+          "name": "model_graded_qa(scorer_chat = sonnet_3_7, partial_credit = TRUE)",
+          "options": {},
+          "metrics": [
+            {
+              "name": "mean",
+              "options": {}
+            }
+          ],
+          "metadata": {}
+        }
+      ]
+    },
+    "plan": {
+      "name": "plan",
+      "steps": [
+        {
+          "solver": "generate()",
+          "params": {
+            "1": "self$samples$input",
+            "solver_chat": "gpt_4_1_nano"
+          }
+        }
+      ],
+      "config": {}
+    },
+    "results": {
+      "total_samples": 78,
+      "completed_samples": 78,
+      "scores": [
+        {
+          "name": "model_graded_qa(scorer_chat = sonnet_3_7, partial_credit = TRUE)",
+          "scorer": "model_graded_qa(scorer_chat = sonnet_3_7, partial_credit = TRUE)",
+          "params": {},
+          "metrics": {
+            "accuracy": {
+              "name": "accuracy",
+              "value": 44.2308,
+              "params": {
+                "1": "numeric_scores"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "stats": {
+      "started_at": "2025-04-14T21:24:57-05:00",
+      "completed_at": "2025-04-14T21:37:27-05:00",
+      "model_usage": {
+        "gpt-4.1-nano": {
+          "input_tokens": 29679,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "output_tokens": 43420,
+          "total_tokens": 73099
+        }
+      }
+    }
+  }
+}

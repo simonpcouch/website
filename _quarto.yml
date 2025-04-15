@@ -4,6 +4,7 @@ project:
     - ".well-known/atproto-did"
     - "assets/*"
     - "assets/2025-04-01-gemini-2-5-pro/viewer/logs"
+    - "assets/2025-04-15-gpt-4-1/viewer/logs"
   post-render: 
     - "cp -rv static/. _site" # source: https://github.com/quarto-dev/quarto-cli/discussions/4162#discussioncomment-4831352
 

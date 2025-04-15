@@ -10,7 +10,15 @@
 <atom:link href="https://simonpcouch.com/blog/index.xml" rel="self" type="application/rss+xml"/>
 <description>A data science blog</description>
 <generator>quarto-1.6.40</generator>
-<lastBuildDate>Fri, 11 Apr 2025 05:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 15 Apr 2025 05:00:00 GMT</lastBuildDate>
+<item>
+  <title>How good are the GPT 4.1 models at writing R code?</title>
+  <link>https://simonpcouch.com/blog/2025-04-15-gpt-4-1/</link>
+  <description><![CDATA[ Yesterday, OpenAI dropped <a href="https://openai.com/index/gpt-4-1/">a new series of models</a> called GPT 4.1, 4.1 mini, and GPT 4.1 nano. This line from their release post, specifically, caught my eye: ]]></description>
+  <guid>https://simonpcouch.com/blog/2025-04-15-gpt-4-1/</guid>
+  <pubDate>Tue, 15 Apr 2025 05:00:00 GMT</pubDate>
+  <media:content url="https://simonpcouch.com/blog/2025-04-15-gpt-4-1/featured.png" medium="image" type="image/png" height="142" width="144"/>
+</item>
 <item>
   <title>Introducing chores</title>
   <link>https://simonpcouch.com/blog/2025-04-11-chores/</link>
@@ -162,14 +170,6 @@
   <guid>https://simonpcouch.com/blog/2023-03-24-speedups-2023/</guid>
   <pubDate>Fri, 24 Mar 2023 05:00:00 GMT</pubDate>
   <media:content url="https://simonpcouch.com/blog/2023-03-24-speedups-2023/featured.png" medium="image" type="image/png" height="152" width="144"/>
-</item>
-<item>
-  <title>Analyzing my own music listening data with R and the tidyverse</title>
-  <link>https://simonpcouch.com/blog/2022-12-01-listening-2022/</link>
-  <description><![CDATA[ Aside from exchanging playlists with my partner every once in a while, I’m not much of a Spotify user. Around this time every year, though, all of my friends start posting their Spotify Wrapped, and I get jealous. ]]></description>
-  <guid>https://simonpcouch.com/blog/2022-12-01-listening-2022/</guid>
-  <pubDate>Thu, 01 Dec 2022 06:00:00 GMT</pubDate>
-  <media:content url="https://simonpcouch.com/blog/2022-12-01-listening-2022/featured.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>
