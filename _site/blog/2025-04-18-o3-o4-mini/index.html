@@ -311,6 +311,19 @@ Note
 <iframe src="../../assets/2025-04-18-o3-o4-mini/viewer/index.html" width="100%" height="600px" style="border-radius: 10px; box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);"></iframe>
 </div>
 </div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>It’s kind of hard to tell which Claude 3.7 Sonnet results are from thinking enabled vs.&nbsp;not in this viewer. The results with thinking enabled are shown initially (and at the top of the sidebar). I’ll fix this in vitals in time for my next post. :)</p>
+</div>
+</div>
 </section><section id="analysis" class="level2"><h2 class="anchored" data-anchor-id="analysis">Analysis</h2>
 <p>At evaluation time, vitals does a naive accuracy calculation that you can see displayed in the app, but in general is quite restrained in its analysis functionality. Instead, the package aims to get analysts to Happy Data Frame Land as quickly as possible using <code><a href="https://vitals.tidyverse.org/reference/vitals_bind.html">vitals_bind()</a></code>:</p>
 <div class="cell">

@@ -288,6 +288,10 @@ htmltools::tags$iframe(
 ) 
 ```
 
+:::callout-note
+It's kind of hard to tell which Claude 3.7 Sonnet results are from thinking enabled vs. not in this viewer. The results with thinking enabled are shown initially (and at the top of the sidebar). I'll fix this in vitals in time for my next post. :)
+:::
+
 ## Analysis
 
 At evaluation time, vitals does a naive accuracy calculation that you can see displayed in the app, but in general is quite restrained in its analysis functionality. Instead, the package aims to get analysts to Happy Data Frame Land as quickly as possible using `vitals_bind()`:
