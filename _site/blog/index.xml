@@ -10,7 +10,15 @@
 <atom:link href="https://simonpcouch.com/blog/index.xml" rel="self" type="application/rss+xml"/>
 <description>A data science blog</description>
 <generator>quarto-1.6.40</generator>
-<lastBuildDate>Tue, 15 Apr 2025 05:00:00 GMT</lastBuildDate>
+<lastBuildDate>Fri, 18 Apr 2025 05:00:00 GMT</lastBuildDate>
+<item>
+  <title>Evaluating o3 and o4-mini on R coding performance</title>
+  <link>https://simonpcouch.com/blog/2025-04-18-o3-o4-mini/</link>
+  <description><![CDATA[ 48 hours after the drop of the GPT 4.1 series of models, a trio of non-reasoning models focused on “real-world developer needs,” OpenAI dropped another set of models, o3 and o4-mini. These two models are the latest generation of thinking models from OpenAI, and they form the backbone of <a href="https://github.com/openai/codex">Codex</a>, a new Claude Code competitor from OpenAI. In short, OpenAI wants market share among developers. ]]></description>
+  <guid>https://simonpcouch.com/blog/2025-04-18-o3-o4-mini/</guid>
+  <pubDate>Fri, 18 Apr 2025 05:00:00 GMT</pubDate>
+  <media:content url="https://simonpcouch.com/blog/2025-04-18-o3-o4-mini/featured.png" medium="image" type="image/png" height="144" width="144"/>
+</item>
 <item>
   <title>How good are the GPT 4.1 models at writing R code?</title>
   <link>https://simonpcouch.com/blog/2025-04-15-gpt-4-1/</link>
@@ -162,14 +170,6 @@
   <guid>https://simonpcouch.com/blog/2023-07-28-moving-on-s23/</guid>
   <pubDate>Fri, 28 Jul 2023 05:00:00 GMT</pubDate>
   <media:content url="https://simonpcouch.com/blog/2023-07-28-moving-on-s23/featured.png" medium="image" type="image/png" height="135" width="144"/>
-</item>
-<item>
-  <title>The tidymodels is getting a whole lot faster</title>
-  <link>https://simonpcouch.com/blog/2023-03-24-speedups-2023/</link>
-  <description><![CDATA[ The <a href="https://www.tidymodels.org/">tidymodels packages</a> provide a consistent, expressive, and safe interface to all sorts of modeling algorithms in R. ]]></description>
-  <guid>https://simonpcouch.com/blog/2023-03-24-speedups-2023/</guid>
-  <pubDate>Fri, 24 Mar 2023 05:00:00 GMT</pubDate>
-  <media:content url="https://simonpcouch.com/blog/2023-03-24-speedups-2023/featured.png" medium="image" type="image/png" height="152" width="144"/>
 </item>
 </channel>
 </rss>

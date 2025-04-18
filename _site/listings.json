@@ -1,11 +1,8 @@
 [
   {
-    "listing": "/about/index.html",
-    "items": []
-  },
-  {
     "listing": "/blog/index.html",
     "items": [
+      "/blog/2025-04-18-o3-o4-mini/index.html",
       "/blog/2025-04-15-gpt-4-1/index.html",
       "/blog/2025-04-11-chores/index.html",
       "/blog/2025-04-01-gemini-2-5-pro/index.html",
@@ -43,5 +40,9 @@
       "/blog/2020-10-27-gentle-intro-stacks/index.html",
       "/blog/2020-10-11-intro/index.html"
     ]
+  },
+  {
+    "listing": "/about/index.html",
+    "items": []
   }
 ]
