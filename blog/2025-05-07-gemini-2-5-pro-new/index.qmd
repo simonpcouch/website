@@ -1,0 +1,324 @@
+---
+title: "Evaluating the new Gemini 2.5 Pro update on R coding"
+date: '2025-05-07'
+tags:
+  - ai
+  - vitals
+  - rstats
+subtitle: "The initial Gemini 2.5 Pro release a month ago was surprisingly strong, so I was excited to benchmark the update announced yesterday on R coding problems."
+image: featured.png
+summary: ''
+---
+
+```{r setup}
+#| include: false
+options(ellmer_timeout_s = 1000)
+Sys.setenv(VITALS_LOG_DIR = "blog/2025-05-07-gemini-2-5-pro-new/logs")
+should_eval <- FALSE
+
+task_files <- list.files(here::here("blog/2025-05-07-gemini-2-5-pro-new/tasks"), full.names = TRUE)
+for (file in task_files) {
+  load(file)
+}
+
+options(width = 70)
+
+knitr::opts_chunk$set(
+  fig.width = 6, 
+  fig.asp = 0.618, 
+  out.width = "100%", 
+  message = FALSE, 
+  warning = FALSE
+)
+
+library(ggplot2)
+theme_set(
+  theme_bw() +
+  theme(
+    panel.border = element_blank(),
+    panel.background = element_rect(fill = "#f8f8f1", color = NA),
+    plot.background = element_rect(fill = "#f8f8f1", color = NA),
+    legend.background = element_rect(fill = "#F3F3EE", color = NA)
+  )
+)
+
+options(
+  ggplot2.discrete.colour = c(
+    "#ccb118", "#4A7862", "#8B4513", "#B0B0B0", "#000000"
+  ),
+  ggplot2.discrete.fill = c(
+    "#ccb118", "#4A7862", "#8B4513", "#B0B0B0", "#000000"
+  )
+)
+
+cat <- function(x, width = 0.9 * getOption("width")) {
+  lines <- unlist(strsplit(x, "\n"))
+  wrapped <- unlist(lapply(lines, strwrap, width = width))
+  base::cat(wrapped, sep = "\n")
+}
+
+# use this to resize the thumbnail image for the blog post
+optimize_image <- function(
+	image_path, 
+	target_width = 500, 
+	target_quality = 85, 
+	output_format = "png"
+  ) {
+  img <- magick::image_read(image_path)
+  
+  dims <- magick::image_info(img)
+  
+  if (dims$width > target_width) {
+    img <- magick::image_resize(img, paste0(target_width, "x"))
+  }
+  
+  img <- magick::image_write(
+	img, image_path, format = output_format, quality = target_quality
+  )
+  
+  invisible(img)
+}
+```
+
+The title line of [Google's release post](https://developers.googleblog.com/en/gemini-2-5-pro-io-improved-coding-performance/) on the newest Gemini 2.5 Pro release is "even better coding performance." Reading this, I was curious whether we'd see a notable increase in performance compared to the last generation on R coding tasks; in [an earlier post](https://www.simonpcouch.com/blog/2025-04-01-gemini-2-5-pro/), I saw that the March release of Gemini 2.5 Pro was a contender with Claude 3.7 Sonnet on _An R Eval_, a dataset of challenging R coding problems. 
+
+<a href="https://simonpcouch.github.io/vtials/"><img src="vitals.png" alt="The hex sticker for the vitals package: a teddy bear in blue scrubs happily holding a stethoscope." align="right" height="240"/></a>
+
+In this post, I'll be using the [vitals package](https://simonpcouch.github.io/vitals/) to compare the new Gemini 2.5 Pro release against its previous generation, as well as the leading "snappy" thinking models on this task from Anthropic and OpenAI: Claude 3.7 Sonnet (Thinking Enabled) and [GPT o4-mini](https://www.simonpcouch.com/blog/2025-04-18-o3-o4-mini/#analysis), respectively.
+
+> tl;dr
+>
+> * The old and new Gemini 2.5 Pro releases seem roughly the same in their R coding capabilities.
+> * Claude Sonnet 3.7 with thinking enabled and GPT o4-mini are neck-and-neck as the leaders in this class of models.
+
+## Setting up the evaluation
+
+Let's start by defining our model connections using ellmer (notably, the dev version of the package):
+
+```{r candidates}
+library(ellmer)
+library(vitals)
+library(tidyverse)
+
+gemini_2_5_pro_new <- chat_google_gemini(
+  model = "gemini-2.5-pro-preview-03-25"
+)
+claude_sonnet_3_7 <- sonnet_3_7_thinking <- chat_anthropic(
+  model = "claude-3-7-sonnet-latest",
+  api_args = list(
+    thinking = list(type = "enabled", budget_tokens = 2000)
+  )
+)
+gpt_o4_mini <- chat_openai(model = "o4-mini-2025-04-16")
+```
+
+You may have noticed that `gemini_2_5_pro_new` seemingly refers to a model from March `"gemini-2.5-pro-preview-03-25"`. Google switched out the model underlying that string, meaning we can no longer access the old model, and code that used to refer to the old model will refer to the new one automatically. That was a choice. Thankfully, I ran this eval against the old Gemini 2.5 Pro version and saved the results a month ago, so I'll do some trickery under-the-hood to include its results here.
+
+Note that I needed to configure `GOOGLE_API_KEY`, `ANTHROPIC_API_KEY`, and `OPENAI_API_KEY` environment variables to connect to these services. The pricing for these models is roughly comparable:
+
+```{r pricing}
+#| echo: false
+tibble::tibble(
+  Name = c("Gemini 2.5 Pro", "Claude 3.7 Sonnet", "GPT o4-mini"),
+  Input = c("$1.25", "$3.00", "$1.10"),
+  Output = c("$10.00", "$15.00", "$4.40")
+)
+```
+
+A couple bits worth noting for interpreting this table:
+
+* The new Gemini 2.5 Pro update has the same pricing as the old one.
+* The per-token pricing for Gemini 2.5 Pro increases after the first 200,000 tokens in a request. We won't come close to hitting that threshold in this eval, so the shown pricing is what applies here.
+* Each of these are "reasoning" models, but may use varying numbers of tokens to come to an answer, so the actual cost breakdown for each of these may not reflect the ratios shown above.
+
+We'll be able to quantify the actual cost and number of tokens used using the new `$get_cost()` method from vitals; the package can total the cost for running a given eval for any model supported by ellmer.
+
+## A baseline task
+
+As in my previous evaluations, I'll use the `are` dataset from vitals and set up a task that will evaluate each model:
+
+```{r create-task}
+are_task <- Task$new(
+  dataset = are,
+  solver = generate(),
+  scorer = model_graded_qa(
+    scorer_chat = claude_sonnet_3_7, 
+    partial_credit = TRUE
+  ),
+  epochs = 3,
+  name = "An R Eval"
+)
+
+are_task
+```
+
+:::callout-note
+See my [previous post on Gemini 2.5 Pro](https://www.simonpcouch.com/blog/2025-04-01-gemini-2-5-pro/#an-r-eval-dataset) for a more thorough description of this evaluation.
+:::
+
+Let's start by evaluating the new Gemini 2.5 Pro model.
+
+```{r eval-gemini-new, eval = should_eval}
+are_gemini_2_5_pro_new <- are_task$clone()
+are_gemini_2_5_pro_new$eval(solver_chat = gemini_2_5_pro_new)
+```
+
+```{r save-gemini-new, eval = should_eval}
+#| include: false
+if (should_eval) {
+  save(are_gemini_2_5_pro_new, file = "blog/2025-05-07-gemini-2-5-pro-new/tasks/are_gemini_2_5_pro_new.rda")
+}
+```
+
+The new `$get_cost()` method from vitals gives a go at tallying up the cost of the eval for the solver and the scorer. I've uncovered a couple bugs in writing this blog post, but I'll show the results here anyway:
+
+```{r}
+#| warning: false
+are_gemini_2_5_pro_new$get_cost()
+```
+
+Needless to say, the Gemini tokens were not free. :) Since the cost information for that model isn't available from ellmer, that price should read `NA` rather than 0, but based on the I/O, that's 5 cents for input tokens and a dollar for output tokens.
+
+Interestingly, the knowledge cutoff for this model is January 2025. This eval was open sourced shortly after then; I wonder if we'll start to see big jumps in performance once the knowledge cutoffs for newly released models include the time when this eval was publicly available on GitHub.
+
+Next, we'll evaluate Claude 3.7 Sonnet with thinking enabled:
+
+```{r eval-claude, eval = should_eval}
+are_claude_3_7 <- are_task$clone()
+are_claude_3_7$eval(solver_chat = claude_sonnet_3_7)
+```
+
+```{r save-claude, eval = should_eval}
+#| include: false
+if (should_eval) {
+  save(are_claude_3_7, file = "blog/2025-05-07-gemini-2-5-pro-new/tasks/are_claude_3_7.rda")
+}
+```
+
+```{r}
+#| warning: false
+are_claude_3_7$get_cost()
+```
+
+Note, here, that both the solver and the scorer used Claude 3.7 Sonnet here. By default, the method doesn't differentiate between solver and scorer tokens; I wonder whether it should.
+
+Finally, let's evaluate GPT o4-mini:
+
+```{r eval-gpt-4-1, eval = should_eval}
+are_gpt_o4_mini <- are_task$clone()
+are_gpt_o4_mini$eval(solver_chat = gpt_o4_mini)
+```
+
+```{r save-gpt-4-1, eval = should_eval}
+#| include: false
+if (should_eval) {
+  save(are_gpt_o4_mini, file = "blog/2025-05-07-gemini-2-5-pro-new/tasks/are_gpt_o4_mini.rda")
+}
+```
+
+```{r}
+#| warning: false
+are_gpt_o4_mini$get_cost()
+```
+
+In this case, o4-mini's costs were something like 3 cents for input and 60 cents for output.
+
+Under the hood, I've imported the old Gemini 2.5 Pro results and situated them in an updated task object as `gemini_2_5_pro_old`. It's shown first in the interactive viewer as `gemini-2.5-pro-exp-03-25`:
+
+```{r bundle, eval = should_eval}
+#| include: false
+vitals_bundle(
+  "blog/2025-05-07-gemini-2-5-pro-new/logs", 
+  "assets/2025-05-07-gemini-2-5-pro-new/viewer"
+)
+```
+
+```{r viewer}
+#| echo: false
+htmltools::tags$iframe(
+  src = "/assets/2025-05-07-gemini-2-5-pro-new/viewer/index.html",
+  width = "100%", 
+  height = "600px",
+  style = "border-radius: 10px; box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);"
+) 
+```
+
+## Analysis
+
+Let's combine the results of all evaluations to compare the models:
+
+```{r are-eval}
+are_eval <- 
+  vitals_bind(
+    `Gemini 2.5 Pro (New)` = are_gemini_2_5_pro_new,
+    `Gemini 2.5 Pro (Old)` = are_gemini_2_5_pro_old,
+    `Claude Sonnet 3.7` = are_claude_3_7,
+    `GPT o4-mini` = are_gpt_o4_mini
+  ) %>%
+  rename(model = task) %>%
+  mutate(
+    model = factor(model, levels = c(
+      "Gemini 2.5 Pro (New)",
+      "Gemini 2.5 Pro (Old)",
+      "Claude Sonnet 3.7",
+      "GPT o4-mini"
+    ))
+  )
+
+are_eval
+```
+
+Let's visualize the results with a bar chart:
+
+```{r plot-are-eval}
+#| fig-alt: "A horizontal bar chart comparing various AI models' performance on R coding tasks. The chart shows percentages of correct (blue), partially correct (beige), and incorrect (orange) answers. The new Gemini 2.5 Pro shows improved performance over the older version, and is roughly on par with Claude 3.7 Sonnet. Both slightly outperform GPT 4.1."
+#| fig-width: 8
+are_eval %>%
+  mutate(
+    score = fct_recode(
+      score, 
+      "Correct" = "C", "Partially Correct" = "P", "Incorrect" = "I"
+    ),
+  ) %>%
+  ggplot(aes(y = model, fill = score)) +
+  geom_bar(position = "fill") +
+  scale_fill_manual(
+    breaks = rev,
+    values = c("Correct" = "#67a9cf", 
+               "Partially Correct" = "#f6e8c3", 
+               "Incorrect" = "#ef8a62")
+  ) +
+  scale_x_continuous(labels = scales::percent) +
+  labs(
+    x = "Percent", y = "Model",
+    title = "An R Eval",
+    subtitle = "The updated Gemini 2.5 Pro seems roughly comparable to its previous\ngeneration on R coding tasks."
+  ) +
+  theme(
+    plot.subtitle = element_text(face = "italic"),
+    legend.position = "bottom"
+  )
+```
+
+To determine if the differences we're seeing are statistically significant, we'll use a cumulative link mixed model:
+
+```{r are-mod}
+library(ordinal)
+
+are_mod <- clmm(score ~ model + (1|id), data = are_eval)
+```
+
+```{r summary-are-mod}
+summary(are_mod)
+```
+
+For the purposes of this post, we'll just take a look at the `Coefficients` table. The reference model here is the new Gemini 2.5 Pro. Negative coefficient estimates for a given model indicate that model is less likely to receive higher ratings than the new Gemini 2.5 Pro. Looking at the coefficients:
+
+* The old Gemini 2.5 Pro is roughly the same in its R coding capabilities as the new one.
+* While neither of the differences from the new Gemini 2.5 Pro are statistically significant, Claude Sonnet 3.7 and GPT o4-mini are neck-and-neck with each other as the SotA on this eval.
+
+In short, from my perspective, there's not much to see here with this new Gemini release.
+
+---
+
+_Thank you to Max Kuhn for advising on the model-based analysis here._

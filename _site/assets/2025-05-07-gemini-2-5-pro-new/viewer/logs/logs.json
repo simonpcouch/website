@@ -1,0 +1,352 @@
+{
+  "2025-05-07T09-16-57-05-00_An-R-Eval_db9a4f19dcbe84079ad841.json": {
+    "version": 2,
+    "status": "success",
+    "eval": {
+      "run_id": "uZ84eNQ8PeTEGwh8O5Mccr",
+      "created": "2025-05-07T09:16:57-05:00",
+      "task": "An-R-Eval",
+      "task_id": "db9a4f19dcbe84079ad841",
+      "task_version": 0,
+      "task_file": "/Users/simoncouch/Documents/rrr/website_new/blog/2025-04-18-o3-o4-mini/index.qmd",
+      "task_attribs": {},
+      "task_args": {},
+      "dataset": {
+        "samples": 26,
+        "sample_ids": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26],
+        "shuffled": false
+      },
+      "model": "gemini-2.5-pro-preview-03-25",
+      "model_args": {},
+      "config": {},
+      "revision": {
+        "type": "git",
+        "origin": "https://github.com/UKGovernmentBEIS/inspect_ai.git",
+        "commit": "9140d8a2"
+      },
+      "packages": {
+        "inspect_ai": "0.3.63"
+      },
+      "scorers": [
+        {
+          "name": "model_graded_qa(scorer_chat = claude_sonnet_3_7, partial_credit = TRUE)",
+          "options": {},
+          "metrics": [
+            {
+              "name": "mean",
+              "options": {}
+            }
+          ],
+          "metadata": {}
+        }
+      ]
+    },
+    "plan": {
+      "name": "plan",
+      "steps": [
+        {
+          "solver": "generate()",
+          "params": {
+            "1": "self$get_samples()$input",
+            "solver_chat": "gemini_2_5_pro_new"
+          }
+        }
+      ],
+      "config": {}
+    },
+    "results": {
+      "total_samples": 78,
+      "completed_samples": 78,
+      "scores": [
+        {
+          "name": "model_graded_qa(scorer_chat = claude_sonnet_3_7, partial_credit = TRUE) (claude-3-7-sonnet-latest)",
+          "scorer": "model_graded_qa(scorer_chat = claude_sonnet_3_7, partial_credit = TRUE) (claude-3-7-sonnet-latest)",
+          "params": {},
+          "metrics": {
+            "accuracy": {
+              "name": "accuracy",
+              "value": 57.6923,
+              "params": {
+                "1": "numeric_scores"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "stats": {
+      "started_at": "2025-05-07T09:08:57-05:00",
+      "completed_at": "2025-05-07T09:16:57-05:00",
+      "model_usage": {
+        "gemini-2.5-pro-preview-03-25": {
+          "input_tokens": 34038,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "output_tokens": 98863,
+          "total_tokens": 132901
+        }
+      }
+    }
+  },
+  "2025-05-07T09-21-21-05-00_An-R-Eval_db9a4f19dcbe84079ad841.json": {
+    "version": 2,
+    "status": "success",
+    "eval": {
+      "run_id": "jUgyYCckn2r6T2laNkFf2z",
+      "created": "2025-05-07T09:21:21-05:00",
+      "task": "An-R-Eval",
+      "task_id": "db9a4f19dcbe84079ad841",
+      "task_version": 0,
+      "task_file": "/Users/simoncouch/Documents/rrr/website_new/blog/2025-05-07-gemini-2-5-pro-new/source.R",
+      "task_attribs": {},
+      "task_args": {},
+      "dataset": {
+        "samples": 26,
+        "sample_ids": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26],
+        "shuffled": false
+      },
+      "model": "claude-3-7-sonnet-latest",
+      "model_args": {},
+      "config": {},
+      "revision": {
+        "type": "git",
+        "origin": "https://github.com/UKGovernmentBEIS/inspect_ai.git",
+        "commit": "9140d8a2"
+      },
+      "packages": {
+        "inspect_ai": "0.3.63"
+      },
+      "scorers": [
+        {
+          "name": "model_graded_qa(scorer_chat = claude_sonnet_3_7, partial_credit = TRUE)",
+          "options": {},
+          "metrics": [
+            {
+              "name": "mean",
+              "options": {}
+            }
+          ],
+          "metadata": {}
+        }
+      ]
+    },
+    "plan": {
+      "name": "plan",
+      "steps": [
+        {
+          "solver": "generate()",
+          "params": {
+            "1": "self$get_samples()$input",
+            "solver_chat": "claude_sonnet_3_7"
+          }
+        }
+      ],
+      "config": {}
+    },
+    "results": {
+      "total_samples": 78,
+      "completed_samples": 78,
+      "scores": [
+        {
+          "name": "model_graded_qa(scorer_chat = claude_sonnet_3_7, partial_credit = TRUE) (claude-3-7-sonnet-latest)",
+          "scorer": "model_graded_qa(scorer_chat = claude_sonnet_3_7, partial_credit = TRUE) (claude-3-7-sonnet-latest)",
+          "params": {},
+          "metrics": {
+            "accuracy": {
+              "name": "accuracy",
+              "value": 61.5385,
+              "params": {
+                "1": "numeric_scores"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "stats": {
+      "started_at": "2025-05-07T09:16:58-05:00",
+      "completed_at": "2025-05-07T09:21:21-05:00",
+      "model_usage": {
+        "claude-3-7-sonnet-latest": {
+          "input_tokens": 36663,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "output_tokens": 84792,
+          "total_tokens": 121455
+        }
+      }
+    }
+  },
+  "2025-05-07T09-25-27-05-00_An-R-Eval_db9a4f19dcbe84079ad841.json": {
+    "version": 2,
+    "status": "success",
+    "eval": {
+      "run_id": "c1a4ux34Qa2ibjNDiK7YGo",
+      "created": "2025-05-07T09:25:27-05:00",
+      "task": "An-R-Eval",
+      "task_id": "db9a4f19dcbe84079ad841",
+      "task_version": 0,
+      "task_file": "/Users/simoncouch/Documents/rrr/website_new/blog/2025-05-07-gemini-2-5-pro-new/source.R",
+      "task_attribs": {},
+      "task_args": {},
+      "dataset": {
+        "samples": 26,
+        "sample_ids": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26],
+        "shuffled": false
+      },
+      "model": "o4-mini-2025-04-16",
+      "model_args": {},
+      "config": {},
+      "revision": {
+        "type": "git",
+        "origin": "https://github.com/UKGovernmentBEIS/inspect_ai.git",
+        "commit": "9140d8a2"
+      },
+      "packages": {
+        "inspect_ai": "0.3.63"
+      },
+      "scorers": [
+        {
+          "name": "model_graded_qa(scorer_chat = claude_sonnet_3_7, partial_credit = TRUE)",
+          "options": {},
+          "metrics": [
+            {
+              "name": "mean",
+              "options": {}
+            }
+          ],
+          "metadata": {}
+        }
+      ]
+    },
+    "plan": {
+      "name": "plan",
+      "steps": [
+        {
+          "solver": "generate()",
+          "params": {
+            "1": "self$get_samples()$input",
+            "solver_chat": "gpt_o4_mini"
+          }
+        }
+      ],
+      "config": {}
+    },
+    "results": {
+      "total_samples": 78,
+      "completed_samples": 78,
+      "scores": [
+        {
+          "name": "model_graded_qa(scorer_chat = claude_sonnet_3_7, partial_credit = TRUE) (claude-3-7-sonnet-latest)",
+          "scorer": "model_graded_qa(scorer_chat = claude_sonnet_3_7, partial_credit = TRUE) (claude-3-7-sonnet-latest)",
+          "params": {},
+          "metrics": {
+            "accuracy": {
+              "name": "accuracy",
+              "value": 64.7436,
+              "params": {
+                "1": "numeric_scores"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "stats": {
+      "started_at": "2025-05-07T09:21:22-05:00",
+      "completed_at": "2025-05-07T09:25:27-05:00",
+      "model_usage": {
+        "o4-mini-2025-04-16": {
+          "input_tokens": 29601,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "output_tokens": 135219,
+          "total_tokens": 164820
+        }
+      }
+    }
+  },
+  "2025-05-07T09-39-53-05-00_An-R-Eval_db9a4f19dcbe84079ad841.json": {
+    "version": 2,
+    "status": "success",
+    "eval": {
+      "run_id": "uZ84eNQ8PeTEGwh8O5Mccr",
+      "created": "2025-05-07T09:39:53-05:00",
+      "task": "An-R-Eval",
+      "task_id": "db9a4f19dcbe84079ad841",
+      "task_version": 0,
+      "task_file": "/Users/simoncouch/Documents/rrr/website_new/blog/2025-05-07-gemini-2-5-pro-new/import_old_task.R",
+      "task_attribs": {},
+      "task_args": {},
+      "dataset": {
+        "samples": 25,
+        "sample_ids": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25],
+        "shuffled": false
+      },
+      "model": "gemini-2.5-pro-exp-03-25",
+      "model_args": {},
+      "config": {},
+      "revision": {
+        "type": "git",
+        "origin": "https://github.com/UKGovernmentBEIS/inspect_ai.git",
+        "commit": "9140d8a2"
+      },
+      "packages": {
+        "inspect_ai": "0.3.63"
+      },
+      "scorers": [
+        {
+          "name": "model_graded_qa(scorer_chat = claude_sonnet_3_7, partial_credit = TRUE)",
+          "options": {},
+          "metrics": [
+            {
+              "name": "mean",
+              "options": {}
+            }
+          ],
+          "metadata": {}
+        }
+      ]
+    },
+    "plan": {
+      "name": "plan",
+      "steps": [
+        {
+          "solver": "generate()",
+          "params": {
+            "1": "self$get_samples()$input",
+            "solver_chat": "gemini_2_5_pro_new"
+          }
+        }
+      ],
+      "config": {}
+    },
+    "results": {
+      "total_samples": 84,
+      "completed_samples": 84,
+      "scores": [
+        {
+          "name": "model_graded_qa(scorer_chat = claude_sonnet_3_7, partial_credit = TRUE) (claude-3-7-sonnet-latest)",
+          "scorer": "model_graded_qa(scorer_chat = claude_sonnet_3_7, partial_credit = TRUE) (claude-3-7-sonnet-latest)",
+          "params": {},
+          "metrics": {
+            "accuracy": {
+              "name": "accuracy",
+              "value": 58.9286,
+              "params": {
+                "1": "numeric_scores"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "stats": {
+      "started_at": "2025-03-31T16:03:19-05:00",
+      "completed_at": "2025-03-31T16:22:10-05:00",
+      "model_usage": {
+        "gemini-2.5-pro-exp-03-25": []
+      }
+    }
+  }
+}

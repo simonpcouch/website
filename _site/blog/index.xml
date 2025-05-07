@@ -10,7 +10,15 @@
 <atom:link href="https://simonpcouch.com/blog/index.xml" rel="self" type="application/rss+xml"/>
 <description>A data science blog</description>
 <generator>quarto-1.6.40</generator>
-<lastBuildDate>Fri, 18 Apr 2025 05:00:00 GMT</lastBuildDate>
+<lastBuildDate>Wed, 07 May 2025 05:00:00 GMT</lastBuildDate>
+<item>
+  <title>Evaluating the new Gemini 2.5 Pro update on R coding</title>
+  <link>https://simonpcouch.com/blog/2025-05-07-gemini-2-5-pro-new/</link>
+  <description><![CDATA[ The title line of <a href="https://developers.googleblog.com/en/gemini-2-5-pro-io-improved-coding-performance/">Google’s release post</a> on the newest Gemini 2.5 Pro release is “even better coding performance.” Reading this, I was curious whether we’d see a notable increase in performance compared to the last generation on R coding tasks; in <a href="https://www.simonpcouch.com/blog/2025-04-01-gemini-2-5-pro/">an earlier post</a>, I saw that the March release of Gemini 2.5 Pro was a contender with Claude 3.7 Sonnet on <em>An R Eval</em>, a dataset of challenging R coding problems. ]]></description>
+  <guid>https://simonpcouch.com/blog/2025-05-07-gemini-2-5-pro-new/</guid>
+  <pubDate>Wed, 07 May 2025 05:00:00 GMT</pubDate>
+  <media:content url="https://simonpcouch.com/blog/2025-05-07-gemini-2-5-pro-new/featured.png" medium="image" type="image/png" height="140" width="144"/>
+</item>
 <item>
   <title>Evaluating o3 and o4-mini on R coding performance</title>
   <link>https://simonpcouch.com/blog/2025-04-18-o3-o4-mini/</link>
@@ -162,14 +170,6 @@
   <guid>https://simonpcouch.com/blog/2023-08-04-parallel-racing/</guid>
   <pubDate>Fri, 04 Aug 2023 05:00:00 GMT</pubDate>
   <media:content url="https://simonpcouch.com/blog/2023-08-04-parallel-racing/featured.png" medium="image" type="image/png" height="141" width="144"/>
-</item>
-<item>
-  <title>Moving On From Baltimore</title>
-  <link>https://simonpcouch.com/blog/2023-07-28-moving-on-s23/</link>
-  <description><![CDATA[ 2 years ago, I sent out <a href="https://www.simonpcouch.com/blog/whats-next-s21/">a post</a> around the time I graduated from college. I wrote about my gratitude for my time in Oregon, my excitement to start a PhD program in Biostatistics at Johns Hopkins, and the joy of raising my then-very-young dog, Millie. Soon after, in summer 2021, I made the road trip to Baltimore, MD. ]]></description>
-  <guid>https://simonpcouch.com/blog/2023-07-28-moving-on-s23/</guid>
-  <pubDate>Fri, 28 Jul 2023 05:00:00 GMT</pubDate>
-  <media:content url="https://simonpcouch.com/blog/2023-07-28-moving-on-s23/featured.png" medium="image" type="image/png" height="135" width="144"/>
 </item>
 </channel>
 </rss>
