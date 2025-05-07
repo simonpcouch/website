@@ -82,9 +82,9 @@ optimize_image <- function(
 
 The title line of [Google's release post](https://developers.googleblog.com/en/gemini-2-5-pro-io-improved-coding-performance/) on the newest Gemini 2.5 Pro release is "even better coding performance." Reading this, I was curious whether we'd see a notable increase in performance compared to the last generation on R coding tasks; in [an earlier post](https://www.simonpcouch.com/blog/2025-04-01-gemini-2-5-pro/), I saw that the March release of Gemini 2.5 Pro was a contender with Claude 3.7 Sonnet on _An R Eval_, a dataset of challenging R coding problems. 
 
-<a href="https://simonpcouch.github.io/vitals/"><img src="vitals.png" alt="The hex sticker for the vitals package: a teddy bear in blue scrubs happily holding a stethoscope." align="right" height="240"/></a>
+<a href="https://vitals.tidyverse.org/"><img src="vitals.png" alt="The hex sticker for the vitals package: a teddy bear in blue scrubs happily holding a stethoscope." align="right" height="240"/></a>
 
-In this post, I'll be using the [vitals package](https://simonpcouch.github.io/vitals/) to compare the new Gemini 2.5 Pro release against its previous generation, as well as the leading "snappy" thinking models on this task from Anthropic and OpenAI: Claude 3.7 Sonnet (Thinking Enabled) and [GPT o4-mini](https://www.simonpcouch.com/blog/2025-04-18-o3-o4-mini/#analysis), respectively.
+In this post, I'll be using the [vitals package](https://vitals.tidyverse.org/) to compare the new Gemini 2.5 Pro release against its previous generation, as well as the leading "snappy" thinking models on this task from Anthropic and OpenAI: Claude 3.7 Sonnet (Thinking Enabled) and [GPT o4-mini](https://www.simonpcouch.com/blog/2025-04-18-o3-o4-mini/#analysis), respectively.
 
 > tl;dr
 >
