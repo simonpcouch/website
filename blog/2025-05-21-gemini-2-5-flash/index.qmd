@@ -1,0 +1,397 @@
+---
+title: "Evaluating Gemini 2.5 Flash on R coding tasks"
+date: '2025-05-21'
+tags:
+  - ai
+  - vitals
+  - rstats
+subtitle: "Google's Gemini 2.5 Pro release really made a splash last month. They've just announced an update to 2.5 Flash, a faster and cheaper model."
+image: featured.png
+summary: ''
+---
+
+```{r setup}
+#| include: false
+options(ellmer_timeout_s = 1000)
+Sys.setenv(VITALS_LOG_DIR = "blog/2025-05-21-gemini-2-5-flash/logs")
+should_eval <- FALSE
+
+task_files <- list.files(here::here("blog/2025-05-21-gemini-2-5-flash/tasks"), full.names = TRUE)
+for (file in task_files) {
+  load(file)
+}
+
+options(width = 70)
+
+knitr::opts_chunk$set(
+  fig.width = 6, 
+  fig.asp = 0.618, 
+  out.width = "100%", 
+  message = FALSE, 
+  warning = FALSE
+)
+
+library(ggplot2)
+theme_set(
+  theme_bw() +
+  theme(
+    panel.border = element_blank(),
+    panel.background = element_rect(fill = "#f8f8f1", color = NA),
+    plot.background = element_rect(fill = "#f8f8f1", color = NA),
+    legend.background = element_rect(fill = "#F3F3EE", color = NA)
+  )
+)
+
+options(
+  ggplot2.discrete.colour = c(
+    "#ccb118", "#4A7862", "#8B4513", "#B0B0B0", "#000000"
+  ),
+  ggplot2.discrete.fill = c(
+    "#ccb118", "#4A7862", "#8B4513", "#B0B0B0", "#000000"
+  )
+)
+
+cat <- function(x, width = 0.9 * getOption("width")) {
+  lines <- unlist(strsplit(x, "\n"))
+  wrapped <- unlist(lapply(lines, strwrap, width = width))
+  base::cat(wrapped, sep = "\n")
+}
+
+# use this to resize the thumbnail image for the blog post
+optimize_image <- function(
+	image_path, 
+	target_width = 500, 
+	target_quality = 85, 
+	output_format = "png"
+  ) {
+  img <- magick::image_read(image_path)
+  
+  dims <- magick::image_info(img)
+  
+  if (dims$width > target_width) {
+    img <- magick::image_resize(img, paste0(target_width, "x"))
+  }
+  
+  img <- magick::image_write(
+	img, image_path, format = output_format, quality = target_quality
+  )
+  
+  invisible(img)
+}
+```
+
+Google's preview of their Gemini 2.5 Pro model has [really made a splash](https://www.simonpcouch.com/blog/2025-05-07-gemini-2-5-pro-new/). The model has become many folks' daily driver, and I've started to see "What about Gemini?" in the comments of each of these blog posts if they don't explicitly call out the model series in the title. Yesterday, Google announced an update of the preview for Gemini 2.5 Flash, a smaller and cheaper version of 2.5 Pro. 
+
+In the [model card](https://blog.google/technology/google-deepmind/google-gemini-updates-io-2025), Google juxtaposes Gemini 2.5 Flash with OpenAI's o4-mini:
+
+<div style="text-align: center;">
+<img src="juxtapose.png" style="border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); width: 600px; height: auto;" />
+</div>
+
+This comparison especially caught my eye, given that [o4-mini is the current leader](https://www.simonpcouch.com/blog/2025-04-18-o3-o4-mini/) in the class of cheap, snappy thinking models on an R coding evaluation I've been running the last few months. The proposition seems to be "o4-mini-ish performance at a fraction of the price."
+
+<a href="https://vitals.tidyverse.org/"><img src="vitals.png" alt="The hex sticker for the vitals package: a teddy bear in blue scrubs happily holding a stethoscope." align="right" height="240"/></a>
+
+In this post, I'll use the [vitals package](https://vitals.tidyverse.org/) to compare Gemini 2.5 Flash against several other models: 
+
+* Gemini 2.0 Flash, the previous generation of this series
+* Gemini 2.5 Pro, the more performant and expensive version of the model
+* GPT o4-mini, supposedly a peer in performance and a [leader](https://www.simonpcouch.com/blog/2025-04-18-o3-o4-mini/) on this eval in the class of cheap and snappy reasoning models
+* Claude 3.7 Sonnet, my daily driver for coding assistance
+
+> tl;dr
+>
+> * 2.5 Flash's performance is really impressive for its price point and is a marked improvement over its previous generation.
+> * o4-mini does show significantly stronger performance on this eval (though is notably more expensive).
+> * Unlike Claude 3.7 Sonnet, enabling thinking with Gemini 2.5 Flash resulted in a marked increase in performance.
+> * Gemini 2.5 Flash with thinking disabled is [nearly indistinguishable](https://www.simonpcouch.com/blog/2025-04-15-gpt-4-1/) from GPT 4.1-nano on this eval. 2.5 Flash reached an accuracy of 43.6% at a cost of $0.15/m input, $0.60/m output, which 4.1-nano scored 44.2% at a cost of $0.10/m input, $0.40/m output. 4.1-nano continues to pack the greatest punch in the budget, non-thinking price point.
+> * I'm starting to think about an initial CRAN release of vitals. Please do [give it a whir](https://vitals.tidyverse.org/) and let me know if you have any feedback.
+
+## Setting up the evaluation
+
+Let's start by defining our model connections using ellmer:
+
+```{r candidates}
+library(ellmer)
+library(vitals)
+library(tidyverse)
+
+# thinking is enabled by default, and can be disabled by
+# with a magic incantation
+# https://ai.google.dev/gemini-api/docs/thinking
+gemini_2_5_flash_thinking <- chat_google_gemini(
+  model = "gemini-2.5-flash-preview-05-20"
+)
+
+gemini_2_5_flash_non_thinking <- chat_google_gemini(
+  model = "gemini-2.5-flash-preview-05-20",
+  api_args = list(
+    generationConfig = list(
+      thinkingConfig = list(
+        thinkingBudget = 0
+        )
+      )
+    )
+)
+
+gemini_2_0_flash <- chat_google_gemini(
+  model = "gemini-2.0-flash"
+)
+gemini_2_5_pro <- chat_google_gemini(
+  model = "gemini-2.5-pro-preview-05-06"
+)
+
+gpt_o4_mini <- chat_openai(model = "o4-mini-2025-04-16")
+
+# note that i don't enable thinking here; thinking 
+# doesn't seem to have an effect for claude on this 
+# eval: https://www.simonpcouch.com/blog/2025-04-18-o3-o4-mini/
+claude_sonnet_3_7 <- chat_anthropic(model = "claude-3-7-sonnet-latest")
+```
+
+Note that I needed to configure `GOOGLE_API_KEY`, `ANTHROPIC_API_KEY`, and `OPENAI_API_KEY` environment variables to connect to these models. The pricing for these models varies considerably:
+
+```{r pricing}
+#| echo: false
+tibble::tribble(
+  ~Name, ~Input, ~Output, 
+  "Gemini 2.5 Flash (Thinking)", "$0.15", "$3.50",
+  "Gemini 2.5 Flash (Non-thinking)", "$0.15", "$0.60",
+  "Gemini 2.0 Flash", "$0.10", "$0.40",
+  "Gemini 2.5 Pro", "$1.25", "$10.00",
+  "GPT o4-mini", "$1.10", "$4.40",
+  "Claude 3.7 Sonnet", "$3.00", "$15.00",
+)
+```
+
+Gemini 2.5 Flash has a thinking and non-thinking mode, where thinking tokens are not surfaced to the user but output tokens are charged at a higher rate. With thinking enabled (as shown on the model card), Gemini 2.5 Flash's output tokens are priced somewhat similarly to o4-mini.
+
+Gemini 2.5 Pro, Gemini 2.5 Flash (Thinking), and GPT o4-mini are reasoning models, and thus will use more tokens than non-reasoning models. While Claude 3.7 Sonnet has a reasoning mode that could be enabled here, I haven't done so for this eval as it [doesn't seem to make a difference](https://www.simonpcouch.com/blog/2025-04-18-o3-o4-mini/) for performance on this eval.
+
+Let's set up a task that will evaluate each model using the `are` dataset from vitals:
+
+```{r create-task}
+are_task <- Task$new(
+  dataset = are,
+  solver = generate(),
+  scorer = model_graded_qa(
+    scorer_chat = claude_sonnet_3_7, 
+    partial_credit = TRUE
+  ),
+  epochs = 3,
+  name = "An R Eval"
+)
+
+are_task
+```
+
+:::callout-note
+See my [first post on Gemini 2.5 Pro](https://www.simonpcouch.com/blog/2025-04-01-gemini-2-5-pro/#an-r-eval-dataset) for a more thorough description of this evaluation.
+:::
+
+## Running the evaluations
+
+First, we'll evaluate our reference model, Gemini 2.5 Flash with thinking enable:
+
+```{r eval-gemini-2-5-flash-thinking, eval = should_eval}
+are_gemini_2_5_flash_thinking <- are_task$clone()
+are_gemini_2_5_flash_thinking$eval(
+  solver_chat = gemini_2_5_flash_thinking
+)
+```
+
+```{r save-gemini-2-5-flash-thinking, eval = should_eval}
+#| include: false
+if (should_eval) {
+  are_gemini_2_5_flash_thinking <- vitals:::scrub_providers(are_gemini_2_5_flash_thinking)
+  save(are_gemini_2_5_flash_thinking, file = "blog/2025-05-21-gemini-2-5-flash/tasks/are_gemini_2_5_flash_thinking.rda")
+}
+```
+
+
+From here, it's pretty rote. The same model without thinking enabled:
+
+```{r eval-gemini-2-5-flash, eval = should_eval}
+are_gemini_2_5_flash_non_thinking <- are_task$clone()
+are_gemini_2_5_flash_non_thinking$eval(
+  solver_chat = gemini_2_5_flash_non_thinking
+)
+```
+
+```{r save-gemini-2-5-flash, eval = should_eval}
+#| include: false
+if (should_eval) {
+  are_gemini_2_5_flash_non_thinking <- vitals:::scrub_providers(are_gemini_2_5_flash_non_thinking)
+  save(are_gemini_2_5_flash_non_thinking, file = "blog/2025-05-21-gemini-2-5-flash/tasks/are_gemini_2_5_flash_non_thinking.rda")
+}
+```
+
+Now for the other Gemini models:
+
+```{r eval-gemini-2-0-flash, eval = should_eval}
+are_gemini_2_0_flash <- are_task$clone()
+are_gemini_2_0_flash$eval(solver_chat = gemini_2_0_flash)
+```
+
+```{r save-gemini-2-0-flash, eval = should_eval}
+#| include: false
+if (should_eval) {
+  are_gemini_2_0_flash <- vitals:::scrub_providers(are_gemini_2_0_flash)
+  save(are_gemini_2_0_flash, file = "blog/2025-05-21-gemini-2-5-flash/tasks/are_gemini_2_0_flash.rda")
+}
+```
+
+
+```{r eval-gemini-2-5-pro, eval = should_eval}
+are_gemini_2_5_pro <- are_task$clone()
+are_gemini_2_5_pro$eval(solver_chat = gemini_2_5_pro)
+```
+
+```{r save-gemini-2-5-pro, eval = should_eval}
+#| include: false
+if (should_eval) {
+  are_gemini_2_5_pro <- vitals:::scrub_providers(are_gemini_2_5_pro)
+  save(are_gemini_2_5_pro, file = "blog/2025-05-21-gemini-2-5-flash/tasks/are_gemini_2_5_pro.rda")
+}
+```
+
+Next, we'll evaluate GPT o4-mini:
+
+```{r eval-gpt-o4-mini, eval = should_eval}
+are_gpt_o4_mini <- are_task$clone()
+are_gpt_o4_mini$eval(solver_chat = gpt_o4_mini)
+```
+
+```{r save-gpt-o4-mini, eval = should_eval}
+#| include: false
+if (should_eval) {
+  are_gpt_o4_mini <- vitals:::scrub_providers(are_gpt_o4_mini)
+  save(are_gpt_o4_mini, file = "blog/2025-05-21-gemini-2-5-flash/tasks/are_gpt_o4_mini.rda")
+}
+```
+
+Finally, let's evaluate Claude 3.7 Sonnet:
+
+```{r eval-claude, eval = should_eval}
+are_claude_3_7 <- are_task$clone()
+are_claude_3_7$eval(solver_chat = claude_sonnet_3_7)
+```
+
+```{r save-claude, eval = should_eval}
+#| include: false
+if (should_eval) {
+  are_claude_3_7 <- vitals:::scrub_providers(are_claude_3_7)
+  save(are_claude_3_7, file = "blog/2025-05-21-gemini-2-5-flash/tasks/are_claude_3_7.rda")
+}
+```
+
+```{r bundle, eval = should_eval}
+#| include: false
+vitals_bundle(
+  "blog/2025-05-21-gemini-2-5-flash/logs", 
+  "assets/2025-05-21-gemini-2-5-flash/viewer"
+)
+```
+
+The interactive viewer will allow us to inspect the evaluation in detail:
+```{r viewer}
+#| echo: false
+htmltools::tags$iframe(
+  src = "/assets/2025-05-21-gemini-2-5-flash/viewer/index.html",
+  width = "100%", 
+  height = "600px",
+  style = "border-radius: 10px; box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);"
+) 
+```
+
+:::callout-note
+While the total durations of the evaluations are correct in the viewer, the timings of specific samples are now off. Given some changes in downstream packages, vitals has to estimate how long a given request takes rather than receiving the exact duration; this will be resolved down the line.
+:::
+
+## Analysis
+
+Let's combine the results of all evaluations to compare the models:
+
+```{r are-eval}
+are_eval <- 
+  vitals_bind(
+    `Gemini 2.5 Flash (Thinking)` = are_gemini_2_5_flash_thinking,
+    `Gemini 2.5 Flash (Non-thinking)` = are_gemini_2_5_flash_non_thinking,
+    `Gemini 2.0 Flash` = are_gemini_2_0_flash,
+    `Gemini 2.5 Pro` = are_gemini_2_5_pro,
+    `GPT o4-mini` = are_gpt_o4_mini,
+    `Claude Sonnet 3.7` = are_claude_3_7
+  ) %>%
+  rename(model = task) %>%
+  mutate(
+    model = factor(model, levels = c(
+      "Gemini 2.5 Flash (Thinking)",
+      "Gemini 2.5 Flash (Non-thinking)",
+      "Gemini 2.0 Flash",
+      "Gemini 2.5 Pro",
+      "GPT o4-mini",
+      "Claude Sonnet 3.7"
+    ))
+  )
+
+are_eval
+```
+
+Let's visualize the results with a bar chart:
+
+```{r plot-are-eval}
+#| fig-alt: "A horizontal bar chart comparing various AI models' performance on R coding tasks. The chart shows percentages of correct (blue), partially correct (beige), and incorrect (orange) answers. Gemini 2.5 Flash shows comparable performance to o4-mini, both outperforming Gemini 2.0 Flash and GPT 4.1-nano. Claude 3.7 Sonnet and Gemini 2.5 Pro remain the top performers."
+#| fig-width: 8
+are_eval %>%
+  mutate(
+    score = fct_recode(
+      score, 
+      "Correct" = "C", "Partially Correct" = "P", "Incorrect" = "I"
+    ),
+  ) %>%
+  ggplot(aes(y = model, fill = score)) +
+  geom_bar(position = "fill") +
+  scale_fill_manual(
+    breaks = rev,
+    values = c("Correct" = "#67a9cf", 
+               "Partially Correct" = "#f6e8c3", 
+               "Incorrect" = "#ef8a62")
+  ) +
+  scale_x_continuous(labels = scales::percent) +
+  labs(
+    x = "Percent", y = "Model",
+    title = "An R Eval",
+    subtitle = "The Gemini 2.5 Flash models represent a middle-ground between 2.5 Pro and\no4-mini, both in terms of price and performance."
+  ) +
+  theme(
+    plot.subtitle = element_text(face = "italic"),
+    legend.position = "bottom"
+  )
+```
+
+To determine if the differences we're seeing are statistically significant, we'll use a cumulative link mixed model:
+
+```{r are-mod}
+library(ordinal)
+
+are_mod <- clmm(score ~ model + (1|id), data = are_eval)
+```
+
+```{r summary-are-mod}
+summary(are_mod)
+```
+
+For the purposes of this post, we'll just take a look at the `Coefficients` table. The reference model here is Gemini 2.5 Flash. Negative coefficient estimates for a given model indicate that model is less likely to receive higher ratings than Gemini 2.5 Flash. Looking at the coefficients:
+
+* Gemini 2.5 Flash is a marked improvement over its previous generation on this eval.
+* Gemini 2.5 Flash significantly lags behind o4-mini on this eval.
+* Enabling Gemini 2.5 Flash's thinking results in a marked increase in performance over the non-thinking model, though brings the pricing much closer to the more performant o4-mini.
+* Gemini 2.5 Flash with thinking disabled is [nearly indistinguishable](https://www.simonpcouch.com/blog/2025-04-15-gpt-4-1/) from GPT 4.1-nano on this eval. 2.5 Flash reached an accuracy of 43.6% at a cost of $0.15/m input, $0.60/m output, which 4.1-nano scored 44.2% at a cost of $0.10/m input, $0.40/m output. 4.1-nano continues to pack the greatest punch in the budget, non-thinking price point.
+
+One more note before I wrap up: For the past month or two, development on ellmer and vitals has been quite coupled to support answering common questions about LLM performance. With the [release of ellmer 0.2.0 on CRAN](https://ellmer.tidyverse.org/news/index.html#ellmer-020) last week, I'm starting to gear up for an initial CRAN release of vitals here soon. In the meantime, I'm especially interested in feedback from folks who have given the package a go! Do let me know if you [give it a whir](https://vitals.tidyverse.org/) and run into any hiccups.
+
+---
+
+_Thank you to Max Kuhn for advising on the model-based analysis here._
+
+_In a first for this blog, I tried using a model to help me write this post. In general, I don't tend to use models to help with writing at all. Now that I've written a good few of these posts to pattern-match from, I wondered if Claude 3.7 Sonnet could draft a reasonable starting place. I used [this prompt](https://gist.github.com/simonpcouch/d756c133631474f0e5cf1eae244f65c0); as usual, I ended up deleting all  of the prose that the model wrote, but it was certainly a boost to have all of the code written for me._

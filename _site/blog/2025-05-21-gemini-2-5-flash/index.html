@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.40">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta name="dcterms.date" content="2025-05-21">
+<title>Evaluating Gemini 2.5 Flash on R coding tasks | Simon P. Couch – Simon P. Couch</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../assets/cabin.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-a2d2da6447bc21d3e680c795c75d6b9d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script><script async="" src="https://www.googletagmanager.com/gtag/js?id=G-DDB8R0B1ZW"></script><script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
+</script>
+</head>
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner"><nav class="navbar navbar-expand-lg " data-bs-theme="dark"><div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../assets/cabin.png" alt="" class="navbar-logo"></a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Simon P. Couch</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+<li class="nav-item">
+    <a class="nav-link" href="../../about/index.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog/index.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../software.html"> 
+<span class="menu-text">Software</span></a>
+  </li>  
+</ul>
+</div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+    <a href="https://www.github.com/simonpcouch/website" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav></header><!-- content --><header id="title-block-header" class="quarto-title-block default page-columns page-full"><div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Evaluating Gemini 2.5 Flash on R coding tasks</h1>
+            <p class="subtitle lead">Google’s Gemini 2.5 Pro release really made a splash last month. They’ve just announced an update to 2.5 Flash, a faster and cheaper model.</p>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">May 21, 2025</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content"><p>Google’s preview of their Gemini 2.5 Pro model has <a href="https://www.simonpcouch.com/blog/2025-05-07-gemini-2-5-pro-new/">really made a splash</a>. The model has become many folks’ daily driver, and I’ve started to see “What about Gemini?” in the comments of each of these blog posts if they don’t explicitly call out the model series in the title. Yesterday, Google announced an update of the preview for Gemini 2.5 Flash, a smaller and cheaper version of 2.5 Pro.</p>
+<p>In the <a href="https://blog.google/technology/google-deepmind/google-gemini-updates-io-2025">model card</a>, Google juxtaposes Gemini 2.5 Flash with OpenAI’s o4-mini:</p>
+<div style="text-align: center;">
+<p><img src="juxtapose.png" style="border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); width: 600px; height: auto;"></p>
+</div>
+<p>This comparison especially caught my eye, given that <a href="https://www.simonpcouch.com/blog/2025-04-18-o3-o4-mini/">o4-mini is the current leader</a> in the class of cheap, snappy thinking models on an R coding evaluation I’ve been running the last few months. The proposition seems to be “o4-mini-ish performance at a fraction of the price.”</p>
+<p><a href="https://vitals.tidyverse.org/"><img src="vitals.png" alt="The hex sticker for the vitals package: a teddy bear in blue scrubs happily holding a stethoscope." align="right" height="240"></a></p>
+<p>In this post, I’ll use the <a href="https://vitals.tidyverse.org/">vitals package</a> to compare Gemini 2.5 Flash against several other models:</p>
+<ul>
+<li>Gemini 2.0 Flash, the previous generation of this series</li>
+<li>Gemini 2.5 Pro, the more performant and expensive version of the model</li>
+<li>GPT o4-mini, supposedly a peer in performance and a <a href="https://www.simonpcouch.com/blog/2025-04-18-o3-o4-mini/">leader</a> on this eval in the class of cheap and snappy reasoning models</li>
+<li>Claude 3.7 Sonnet, my daily driver for coding assistance</li>
+</ul>
+<blockquote class="blockquote">
+<p>tl;dr</p>
+<ul>
+<li>2.5 Flash’s performance is really impressive for its price point and is a marked improvement over its previous generation.</li>
+<li>o4-mini does show significantly stronger performance on this eval (though is notably more expensive).</li>
+<li>Unlike Claude 3.7 Sonnet, enabling thinking with Gemini 2.5 Flash resulted in a marked increase in performance.</li>
+<li>Gemini 2.5 Flash with thinking disabled is <a href="https://www.simonpcouch.com/blog/2025-04-15-gpt-4-1/">nearly indistinguishable</a> from GPT 4.1-nano on this eval. 2.5 Flash reached an accuracy of 43.6% at a cost of $0.15/m input, $0.60/m output, which 4.1-nano scored 44.2% at a cost of $0.10/m input, $0.40/m output. 4.1-nano continues to pack the greatest punch in the budget, non-thinking price point.</li>
+<li>I’m starting to think about an initial CRAN release of vitals. Please do <a href="https://vitals.tidyverse.org/">give it a whir</a> and let me know if you have any feedback.</li>
+</ul>
+</blockquote>
+<section id="setting-up-the-evaluation" class="level2"><h2 class="anchored" data-anchor-id="setting-up-the-evaluation">Setting up the evaluation</h2>
+<p>Let’s start by defining our model connections using ellmer:</p>
+<div class="cell">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ellmer.tidyverse.org">ellmer</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/tidyverse/vitals">vitals</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># thinking is enabled by default, and can be disabled by</span></span>
+<span><span class="co"># with a magic incantation</span></span>
+<span><span class="co"># https://ai.google.dev/gemini-api/docs/thinking</span></span>
+<span><span class="va">gemini_2_5_flash_thinking</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ellmer.tidyverse.org/reference/chat_google_gemini.html">chat_google_gemini</a></span><span class="op">(</span></span>
+<span>  model <span class="op">=</span> <span class="st">"gemini-2.5-flash-preview-05-20"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">gemini_2_5_flash_non_thinking</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ellmer.tidyverse.org/reference/chat_google_gemini.html">chat_google_gemini</a></span><span class="op">(</span></span>
+<span>  model <span class="op">=</span> <span class="st">"gemini-2.5-flash-preview-05-20"</span>,</span>
+<span>  api_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span></span>
+<span>    generationConfig <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span></span>
+<span>      thinkingConfig <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span></span>
+<span>        thinkingBudget <span class="op">=</span> <span class="fl">0</span></span>
+<span>        <span class="op">)</span></span>
+<span>      <span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">gemini_2_0_flash</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ellmer.tidyverse.org/reference/chat_google_gemini.html">chat_google_gemini</a></span><span class="op">(</span></span>
+<span>  model <span class="op">=</span> <span class="st">"gemini-2.0-flash"</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">gemini_2_5_pro</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ellmer.tidyverse.org/reference/chat_google_gemini.html">chat_google_gemini</a></span><span class="op">(</span></span>
+<span>  model <span class="op">=</span> <span class="st">"gemini-2.5-pro-preview-05-06"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">gpt_o4_mini</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ellmer.tidyverse.org/reference/chat_openai.html">chat_openai</a></span><span class="op">(</span>model <span class="op">=</span> <span class="st">"o4-mini-2025-04-16"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># note that i don't enable thinking here; thinking </span></span>
+<span><span class="co"># doesn't seem to have an effect for claude on this </span></span>
+<span><span class="co"># eval: https://www.simonpcouch.com/blog/2025-04-18-o3-o4-mini/</span></span>
+<span><span class="va">claude_sonnet_3_7</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ellmer.tidyverse.org/reference/chat_anthropic.html">chat_anthropic</a></span><span class="op">(</span>model <span class="op">=</span> <span class="st">"claude-3-7-sonnet-latest"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Note that I needed to configure <code>GOOGLE_API_KEY</code>, <code>ANTHROPIC_API_KEY</code>, and <code>OPENAI_API_KEY</code> environment variables to connect to these models. The pricing for these models varies considerably:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 3
+  Name                            Input Output
+  &lt;chr&gt;                           &lt;chr&gt; &lt;chr&gt; 
+1 Gemini 2.5 Flash (Thinking)     $0.15 $3.50 
+2 Gemini 2.5 Flash (Non-thinking) $0.15 $0.60 
+3 Gemini 2.0 Flash                $0.10 $0.40 
+4 Gemini 2.5 Pro                  $1.25 $10.00
+5 GPT o4-mini                     $1.10 $4.40 
+6 Claude 3.7 Sonnet               $3.00 $15.00</code></pre>
+</div>
+</div>
+<p>Gemini 2.5 Flash has a thinking and non-thinking mode, where thinking tokens are not surfaced to the user but output tokens are charged at a higher rate. With thinking enabled (as shown on the model card), Gemini 2.5 Flash’s output tokens are priced somewhat similarly to o4-mini.</p>
+<p>Gemini 2.5 Pro, Gemini 2.5 Flash (Thinking), and GPT o4-mini are reasoning models, and thus will use more tokens than non-reasoning models. While Claude 3.7 Sonnet has a reasoning mode that could be enabled here, I haven’t done so for this eval as it <a href="https://www.simonpcouch.com/blog/2025-04-18-o3-o4-mini/">doesn’t seem to make a difference</a> for performance on this eval.</p>
+<p>Let’s set up a task that will evaluate each model using the <code>are</code> dataset from vitals:</p>
+<div class="cell">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">are_task</span> <span class="op">&lt;-</span> <span class="va"><a href="https://vitals.tidyverse.org/reference/Task.html">Task</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
+<span>  dataset <span class="op">=</span> <span class="va">are</span>,</span>
+<span>  solver <span class="op">=</span> <span class="fu"><a href="https://vitals.tidyverse.org/reference/generate.html">generate</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  scorer <span class="op">=</span> <span class="fu"><a href="https://vitals.tidyverse.org/reference/scorer_model.html">model_graded_qa</a></span><span class="op">(</span></span>
+<span>    scorer_chat <span class="op">=</span> <span class="va">claude_sonnet_3_7</span>, </span>
+<span>    partial_credit <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  epochs <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>  name <span class="op">=</span> <span class="st">"An R Eval"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">are_task</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>An evaluation task An-R-Eval.</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>See my <a href="https://www.simonpcouch.com/blog/2025-04-01-gemini-2-5-pro/#an-r-eval-dataset">first post on Gemini 2.5 Pro</a> for a more thorough description of this evaluation.</p>
+</div>
+</div>
+</section><section id="running-the-evaluations" class="level2"><h2 class="anchored" data-anchor-id="running-the-evaluations">Running the evaluations</h2>
+<p>First, we’ll evaluate our reference model, Gemini 2.5 Flash with thinking enable:</p>
+<div class="cell">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">are_gemini_2_5_flash_thinking</span> <span class="op">&lt;-</span> <span class="va">are_task</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">are_gemini_2_5_flash_thinking</span><span class="op">$</span><span class="fu">eval</span><span class="op">(</span></span>
+<span>  solver_chat <span class="op">=</span> <span class="va">gemini_2_5_flash_thinking</span></span>
+<span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>From here, it’s pretty rote. The same model without thinking enabled:</p>
+<div class="cell">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">are_gemini_2_5_flash_non_thinking</span> <span class="op">&lt;-</span> <span class="va">are_task</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">are_gemini_2_5_flash_non_thinking</span><span class="op">$</span><span class="fu">eval</span><span class="op">(</span></span>
+<span>  solver_chat <span class="op">=</span> <span class="va">gemini_2_5_flash_non_thinking</span></span>
+<span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now for the other Gemini models:</p>
+<div class="cell">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">are_gemini_2_0_flash</span> <span class="op">&lt;-</span> <span class="va">are_task</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">are_gemini_2_0_flash</span><span class="op">$</span><span class="fu">eval</span><span class="op">(</span>solver_chat <span class="op">=</span> <span class="va">gemini_2_0_flash</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">are_gemini_2_5_pro</span> <span class="op">&lt;-</span> <span class="va">are_task</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">are_gemini_2_5_pro</span><span class="op">$</span><span class="fu">eval</span><span class="op">(</span>solver_chat <span class="op">=</span> <span class="va">gemini_2_5_pro</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Next, we’ll evaluate GPT o4-mini:</p>
+<div class="cell">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">are_gpt_o4_mini</span> <span class="op">&lt;-</span> <span class="va">are_task</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">are_gpt_o4_mini</span><span class="op">$</span><span class="fu">eval</span><span class="op">(</span>solver_chat <span class="op">=</span> <span class="va">gpt_o4_mini</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Finally, let’s evaluate Claude 3.7 Sonnet:</p>
+<div class="cell">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">are_claude_3_7</span> <span class="op">&lt;-</span> <span class="va">are_task</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">are_claude_3_7</span><span class="op">$</span><span class="fu">eval</span><span class="op">(</span>solver_chat <span class="op">=</span> <span class="va">claude_sonnet_3_7</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The interactive viewer will allow us to inspect the evaluation in detail:</p>
+<div class="cell">
+<div class="cell-output-display">
+<iframe src="../../assets/2025-05-21-gemini-2-5-flash/viewer/index.html" width="100%" height="600px" style="border-radius: 10px; box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);"></iframe>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>While the total durations of the evaluations are correct in the viewer, the timings of specific samples are now off. Given some changes in downstream packages, vitals has to estimate how long a given request takes rather than receiving the exact duration; this will be resolved down the line.</p>
+</div>
+</div>
+</section><section id="analysis" class="level2"><h2 class="anchored" data-anchor-id="analysis">Analysis</h2>
+<p>Let’s combine the results of all evaluations to compare the models:</p>
+<div class="cell">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">are_eval</span> <span class="op">&lt;-</span> </span>
+<span>  <span class="fu"><a href="https://vitals.tidyverse.org/reference/vitals_bind.html">vitals_bind</a></span><span class="op">(</span></span>
+<span>    `Gemini 2.5 Flash (Thinking)` <span class="op">=</span> <span class="va">are_gemini_2_5_flash_thinking</span>,</span>
+<span>    `Gemini 2.5 Flash (Non-thinking)` <span class="op">=</span> <span class="va">are_gemini_2_5_flash_non_thinking</span>,</span>
+<span>    `Gemini 2.0 Flash` <span class="op">=</span> <span class="va">are_gemini_2_0_flash</span>,</span>
+<span>    `Gemini 2.5 Pro` <span class="op">=</span> <span class="va">are_gemini_2_5_pro</span>,</span>
+<span>    `GPT o4-mini` <span class="op">=</span> <span class="va">are_gpt_o4_mini</span>,</span>
+<span>    `Claude Sonnet 3.7` <span class="op">=</span> <span class="va">are_claude_3_7</span></span>
+<span>  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">task</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
+<span>    model <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">model</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span></span>
+<span>      <span class="st">"Gemini 2.5 Flash (Thinking)"</span>,</span>
+<span>      <span class="st">"Gemini 2.5 Flash (Non-thinking)"</span>,</span>
+<span>      <span class="st">"Gemini 2.0 Flash"</span>,</span>
+<span>      <span class="st">"Gemini 2.5 Pro"</span>,</span>
+<span>      <span class="st">"GPT o4-mini"</span>,</span>
+<span>      <span class="st">"Claude Sonnet 3.7"</span></span>
+<span>    <span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="va">are_eval</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 468 × 5
+   model                       id                 epoch score metadata
+   &lt;fct&gt;                       &lt;chr&gt;              &lt;int&gt; &lt;ord&gt; &lt;list&gt;  
+ 1 Gemini 2.5 Flash (Thinking) after-stat-bar-he…     1 I     &lt;tibble&gt;
+ 2 Gemini 2.5 Flash (Thinking) after-stat-bar-he…     2 I     &lt;tibble&gt;
+ 3 Gemini 2.5 Flash (Thinking) after-stat-bar-he…     3 I     &lt;tibble&gt;
+ 4 Gemini 2.5 Flash (Thinking) conditional-group…     1 P     &lt;tibble&gt;
+ 5 Gemini 2.5 Flash (Thinking) conditional-group…     2 C     &lt;tibble&gt;
+ 6 Gemini 2.5 Flash (Thinking) conditional-group…     3 C     &lt;tibble&gt;
+ 7 Gemini 2.5 Flash (Thinking) correlated-delays…     1 P     &lt;tibble&gt;
+ 8 Gemini 2.5 Flash (Thinking) correlated-delays…     2 P     &lt;tibble&gt;
+ 9 Gemini 2.5 Flash (Thinking) correlated-delays…     3 P     &lt;tibble&gt;
+10 Gemini 2.5 Flash (Thinking) curl-http-get          1 C     &lt;tibble&gt;
+# ℹ 458 more rows</code></pre>
+</div>
+</div>
+<p>Let’s visualize the results with a bar chart:</p>
+<div class="cell">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">are_eval</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
+<span>    score <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/fct_recode.html">fct_recode</a></span><span class="op">(</span></span>
+<span>      <span class="va">score</span>, </span>
+<span>      <span class="st">"Correct"</span> <span class="op">=</span> <span class="st">"C"</span>, <span class="st">"Partially Correct"</span> <span class="op">=</span> <span class="st">"P"</span>, <span class="st">"Incorrect"</span> <span class="op">=</span> <span class="st">"I"</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">model</span>, fill <span class="op">=</span> <span class="va">score</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">geom_bar</a></span><span class="op">(</span>position <span class="op">=</span> <span class="st">"fill"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_fill_manual</a></span><span class="op">(</span></span>
+<span>    breaks <span class="op">=</span> <span class="va">rev</span>,</span>
+<span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Correct"</span> <span class="op">=</span> <span class="st">"#67a9cf"</span>, </span>
+<span>               <span class="st">"Partially Correct"</span> <span class="op">=</span> <span class="st">"#f6e8c3"</span>, </span>
+<span>               <span class="st">"Incorrect"</span> <span class="op">=</span> <span class="st">"#ef8a62"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_x_continuous</a></span><span class="op">(</span>labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="va"><a href="https://scales.r-lib.org/reference/percent_format.html">percent</a></span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span></span>
+<span>    x <span class="op">=</span> <span class="st">"Percent"</span>, y <span class="op">=</span> <span class="st">"Model"</span>,</span>
+<span>    title <span class="op">=</span> <span class="st">"An R Eval"</span>,</span>
+<span>    subtitle <span class="op">=</span> <span class="st">"The Gemini 2.5 Flash models represent a middle-ground between 2.5 Pro and\no4-mini, both in terms of price and performance."</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span></span>
+<span>    plot.subtitle <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>face <span class="op">=</span> <span class="st">"italic"</span><span class="op">)</span>,</span>
+<span>    legend.position <span class="op">=</span> <span class="st">"bottom"</span></span>
+<span>  <span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="index_files/figure-html/plot-are-eval-1.png" class="img-fluid figure-img" style="width:100.0%" alt="A horizontal bar chart comparing various AI models' performance on R coding tasks. The chart shows percentages of correct (blue), partially correct (beige), and incorrect (orange) answers. Gemini 2.5 Flash shows comparable performance to o4-mini, both outperforming Gemini 2.0 Flash and GPT 4.1-nano. Claude 3.7 Sonnet and Gemini 2.5 Pro remain the top performers."></p>
+</figure>
+</div>
+</div>
+</div>
+<p>To determine if the differences we’re seeing are statistically significant, we’ll use a cumulative link mixed model:</p>
+<div class="cell">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/runehaubo/ordinal">ordinal</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">are_mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ordinal/man/clmm.html">clmm</a></span><span class="op">(</span><span class="va">score</span> <span class="op">~</span> <span class="va">model</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span><span class="op">|</span><span class="va">id</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">are_eval</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">are_mod</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Cumulative Link Mixed Model fitted with the Laplace approximation
+
+formula: score ~ model + (1 | id)
+data:    are_eval
+
+ link  threshold nobs logLik  AIC    niter     max.grad cond.H 
+ logit flexible  468  -375.15 766.30 397(1971) 8.31e-05 6.4e+01
+
+Random effects:
+ Groups Name        Variance Std.Dev.
+ id     (Intercept) 5.523    2.35    
+Number of groups:  id 26 
+
+Coefficients:
+                                     Estimate Std. Error z value
+modelGemini 2.5 Flash (Non-thinking)  -0.8506     0.3604  -2.360
+modelGemini 2.0 Flash                 -1.3338     0.3698  -3.607
+modelGemini 2.5 Pro                    0.6600     0.3611   1.828
+modelGPT o4-mini                       0.7887     0.3620   2.179
+modelClaude Sonnet 3.7                 0.3740     0.3567   1.048
+                                     Pr(&gt;|z|)    
+modelGemini 2.5 Flash (Non-thinking)  0.01826 *  
+modelGemini 2.0 Flash                 0.00031 ***
+modelGemini 2.5 Pro                   0.06759 .  
+modelGPT o4-mini                      0.02934 *  
+modelClaude Sonnet 3.7                0.29441    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Threshold coefficients:
+    Estimate Std. Error z value
+I|P  -1.3191     0.5404  -2.441
+P|C   0.4820     0.5361   0.899</code></pre>
+</div>
+</div>
+<p>For the purposes of this post, we’ll just take a look at the <code>Coefficients</code> table. The reference model here is Gemini 2.5 Flash. Negative coefficient estimates for a given model indicate that model is less likely to receive higher ratings than Gemini 2.5 Flash. Looking at the coefficients:</p>
+<ul>
+<li>Gemini 2.5 Flash is a marked improvement over its previous generation on this eval.</li>
+<li>Gemini 2.5 Flash significantly lags behind o4-mini on this eval.</li>
+<li>Enabling Gemini 2.5 Flash’s thinking results in a marked increase in performance over the non-thinking model, though brings the pricing much closer to the more performant o4-mini.</li>
+<li>Gemini 2.5 Flash with thinking disabled is <a href="https://www.simonpcouch.com/blog/2025-04-15-gpt-4-1/">nearly indistinguishable</a> from GPT 4.1-nano on this eval. 2.5 Flash reached an accuracy of 43.6% at a cost of $0.15/m input, $0.60/m output, which 4.1-nano scored 44.2% at a cost of $0.10/m input, $0.40/m output. 4.1-nano continues to pack the greatest punch in the budget, non-thinking price point.</li>
+</ul>
+<p>One more note before I wrap up: For the past month or two, development on ellmer and vitals has been quite coupled to support answering common questions about LLM performance. With the <a href="https://ellmer.tidyverse.org/news/index.html#ellmer-020">release of ellmer 0.2.0 on CRAN</a> last week, I’m starting to gear up for an initial CRAN release of vitals here soon. In the meantime, I’m especially interested in feedback from folks who have given the package a go! Do let me know if you <a href="https://vitals.tidyverse.org/">give it a whir</a> and run into any hiccups.</p>
+<hr>
+<p><em>Thank you to Max Kuhn for advising on the model-based analysis here.</em></p>
+<p><em>In a first for this blog, I tried using a model to help me write this post. In general, I don’t tend to use models to help with writing at all. Now that I’ve written a good few of these posts to pattern-match from, I wondered if Claude 3.7 Sonnet could draft a reasonable starting place. I used <a href="https://gist.github.com/simonpcouch/d756c133631474f0e5cf1eae244f65c0">this prompt</a>; as usual, I ended up deleting all of the prose that the model wrote, but it was certainly a boost to have all of the code written for me.</em></p>
+
+
+</section><a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a><div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-reuse"><h2 class="anchored quarto-appendix-heading">Reuse</h2><div class="quarto-appendix-contents"><div><a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a></div></div></section></div></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/simonpcouch\.com");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><script src="https://utteranc.es/client.js" repo="simonpcouch/website" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script>
+</div> <!-- /content -->
+<footer class="footer"><div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© 2024 Simon P. Couch ∙ Made with <a href="https://quarto.org">Quarto</a></p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+</body></html>

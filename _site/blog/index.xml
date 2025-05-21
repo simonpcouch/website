@@ -10,7 +10,15 @@
 <atom:link href="https://simonpcouch.com/blog/index.xml" rel="self" type="application/rss+xml"/>
 <description>A data science blog</description>
 <generator>quarto-1.6.40</generator>
-<lastBuildDate>Wed, 07 May 2025 05:00:00 GMT</lastBuildDate>
+<lastBuildDate>Wed, 21 May 2025 05:00:00 GMT</lastBuildDate>
+<item>
+  <title>Evaluating Gemini 2.5 Flash on R coding tasks</title>
+  <link>https://simonpcouch.com/blog/2025-05-21-gemini-2-5-flash/</link>
+  <description><![CDATA[ Google’s preview of their Gemini 2.5 Pro model has <a href="https://www.simonpcouch.com/blog/2025-05-07-gemini-2-5-pro-new/">really made a splash</a>. The model has become many folks’ daily driver, and I’ve started to see “What about Gemini?” in the comments of each of these blog posts if they don’t explicitly call out the model series in the title. Yesterday, Google announced an update of the preview for Gemini 2.5 Flash, a smaller and cheaper version of 2.5 Pro. ]]></description>
+  <guid>https://simonpcouch.com/blog/2025-05-21-gemini-2-5-flash/</guid>
+  <pubDate>Wed, 21 May 2025 05:00:00 GMT</pubDate>
+  <media:content url="https://simonpcouch.com/blog/2025-05-21-gemini-2-5-flash/featured.png" medium="image" type="image/png" height="144" width="144"/>
+</item>
 <item>
   <title>Evaluating the new Gemini 2.5 Pro update on R coding</title>
   <link>https://simonpcouch.com/blog/2025-05-07-gemini-2-5-pro-new/</link>
@@ -162,14 +170,6 @@
   <guid>https://simonpcouch.com/blog/2023-09-01-jmt-2023/</guid>
   <pubDate>Fri, 01 Sep 2023 05:00:00 GMT</pubDate>
   <media:content url="https://simonpcouch.com/blog/2023-09-01-jmt-2023/featured.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
-  <title>Optimizing model parameters faster with tidymodels</title>
-  <link>https://simonpcouch.com/blog/2023-08-04-parallel-racing/</link>
-  <description><![CDATA[ Especially for large amounts of data or large grids of parameters, the time and resources needed to tune statistical models can quickly become a barrier to getting machine learning models deployed. Many examples online demonstrating how to tune hyperparameters with tidymodels use <code>tune_grid()</code> on one CPU core. Making use of parallel processing and using a near-drop-in replacement for <code>tune_grid()</code> can speed up hyperparameter tuning by 20-30x! ]]></description>
-  <guid>https://simonpcouch.com/blog/2023-08-04-parallel-racing/</guid>
-  <pubDate>Fri, 04 Aug 2023 05:00:00 GMT</pubDate>
-  <media:content url="https://simonpcouch.com/blog/2023-08-04-parallel-racing/featured.png" medium="image" type="image/png" height="141" width="144"/>
 </item>
 </channel>
 </rss>
