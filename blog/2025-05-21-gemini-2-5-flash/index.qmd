@@ -340,7 +340,7 @@ are_eval
 Let's visualize the results with a bar chart:
 
 ```{r plot-are-eval}
-#| fig-alt: "A horizontal bar chart comparing various AI models' performance on R coding tasks. The chart shows percentages of correct (blue), partially correct (beige), and incorrect (orange) answers. Gemini 2.5 Flash shows comparable performance to o4-mini, both outperforming Gemini 2.0 Flash and GPT 4.1-nano. Claude 3.7 Sonnet and Gemini 2.5 Pro remain the top performers."
+#| fig-alt: "A horizontal bar chart comparing various AI models' performance on R coding tasks. The chart shows percentages of correct (blue), partially correct (beige), and incorrect (orange) answers. Gemini 2.5 Flash demonstrates performance somewhere between 2.5 Pro and o4-mini, with thinking resulting in a 10% increase in the proportion of correct answers. Claude 3.7 Sonnet and o4-mini remain the top performers."
 #| fig-width: 8
 are_eval %>%
   mutate(
