@@ -313,6 +313,8 @@ costs
 ```
 
 ```{r}
+#| fig-alt: "A scatterplot comparing the price and performance of four LLMs. While the Claude Sonnet models and o4-mini are clustered around $1, o4-mini shows much stronger performance. Claude 4 Opus delivers slightly stronger performance than o4-mini, though is much more expensive at $4 total."
+#| fig-width: 8
 ggplot(costs) +
   aes(x = Price, y = Score, label = Name) +
   geom_point(size = 3, color = "#4A7862") +
