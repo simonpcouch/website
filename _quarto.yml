@@ -8,6 +8,7 @@ project:
     - "assets/2025-04-18-o3-o4-mini/viewer/logs"
     - "assets/2025-05-07-gemini-2-5-pro-new/viewer/logs"
     - "assets/2025-05-21-gemini-2-5-flash/viewer/logs"
+    - "assets/2025-05-27-claude-4/viewer/logs"
   post-render: 
     - "cp -rv static/. _site" # source: https://github.com/quarto-dev/quarto-cli/discussions/4162#discussioncomment-4831352
 

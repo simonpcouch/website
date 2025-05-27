@@ -10,7 +10,15 @@
 <atom:link href="https://simonpcouch.com/blog/index.xml" rel="self" type="application/rss+xml"/>
 <description>A data science blog</description>
 <generator>quarto-1.6.40</generator>
-<lastBuildDate>Wed, 21 May 2025 05:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 27 May 2025 05:00:00 GMT</lastBuildDate>
+<item>
+  <title>Claude 4 and R Coding</title>
+  <link>https://simonpcouch.com/blog/2025-05-27-claude-4/</link>
+  <description><![CDATA[ <a href="https://www.anthropic.com/news/claude-4">Claude 4</a> dropped on Thursday! Given that Claude 3.7 Sonnet is my daily driver LLM for R coding, I’ve been excited to poke at it. ]]></description>
+  <guid>https://simonpcouch.com/blog/2025-05-27-claude-4/</guid>
+  <pubDate>Tue, 27 May 2025 05:00:00 GMT</pubDate>
+  <media:content url="https://simonpcouch.com/blog/2025-05-27-claude-4/featured.png" medium="image" type="image/png" height="125" width="144"/>
+</item>
 <item>
   <title>Evaluating Gemini 2.5 Flash on R coding tasks</title>
   <link>https://simonpcouch.com/blog/2025-05-21-gemini-2-5-flash/</link>
@@ -162,14 +170,6 @@
   <guid>https://simonpcouch.com/blog/2023-10-11-submodels-rabbit-hole/</guid>
   <pubDate>Wed, 11 Oct 2023 05:00:00 GMT</pubDate>
   <media:content url="https://simonpcouch.com/blog/2023-10-11-submodels-rabbit-hole/featured.png" medium="image" type="image/png" height="131" width="144"/>
-</item>
-<item>
-  <title>Hiking the 2023 John Muir Trail / Nüümü Poyo</title>
-  <link>https://simonpcouch.com/blog/2023-09-01-jmt-2023/</link>
-  <description><![CDATA[ The John Muir Trail (JMT) is a backpacking trail through California’s Sierra Nevada. For folks heading northbound, the trail begins at the top of Mt. Whitney—the tallest mountain in the contiguous US—ascending 8 mountain passes over 214 miles to Yosemite Valley. The JMT’s route traces portions of Nüümü Poyo, or the People’s Trail: historically significant trade routes maintained by people indigenous to what is now California. ]]></description>
-  <guid>https://simonpcouch.com/blog/2023-09-01-jmt-2023/</guid>
-  <pubDate>Fri, 01 Sep 2023 05:00:00 GMT</pubDate>
-  <media:content url="https://simonpcouch.com/blog/2023-09-01-jmt-2023/featured.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>

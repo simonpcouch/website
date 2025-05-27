@@ -1,0 +1,348 @@
+---
+title: "Claude 4 and R Coding"
+date: '2025-05-27'
+tags:
+  - ai
+  - vitals
+  - rstats
+subtitle: "Evaluating the most recent releases of Claude Sonnet and Opus on challenging R coding problems."
+image: featured.png
+summary: ''
+---
+
+```{r setup}
+#| include: false
+options(ellmer_timeout_s = 1000)
+Sys.setenv(VITALS_LOG_DIR = "blog/2025-05-27-claude-4/logs")
+should_eval <- FALSE
+
+task_files <- list.files(here::here("blog/2025-05-27-claude-4/tasks"), full.names = TRUE)
+for (file in task_files) {
+  load(file)
+}
+
+options(width = 70)
+
+knitr::opts_chunk$set(
+  fig.width = 6, 
+  fig.asp = 0.618, 
+  out.width = "100%", 
+  message = FALSE, 
+  warning = FALSE
+)
+
+library(ggplot2)
+theme_set(
+  theme_bw() +
+  theme(
+    panel.border = element_blank(),
+    panel.background = element_rect(fill = "#f8f8f1", color = NA),
+    plot.background = element_rect(fill = "#f8f8f1", color = NA),
+    legend.background = element_rect(fill = "#F3F3EE", color = NA)
+  )
+)
+
+options(
+  ggplot2.discrete.colour = c(
+    "#ccb118", "#4A7862", "#8B4513", "#B0B0B0", "#000000"
+  ),
+  ggplot2.discrete.fill = c(
+    "#ccb118", "#4A7862", "#8B4513", "#B0B0B0", "#000000"
+  )
+)
+
+cat <- function(x, width = 0.9 * getOption("width")) {
+  lines <- unlist(strsplit(x, "\n"))
+  wrapped <- unlist(lapply(lines, strwrap, width = width))
+  base::cat(wrapped, sep = "\n")
+}
+
+# use this to resize the thumbnail image for the blog post
+optimize_image <- function(
+	image_path, 
+	target_width = 500, 
+	target_quality = 85, 
+	output_format = "png"
+  ) {
+  img <- magick::image_read(image_path)
+  
+  dims <- magick::image_info(img)
+  
+  if (dims$width > target_width) {
+    img <- magick::image_resize(img, paste0(target_width, "x"))
+  }
+  
+  img <- magick::image_write(
+	img, image_path, format = output_format, quality = target_quality
+  )
+  
+  invisible(img)
+}
+```
+
+[Claude 4](https://www.anthropic.com/news/claude-4) dropped on Thursday! Given that Claude 3.7 Sonnet is my daily driver LLM for R coding, I've been excited to poke at it.
+
+<a href="https://vitals.tidyverse.org/"><img src="vitals.png" alt="The hex sticker for the vitals package: a teddy bear in blue scrubs happily holding a stethoscope." align="right" height="240"/></a>
+
+The last few months, I've been writing a [series](https://www.simonpcouch.com/blog/2025-05-21-gemini-2-5-flash/) [of](https://www.simonpcouch.com/blog/2025-05-07-gemini-2-5-pro-new/) [blog](https://www.simonpcouch.com/blog/2025-04-18-o3-o4-mini/) [posts](https://www.simonpcouch.com/blog/2025-04-15-gpt-4-1/) where I evaluate new LLM releases on their R coding performance. I do so entirely in R using the [ellmer](https://ellmer.tidyverse.org/) and [vitals](https://vitals.tidyverse.org/) packages, the latter of which will be headed to CRAN in the coming weeks. In this post, I'll skip over all of the evaluation code and just make some graphs; if you're interested in learning more about how to run an eval like this one, check out the post [Evaluating o3 and o4-mini on R coding performance](https://www.simonpcouch.com/blog/2025-04-18-o3-o4-mini/).
+
+Here's the gist:
+
+* [An R Eval](https://vitals.tidyverse.org/reference/are.html) is a dataset of challenging R coding problems.
+* We'll run an evaluation on that dataset on Claude 4 Sonnet, Claude 4 Opus (which Anthropic made a point to note had impressive coding performance), Claude 3.7 Sonnet (my previous coding daily driver), and o4-mini (up to this point, the [most performant model](https://www.simonpcouch.com/blog/2025-04-18-o3-o4-mini/) in this eval).
+* Using the results, we can measure how well different models solved the R coding problems, how many tokens (and thus dollars) they used to get to those answers, and how long it took them to finish their answer.
+
+```{r load-pkgs}
+library(ellmer)
+library(vitals)
+library(tidyverse)
+library(ggrepel)
+```
+
+<details>
+  <summary>Full evaluation code here</summary>
+```{r eval, eval = should_eval}
+claude_4_sonnet <- chat_anthropic(model = "claude-sonnet-4-20250514")
+claude_4_opus <- chat_anthropic(model = "claude-opus-4-20250514")
+claude_3_7_sonnet <- chat_anthropic(model = "claude-3-7-sonnet-latest")
+gpt_o4_mini <- chat_openai(model = "o4-mini-2025-04-16")
+
+are_task <- Task$new(
+  dataset = are,
+  solver = generate(),
+  scorer = model_graded_qa(
+    scorer_chat = claude_3_7_sonnet, 
+    partial_credit = TRUE
+  ),
+  epochs = 3,
+  name = "An R Eval"
+)
+
+are_task
+
+are_claude_4_sonnet <- are_task$clone()
+are_claude_4_sonnet$eval(solver_chat = claude_4_sonnet)
+are_claude_4_sonnet <- vitals:::scrub_providers(are_claude_4_sonnet)
+save(are_claude_4_sonnet, file = "blog/2025-05-27-claude-4/tasks/are_claude_4_sonnet.rda")
+
+are_claude_4_opus <- are_task$clone()
+are_claude_4_opus$eval(solver_chat = claude_4_opus)
+are_claude_4_opus <- vitals:::scrub_providers(are_claude_4_opus)
+save(are_claude_4_opus, file = "blog/2025-05-27-claude-4/tasks/are_claude_4_opus.rda")
+
+are_claude_3_7_sonnet <- are_task$clone()
+are_claude_3_7_sonnet$eval(solver_chat = claude_3_7_sonnet)
+are_claude_3_7_sonnet <- vitals:::scrub_providers(are_claude_3_7_sonnet)
+save(are_claude_3_7_sonnet, file = "blog/2025-05-27-claude-4/tasks/are_claude_3_7_sonnet.rda")
+
+are_gpt_o4_mini <- are_task$clone()
+are_gpt_o4_mini$eval(solver_chat = gpt_o4_mini)
+are_gpt_o4_mini <- vitals:::scrub_providers(are_gpt_o4_mini)
+save(are_gpt_o4_mini, file = "blog/2025-05-27-claude-4/tasks/are_gpt_o4_mini.rda")
+```
+
+</details>
+
+You can view the raw results of the evaluation in this interactive viewer:
+
+```{r bundle, eval = should_eval, echo = FALSE}
+#| include: false
+vitals_bundle(
+  "blog/2025-05-27-claude-4/logs", 
+  "assets/2025-05-27-claude-4/viewer"
+)
+```
+
+```{r viewer}
+#| echo: false
+htmltools::tags$iframe(
+  src = "/assets/2025-05-27-claude-4/viewer/index.html",
+  width = "100%", 
+  height = "600px",
+  style = "border-radius: 10px; box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);"
+) 
+```
+
+:::callout-note
+While the total durations of the evaluations are correct in the viewer, the timings of specific samples are now estimated. Given some changes in downstream packages, vitals has to estimate how long a given request takes rather than receiving the exact duration; this will be resolved down the line.
+:::
+
+## Analysis
+
+At this point, we have access to `are_eval`, a data frame containing all of the results collected during the evaluation.
+
+```{r are-eval, echo = FALSE}
+are_eval <- 
+  vitals_bind(
+    `Claude 4 Sonnet` = are_claude_4_sonnet,
+    `Claude 4 Opus` = are_claude_4_opus,
+    `Claude 3.7 Sonnet` = are_claude_3_7_sonnet,
+    `GPT o4-mini` = are_gpt_o4_mini
+  ) %>%
+  rename(model = task) %>%
+  mutate(
+    model = factor(model, levels = c(
+      "Claude 4 Sonnet",
+      "Claude 4 Opus",
+      "Claude 3.7 Sonnet",
+      "GPT o4-mini"
+    ))
+  )
+```
+
+```{r are-eval-print}
+are_eval
+```
+
+The evaluation scores each answer as "Correct", "Partially Correct", or "Incorrect". We can use a bar chart to visualize the proportions of responses that fell into each of those categories:
+
+```{r plot-are-eval}
+#| fig-alt: "A horizontal bar chart comparing various AI models' performance on R coding tasks. The chart shows percentages of correct (blue), partially correct (beige), and incorrect (orange) answers. Claude 4 Opus has the highest proportion of correct answers, followed by o4-mini, Claude 4 Sonnet, and Claude 3.7 Sonnet."
+#| fig-width: 8
+are_eval %>%
+  mutate(
+    score = fct_recode(
+      score, 
+      "Correct" = "C", "Partially Correct" = "P", "Incorrect" = "I"
+    ),
+  ) %>%
+  ggplot(aes(y = model, fill = score)) +
+  geom_bar(position = "fill") +
+  scale_fill_manual(
+    breaks = rev,
+    values = c("Correct" = "#67a9cf", 
+               "Partially Correct" = "#f6e8c3", 
+               "Incorrect" = "#ef8a62")
+  ) +
+  scale_x_continuous(labels = scales::percent) +
+  labs(
+    x = "Percent", y = "Model",
+    title = "An R Eval",
+    subtitle = "Claude 4 models represent a step forward in R coding performance."
+  ) +
+  theme_bw() +
+  theme(
+    panel.border = element_blank(),
+    panel.background = element_rect(fill = "#f8f8f1", color = NA),
+    plot.background = element_rect(fill = "#f8f8f1", color = NA),
+    legend.background = element_rect(fill = "#F3F3EE", color = NA),
+    plot.subtitle = element_text(face = "italic"),
+    legend.position = "bottom"
+  )
+```
+
+The pricing per token of each of these models differs quite a bit, though, and o4-mini might use many more tokens during its "reasoning." How much did it cost to run each of these evals, and what's the resulting cost-per-performance?
+
+The pricing per million tokens for these models is as follows:
+
+```{r, echo = FALSE}
+pricing <- 
+  tribble(
+    ~Name, ~Input, ~Output,
+    "Claude 4 Sonnet", "$3.00", "$15.00",
+    "Claude 4 Opus", "$15.00", "$75.00",
+    "Claude 3.7 Sonnet", "$3.00", "$15.00",
+    "o4-mini", "$1.10", "$4.40"
+  )
+
+pricing
+```
+
+```{r, warning = FALSE, echo = FALSE}
+are_claude_4_sonnet_clean <- are_claude_4_sonnet$get_cost() %>%
+  filter(model != "claude-3-7-sonnet")
+
+are_claude_4_opus_clean <- are_claude_4_opus$get_cost() %>%
+  filter(model != "claude-3-7-sonnet")
+
+are_gpt_o4_mini_clean <- are_gpt_o4_mini$get_cost() %>%
+  filter(model != "claude-3-7-sonnet")
+
+are_claude_3_7_sonnet_clean <- are_claude_3_7_sonnet$get_cost() %>%
+  mutate(
+    input = input - 35000,
+    output = output - 40000
+  )
+
+model_mapping <- tribble(
+  ~model, ~Name,
+  "claude-sonnet-4", "Claude 4 Sonnet",
+  "claude-opus-4", "Claude 4 Opus", 
+  "claude-3-7-sonnet", "Claude 3.7 Sonnet",
+  "o4-mini-2025-04-16", "o4-mini"
+)
+
+pricing_clean <- pricing %>%
+  mutate(
+    input_price = as.numeric(str_remove(Input, "\\$")),
+    output_price = as.numeric(str_remove(Output, "\\$"))
+  )
+
+calculate_price <- function(eval_data) {
+  eval_data %>%
+    left_join(model_mapping, by = "model") %>%
+    left_join(pricing_clean, by = "Name") %>%
+    mutate(
+      correct_price = (input * input_price / 1000000) + (output * output_price / 1000000)
+    ) %>%
+    select(provider, model, Name, input, output, correct_price)
+}
+
+costs <- 
+  bind_rows(  
+    calculate_price(are_claude_4_sonnet_clean),
+    calculate_price(are_claude_4_opus_clean),
+    calculate_price(are_claude_3_7_sonnet_clean),
+    calculate_price(are_gpt_o4_mini_clean)
+  ) %>%
+  select(Name, Price = correct_price)
+
+costs$Score <- 
+  unname(c(
+    are_claude_4_sonnet$metrics,
+    are_claude_4_opus$metrics,
+    are_claude_3_7_sonnet$metrics,
+    are_gpt_o4_mini$metrics
+  ))
+```
+
+Under the hood, I've calculated the total cost of running the eval for each model using the shown pricing and joined it to the evaluation results:
+
+```{r costs}
+costs
+```
+
+```{r}
+ggplot(costs) +
+  aes(x = Price, y = Score, label = Name) +
+  geom_point(size = 3, color = "#4A7862") +
+  geom_label_repel() +
+  scale_y_continuous(limits = c(55, 70), labels = function(x) paste0(x, "%")) +
+  labs(
+    x = "Total Price (USD)",
+    y = "Score",
+    title = "R Coding Performance vs. Cost",
+    subtitle = "o4-mini packs the most punch at its price point, though\nClaude 4 Opus is state-of-the-art."
+  ) +
+  lims(x = c(0, 4))
+```
+
+While Claude 4 Opus is the new SotA on this eval, o4-mini almost matches its performance at a small fraction of the price.
+
+To determine if the differences we're seeing are statistically significant, we'll use a cumulative link mixed model:
+
+```{r are-mod}
+library(ordinal)
+
+are_mod <- clmm(score ~ model + (1|id), data = are_eval)
+```
+
+```{r summary-are-mod}
+summary(are_mod)
+```
+
+For the purposes of this post, we'll just take a look at the `Coefficients` table. The reference model here is Claude 4 Sonnet. Negative coefficient estimates for a given model indicate that model is less likely to receive higher ratings than Claude 4 Sonnet. Looking at the coefficients, while Claude 4 Sonnet seems like an improvement upon its previous generation, we don't see evidence of statistically significantly differing performance on this eval from Claude 4 Sonnet and any other model.
+
+---
+
+_Thank you to Max Kuhn for advising on the model-based analysis here._
