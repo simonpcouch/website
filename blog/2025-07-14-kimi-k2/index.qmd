@@ -1,0 +1,364 @@
+---
+title: "Kimi K2 and R Coding"
+date: '2025-07-14'
+tags:
+  - ai
+  - vitals
+  - rstats
+subtitle: "An open-weights model released over the weekend by a little-known company has drawn quite a bit of attention. Is it any good?"
+image: featured.png
+summary: ''
+---
+
+```{r setup}
+#| include: false
+options(ellmer_timeout_s = 1000)
+Sys.setenv(VITALS_LOG_DIR = "blog/2025-07-14-kimi-k2/logs")
+should_eval <- FALSE
+
+task_files <- list.files(here::here("blog/2025-07-14-kimi-k2/tasks"), full.names = TRUE)
+for (file in task_files) {
+  load(file)
+}
+
+options(width = 70)
+
+knitr::opts_chunk$set(
+  fig.width = 6, 
+  fig.asp = 0.618, 
+  out.width = "100%", 
+  message = FALSE, 
+  warning = FALSE
+)
+
+library(ggplot2)
+theme_set(
+  theme_bw() +
+  theme(
+    panel.border = element_blank(),
+    panel.background = element_rect(fill = "#f8f8f1", color = NA),
+    plot.background = element_rect(fill = "#f8f8f1", color = NA),
+    legend.background = element_rect(fill = "#F3F3EE", color = NA)
+  )
+)
+
+options(
+  ggplot2.discrete.colour = c(
+    "#ccb118", "#4A7862", "#8B4513", "#B0B0B0", "#000000"
+  ),
+  ggplot2.discrete.fill = c(
+    "#ccb118", "#4A7862", "#8B4513", "#B0B0B0", "#000000"
+  )
+)
+
+cat <- function(x, width = 0.9 * getOption("width")) {
+  lines <- unlist(strsplit(x, "\n"))
+  wrapped <- unlist(lapply(lines, strwrap, width = width))
+  base::cat(wrapped, sep = "\n")
+}
+
+# use this to resize the thumbnail image for the blog post
+optimize_image <- function(
+	image_path, 
+	target_width = 500, 
+	target_quality = 85, 
+	output_format = "png"
+  ) {
+  img <- magick::image_read(image_path)
+  
+  dims <- magick::image_info(img)
+  
+  if (dims$width > target_width) {
+    img <- magick::image_resize(img, paste0(target_width, "x"))
+  }
+  
+  img <- magick::image_write(
+	img, image_path, format = output_format, quality = target_quality
+  )
+  
+  invisible(img)
+}
+```
+
+It was a hoot and a half of a weekend in the LLM world. A company I hadn't heard of called Moonshot AI released a model called [Kimi K2](https://moonshotai.github.io/Kimi-K2/). From 30,000 feet:
+
+-   It's open-weights.[^1] As in, if it wasn't a huge model, you could just download the model and run it on your laptop.
+-   It hangs out near the top of many of the most notable benchmarks, alongside models like Claude Opus 4 and GPT 4.1, in a way that no other "open" model has since Deepseek.[^2] As is the case with any LLM release, high benchmarks don't necessarily imply real utility, but the model's numbers were enough to draw the attention of many folks in the space.
+-   It's not a reasoning model, which is where much attention is otherwise being paid at the moment. I'd guess the folks at Moonshot are cooking on a reasoning variant of the model as we speak.
+
+[^1]: Some asterisks here with the licensing.
+
+[^2]: Well, Llama 4, but yikes.
+
+Also, their [release post](https://moonshotai.github.io/Kimi-K2/) includes a supposedly-one-shotted Javascript Minecraft clone? Can this please be a thing from now on?
+
+![](js_minecraft.png){style="border-radius: 10px; box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);"}
+
+<br>
+
+<a href="https://vitals.tidyverse.org/"><img src="vitals.png" alt="The hex sticker for the vitals package: a teddy bear in blue scrubs happily holding a stethoscope." align="right" height="240"/></a>
+
+In this post, we'll put this model through its paces on some R coding tasks using the newly-on-CRAN [vitals R package](https://vitals.tidyverse.org/) for LLM evaluation. First, I'll show how to use [ellmer](https://ellmer.tidyverse.org) to connect to "unsupported" models. Then, we'll load in [An R Eval](https://vitals.tidyverse.org/reference/are.html), a dataset of challenging R coding problems. We'll let Kimi K2 take a crack at each of the problems, and then compare how well it does to a few other leading models.
+
+::: callout-note
+This post is part of a [series](https://www.simonpcouch.com/blog/2025-05-21-gemini-2-5-flash/) [of](https://www.simonpcouch.com/blog/2025-05-07-gemini-2-5-pro-new/) [blog](https://www.simonpcouch.com/blog/2025-04-18-o3-o4-mini/) [posts](https://www.simonpcouch.com/blog/2025-04-15-gpt-4-1/) where I evaluate new LLM releases on their R coding performance. In this post, I'll skip over all of the evaluation code and just make some graphs; if you're interested in learning more about how to run an eval like this one, check out the post [Evaluating o3 and o4-mini on R coding performance](https://www.simonpcouch.com/blog/2025-04-18-o3-o4-mini/).
+:::
+
+```{r load-pkgs}
+library(ellmer)
+library(vitals)
+library(tidyverse)
+library(ggrepel)
+```
+
+## Connecting to Kimi K2 with ellmer
+
+Since this Kimi series of models is a relatively new player, the [ellmer](https://ellmer.tidyverse.org/) R package doesn't yet have "official" support for the model. However, Moonshot's API uses the OpenAI spec, meaning that we can just make use of ellmer's support for OpenAI to interact with the model by changing the `base_url`, `api_key`, and default `model`.
+
+```{r}
+#| eval: false
+chat_moonshot <- function(
+  system_prompt = NULL, 
+  base_url = "https://api.moonshot.ai/v1", 
+  api_key = Sys.getenv("MOONSHOT_API_KEY"), 
+  model = "kimi-k2-0711-preview", 
+  ...
+) {
+  chat_openai(
+    system_prompt = system_prompt,
+    base_url = base_url, 
+    api_key = api_key, 
+    model = model, 
+    ...
+  )
+}
+
+
+ch <- chat_moonshot()
+ch$chat("hey!")
+#> Hey! What’s up?
+```
+
+:::callout-note
+While the API is advertised as OpenAI-compatible, it has some small modifications that result in 400 Errors occasionally. I switched out `chat_deepseek()` for `chat_openai()` in the above and resolved most of them.
+:::
+
+I had to [sign up for an API key](https://platform.moonshot.ai/console/api-keys) and put a dollar on it to run this eval. This model seems [quite cheap](https://platform.moonshot.ai/docs/pricing/chat#concepts) compared to the models it's being likened to, so I'll also run it against some models that are closer in pricing:
+
+| Model | Input Price | Output Price |
+|-------|-------------|--------------|
+| Kimi K2 | $0.60 | $2.50 |
+| Claude 4 Sonnet | $3.00 | $15.00 |
+| Claude 4 Opus | $15.00 | $75.00 |
+| GPT-4.1 | $2.00 | $8.00 |
+| GPT-4.1 mini | $0.40 | $1.60 |
+| Gemini 2.5 Flash | $0.30 | $2.50 |
+
+Being able to wrap the OpenAI API this easily is so nice, and their API key flow was easy peasy. Google Gemini, take notes.
+
+## Evaluating the model
+
+To evaluate the model, we define a chat instance for the solver (Kimi K2) and scorer (Claude 3.7 Sonnet), set up an evaluation Task object, and then run `$eval()`:
+
+```{r}
+#| eval: false
+claude_3_7_sonnet <- chat_anthropic(model = "claude-3-7-sonnet-latest")
+kimi_k2 <- chat_moonshot()
+
+are_task <- Task$new(
+  dataset = are,
+  solver = generate(),
+  scorer = model_graded_qa(
+    scorer_chat = claude_3_7_sonnet, 
+    partial_credit = TRUE
+  ),
+  epochs = 3,
+  name = "An R Eval"
+)
+
+are_task$eval(solver_chat = kimi_k2)
+```
+
+I'm writing this on a Sunday, so take this with a grain of salt, but the API was _snappy_. No issues. We'll see how that holds up tomorrow, when I'll send this out.^[Spoiler: it was slower.]
+
+It costed about 7 cents to run this eval against Kimi K2.
+
+<details>
+
+<summary>Full evaluation code here</summary>
+
+```{r eval}
+#| eval: false
+claude_4_sonnet <- chat_anthropic(model = "claude-sonnet-4-20250514")
+claude_4_opus <- chat_anthropic(model = "claude-opus-4-20250514")
+claude_3_7_sonnet <- chat_anthropic(model = "claude-3-7-sonnet-latest")
+gpt_4_1 <- chat_openai(model = "gpt-4.1")
+gpt_4_1_mini <- chat_openai(model = "gpt-4.1-mini")
+gemini_2_5_flash <- chat_google_gemini(
+  model = "gemini-2.5-flash",
+  api_args = list(
+    generationConfig = list(
+      thinkingConfig = list(
+        thinkingBudget = 0
+        )
+      )
+    )
+)
+kimi_k2 <- chat_moonshot()
+
+are_task <- Task$new(
+  dataset = are,
+  solver = generate(),
+  scorer = model_graded_qa(
+    scorer_chat = claude_3_7_sonnet, 
+    partial_credit = TRUE
+  ),
+  epochs = 3,
+  name = "An R Eval"
+)
+
+are_task
+
+are_claude_4_sonnet <- are_task$clone()
+are_claude_4_sonnet$eval(solver_chat = claude_4_sonnet)
+save(are_claude_4_sonnet, file = "blog/2025-07-14-kimi-k2/tasks/are_claude_4_sonnet.rda")
+
+are_claude_4_opus <- are_task$clone()
+are_claude_4_opus$eval(solver_chat = claude_4_opus)
+save(are_claude_4_opus, file = "blog/2025-07-14-kimi-k2/tasks/are_claude_4_opus.rda")
+
+are_claude_4_opus <- are_task$clone()
+are_claude_4_opus$eval(solver_chat = claude_4_opus)
+save(are_claude_4_opus, file = "blog/2025-07-14-kimi-k2/tasks/are_claude_4_opus.rda")
+
+are_gpt_4_1 <- are_task$clone()
+are_gpt_4_1$eval(solver_chat = gpt_4_1)
+save(are_gpt_4_1, file = "blog/2025-07-14-kimi-k2/tasks/are_gpt_4_1.rda")
+
+are_gpt_4_1_mini <- are_task$clone()
+are_gpt_4_1_mini$eval(solver_chat = gpt_4_1_mini)
+save(are_gpt_4_1_mini, file = "blog/2025-07-14-kimi-k2/tasks/are_gpt_4_1_mini.rda")
+
+are_gemini_2_5_flash <- are_task$clone()
+are_gemini_2_5_flash$eval(solver_chat = gemini_2_5_flash)
+save(are_gemini_2_5_flash, file = "blog/2025-07-14-kimi-k2/tasks/are_gemini_2_5_flash.rda")
+
+are_kimi_k2 <- are_task$clone()
+are_kimi_k2$eval(solver_chat = kimi_k2)
+save(are_kimi_k2, file = "blog/2025-07-14-kimi-k2/tasks/are_kimi_k2.rda")
+```
+
+</details>
+
+You can view the raw results of the evaluation in this interactive viewer:
+
+```{r bundle, eval = should_eval, echo = FALSE}
+#| include: false
+vitals_bundle(
+  "blog/2025-07-14-kimi-k2/logs", 
+  "assets/2025-07-14-kimi-k2/viewer"
+)
+```
+
+```{r viewer}
+#| echo: false
+htmltools::tags$iframe(
+  src = "/assets/2025-07-14-kimi-k2/viewer/index.html",
+  width = "100%", 
+  height = "600px",
+  style = "border-radius: 10px; box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);"
+) 
+```
+
+::: callout-note
+While the total durations of the evaluations are correct in the viewer, the timings of specific samples are now estimated. Given some changes in downstream packages, vitals has to estimate how long a given request takes rather than receiving the exact duration; this will be resolved down the line.
+:::
+
+## Analysis
+
+At this point, we have access to `are_eval`, a data frame containing all of the results collected during the evaluation.
+
+```{r are-eval, echo = FALSE}
+are_eval <- 
+  vitals_bind(
+    `Kimi K2` = are_kimi_k2,
+    `Claude 4 Opus` = are_claude_4_opus,
+    `Claude 4 Sonnet` = are_claude_4_sonnet,
+    `GPT 4.1` = are_gpt_4_1,
+    `GPT 4.1-mini` = are_gpt_4_1_mini,
+    `Gemini 2.5 Flash` = are_gemini_2_5_flash
+  ) %>%
+  rename(model = task) %>%
+  mutate(
+    model = factor(model, levels = c(
+      "Kimi K2",
+      "Claude 4 Opus",
+      "Claude 4 Sonnet",
+      "GPT 4.1",
+      "GPT 4.1-mini",
+      "Gemini 2.5 Flash"
+    ))
+  )
+```
+
+```{r are-eval-print}
+are_eval
+```
+
+The evaluation scores each answer as "Correct", "Partially Correct", or "Incorrect". We can use a bar chart to visualize the proportions of responses that fell into each of those categories:
+
+```{r plot-are-eval}
+#| fig-alt: "A horizontal bar chart comparing various AI models' performance on R coding tasks. The chart shows percentages of correct (blue), partially correct (beige), and incorrect (orange) answers. Models listed from top to bottom are Kimi K2, Claude 4 Opus, Claude 4 Sonnet, GPT 4.1, GPT 4.1-mini, and Gemini 2.5 Flash. Claude 4 Opus shows the highest proportion of correct answers at approximately 60%, while Kimi K2 sits around 36%."
+#| fig-width: 8
+are_eval %>%
+  mutate(
+    score = fct_recode(
+      score, 
+      "Correct" = "C", "Partially Correct" = "P", "Incorrect" = "I"
+    ),
+    model = fct_rev(model)
+  ) %>%
+  ggplot(aes(y = model, fill = score)) +
+  geom_bar(position = "fill") +
+  scale_fill_manual(
+    breaks = rev,
+    values = c("Correct" = "#67a9cf", 
+               "Partially Correct" = "#f6e8c3", 
+               "Incorrect" = "#ef8a62")
+  ) +
+  scale_x_continuous(labels = scales::percent) +
+  labs(
+    x = "Percent", y = "Model",
+    title = "An R Eval",
+    subtitle = "Kimi K2 lags behind many of the models it was likened to\nin Moonshot AI's release post."
+  ) +
+  theme_bw() +
+  theme(
+    panel.border = element_blank(),
+    panel.background = element_rect(fill = "#f8f8f1", color = NA),
+    plot.background = element_rect(fill = "#f8f8f1", color = NA),
+    legend.background = element_rect(fill = "#F3F3EE", color = NA),
+    plot.subtitle = element_text(face = "italic"),
+    legend.position = "bottom"
+  )
+```
+
+At least on this eval, it looks like Kimi K2 is slightly more expensive and slightly worse or comparable to GPT 4.1-mini and Gemini 2.5 Flash, and certainly not a contender with GPT 4.1, Claude 4 Sonnet, or Claude 4 Opus.
+
+## Extra credit(s)
+
+I'm not sure if it was just some weird UI artifact or an intended behavior, but it seemed the minimum amount I could put on a Moonshot API key was $10. So, after spending the 7 cents needed to run this eval, I had some extra runway.
+
+I've recently been working on a yet-to-be-open-sourced agent thing that allows for plugging in different models under the hood. At a high level:
+
+* There are about 20,000 tokens in the prompt, 10,000 of which are attached to one tool.
+* The application relies on 1) strong instruction-following, 2) strong tool usage, and 3) some imagination.
+* There's one tool that is asynchronous in the sense that it returns immediately when called, saying "Ok, got your inputs, running now," but only later returns the actual results of the tool call. I've seen a few models really struggle with this format.
+
+I figured this would be a good context in which to vibe-eval this new model with my leftover credits. The vibes:
+
+* Tokens streamed a good bit more slowly than I'm used to seeing from Claude Sonnet or Gemini 2.5 Pro. (This was on Monday, so presumably much higher usage on the API than Sunday.)
+* The model seems fine-tuned into the "responses should be unordered lists with bolded labels" local minimum pretty thoroughly.
+* Tool calling is weak. The model doesn't follow instructions in tool descriptions well or react to error messages reasonably. If I prompt the model to make changes to the way that it's calling a tool myself, it seems to react well.
+
+Altogether, I wouldn't call this an impressive release, and don't anticipate I'll spend much more time with this model.

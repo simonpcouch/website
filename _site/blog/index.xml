@@ -10,7 +10,15 @@
 <atom:link href="https://simonpcouch.com/blog/index.xml" rel="self" type="application/rss+xml"/>
 <description>A data science blog</description>
 <generator>quarto-1.6.40</generator>
-<lastBuildDate>Tue, 27 May 2025 05:00:00 GMT</lastBuildDate>
+<lastBuildDate>Mon, 14 Jul 2025 05:00:00 GMT</lastBuildDate>
+<item>
+  <title>Kimi K2 and R Coding</title>
+  <link>https://simonpcouch.com/blog/2025-07-14-kimi-k2/</link>
+  <description><![CDATA[ It was a hoot and a half of a weekend in the LLM world. A company I hadn’t heard of called Moonshot AI released a model called <a href="https://moonshotai.github.io/Kimi-K2/">Kimi K2</a>. From 30,000 feet: ]]></description>
+  <guid>https://simonpcouch.com/blog/2025-07-14-kimi-k2/</guid>
+  <pubDate>Mon, 14 Jul 2025 05:00:00 GMT</pubDate>
+  <media:content url="https://simonpcouch.com/blog/2025-07-14-kimi-k2/featured.png" medium="image" type="image/png" height="142" width="144"/>
+</item>
 <item>
   <title>Claude 4 and R Coding</title>
   <link>https://simonpcouch.com/blog/2025-05-27-claude-4/</link>
@@ -162,14 +170,6 @@
   <guid>https://simonpcouch.com/blog/2023-10-24-quarto-site/</guid>
   <pubDate>Tue, 24 Oct 2023 05:00:00 GMT</pubDate>
   <media:content url="https://simonpcouch.com/blog/2023-10-24-quarto-site/featured.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
-  <title>Down the submodels rabbit hole with tidymodels</title>
-  <link>https://simonpcouch.com/blog/2023-10-11-submodels-rabbit-hole/</link>
-  <description><![CDATA[ A familiar pastime—plotting <code>mtcars</code>: ]]></description>
-  <guid>https://simonpcouch.com/blog/2023-10-11-submodels-rabbit-hole/</guid>
-  <pubDate>Wed, 11 Oct 2023 05:00:00 GMT</pubDate>
-  <media:content url="https://simonpcouch.com/blog/2023-10-11-submodels-rabbit-hole/featured.png" medium="image" type="image/png" height="131" width="144"/>
 </item>
 </channel>
 </rss>
