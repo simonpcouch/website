@@ -10,7 +10,15 @@
 <atom:link href="https://simonpcouch.com/blog/index.xml" rel="self" type="application/rss+xml"/>
 <description>A data science blog</description>
 <generator>quarto-1.6.40</generator>
-<lastBuildDate>Mon, 14 Jul 2025 05:00:00 GMT</lastBuildDate>
+<lastBuildDate>Thu, 17 Jul 2025 05:00:00 GMT</lastBuildDate>
+<item>
+  <title>How I’m using Claude Code to write R code</title>
+  <link>https://simonpcouch.com/blog/2025-07-17-claude-code-2/</link>
+  <description><![CDATA[ A couple months ago, I <a href="https://www.simonpcouch.com/blog/2025-03-26-claude-code/">wrote a bit</a> about how I was using Claude Code to help me write R code. At the time, I mostly just shared my impressions of working with the tool and some prompting tips. In the month or two after I wrote the post, my usage waned; I was mostly back to using LLMs only for shorter, more narrowly-scoped tasks. A few weeks ago, though, we put together some tooling that has helped me get much more out of the tool and thus made me interested in using it more often again. ]]></description>
+  <guid>https://simonpcouch.com/blog/2025-07-17-claude-code-2/</guid>
+  <pubDate>Thu, 17 Jul 2025 05:00:00 GMT</pubDate>
+  <media:content url="https://simonpcouch.com/blog/2025-07-17-claude-code-2/featured.png" medium="image" type="image/png" height="146" width="144"/>
+</item>
 <item>
   <title>Kimi K2 and R Coding</title>
   <link>https://simonpcouch.com/blog/2025-07-14-kimi-k2/</link>
@@ -162,14 +170,6 @@
   <guid>https://simonpcouch.com/blog/2023-11-28-flights/</guid>
   <pubDate>Tue, 28 Nov 2023 06:00:00 GMT</pubDate>
   <media:content url="https://simonpcouch.com/blog/2023-11-28-flights/featured.png" medium="image" type="image/png" height="144" width="144"/>
-</item>
-<item>
-  <title>Quarto!</title>
-  <link>https://simonpcouch.com/blog/2023-10-24-quarto-site/</link>
-  <description><![CDATA[ When I was in college, a coworker at one of my jobs did web development gigs on the side. His personal website was a super slick single-page site, built with Flask. I had no idea how it worked, but I really liked it, so I asked if it was okay to fork his repository and took that site on as my own. Editing the site was painful, and I borked it at least hourly whenever I worked on it. It mostly functioned like a high-gloss CV, and didn’t have any sort of blogging component. It looked something like this: ]]></description>
-  <guid>https://simonpcouch.com/blog/2023-10-24-quarto-site/</guid>
-  <pubDate>Tue, 24 Oct 2023 05:00:00 GMT</pubDate>
-  <media:content url="https://simonpcouch.com/blog/2023-10-24-quarto-site/featured.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>
