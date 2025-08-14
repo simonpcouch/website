@@ -10,7 +10,15 @@
 <atom:link href="https://simonpcouch.com/blog/index.xml" rel="self" type="application/rss+xml"/>
 <description>A data science blog</description>
 <generator>quarto-1.6.40</generator>
-<lastBuildDate>Thu, 17 Jul 2025 05:00:00 GMT</lastBuildDate>
+<lastBuildDate>Thu, 14 Aug 2025 05:00:00 GMT</lastBuildDate>
+<item>
+  <title>R and the Model Context Protocol</title>
+  <link>https://simonpcouch.com/blog/2025-08-14-mcptools/</link>
+  <description><![CDATA[ This is a <a href="https://www.tidyverse.org/blog/2025/07/mcptools-0-1-0/">cross-post</a> from tidyverse.org. ]]></description>
+  <guid>https://simonpcouch.com/blog/2025-08-14-mcptools/</guid>
+  <pubDate>Thu, 14 Aug 2025 05:00:00 GMT</pubDate>
+  <media:content url="https://simonpcouch.com/blog/2025-08-14-mcptools/featured.png" medium="image" type="image/png" height="143" width="144"/>
+</item>
 <item>
   <title>How I’m using Claude Code to write R code</title>
   <link>https://simonpcouch.com/blog/2025-07-17-claude-code-2/</link>
@@ -162,14 +170,6 @@
   <guid>https://simonpcouch.com/blog/2023-11-30-listening-2023/</guid>
   <pubDate>Thu, 30 Nov 2023 06:00:00 GMT</pubDate>
   <media:content url="https://simonpcouch.com/blog/2023-11-30-listening-2023/featured.png" medium="image" type="image/png" height="156" width="144"/>
-</item>
-<item>
-  <title>Predicting flight delays with tidymodels🛩</title>
-  <link>https://simonpcouch.com/blog/2023-11-28-flights/</link>
-  <description><![CDATA[ <em>Last week, I virtually dropped by University of Wisconsin-Madison for a webinar on tidymodels. Heading into the holidays, I thought a fun example problem might be to try and predict flight delays using flights data from Madison’s airport. This is a very, very difficult modeling problem, and the results aren’t very impressive, but it’s a fun one nonetheless.</em> ]]></description>
-  <guid>https://simonpcouch.com/blog/2023-11-28-flights/</guid>
-  <pubDate>Tue, 28 Nov 2023 06:00:00 GMT</pubDate>
-  <media:content url="https://simonpcouch.com/blog/2023-11-28-flights/featured.png" medium="image" type="image/png" height="144" width="144"/>
 </item>
 </channel>
 </rss>
