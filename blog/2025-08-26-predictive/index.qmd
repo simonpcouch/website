@@ -1,0 +1,272 @@
+---
+title: "I was wrong about tidymodels and LLMs"
+date: '2025-08-26'
+tags:
+  - ai
+  - rstats
+  - databot
+  - evals
+subtitle: "Today's frontier LLMs know much more about tidymodels than I thought."
+image: featured.png
+summary: ''
+---
+
+```{r setup}
+#| include: false
+options(ellmer_timeout_s = 1000)
+
+options(width = 70)
+
+knitr::opts_chunk$set(
+  fig.width = 6, 
+  fig.asp = 0.618, 
+  out.width = "100%", 
+  message = FALSE, 
+  warning = FALSE
+)
+
+library(ggplot2)
+theme_set(
+  theme_bw() +
+  theme(
+    panel.border = element_blank(),
+    panel.background = element_rect(fill = "#f8f8f1", color = NA),
+    plot.background = element_rect(fill = "#f8f8f1", color = NA),
+    legend.background = element_rect(fill = "#F3F3EE", color = NA)
+  )
+)
+
+options(
+  ggplot2.discrete.colour = c(
+    "#ccb118", "#4A7862", "#8B4513", "#B0B0B0", "#000000"
+  ),
+  ggplot2.discrete.fill = c(
+    "#ccb118", "#4A7862", "#8B4513", "#B0B0B0", "#000000"
+  )
+)
+
+cat <- function(x, width = 0.9 * getOption("width")) {
+  lines <- unlist(strsplit(x, "\n"))
+  wrapped <- unlist(lapply(lines, strwrap, width = width))
+  base::cat(wrapped, sep = "\n")
+}
+
+# use this to resize the thumbnail image for the blog post
+optimize_image <- function(
+	image_path, 
+	target_width = 500, 
+	target_quality = 85, 
+	output_format = "png"
+  ) {
+  img <- magick::image_read(image_path)
+  
+  dims <- magick::image_info(img)
+  
+  if (dims$width > target_width) {
+    img <- magick::image_resize(img, paste0(target_width, "x"))
+  }
+  
+  img <- magick::image_write(
+	img, image_path, format = output_format, quality = target_quality
+  )
+  
+  invisible(img)
+}
+```
+
+One of my most visceral memories of my first interactions with LLMs was asking that first release of ChatGPT in late 2022 to write code to fit a linear regression with tidymodels. The model hallucinated a function `tidymodels::install_tidymodels()` again and again. That function does not exist. If it did, there'd be some serious chicken and egg happening. This thing was goofy.
+
+A year or two went by. Around this time last year, I started engaging with LLMs more seriously. At the time, I found that the modern frontier LLMs at the time "just knew" tidyverse in a way that they didn't with tidymodels. Those LLMs might not have been up to date with the newest syntax, but by and large, I didn't need to paste in a bunch of documentation on tidyverse in order to use those LLMs to write tidyverse code. This was not the case with tidymodels, though; at the time, I felt that LLMs required a good bit of prompting in order to write tidymodels code fluently. 
+
+In working on a tidymodels assistant in recent months, I had been under the assumption that this was still the case. Now that I've put together some evals to measure the assistant's performance, though, I realize this is no longer the case; today's frontier LLMs "just know" tidymodels.
+
+## Enter Databot
+
+Posit just announced a research preview feature in Positron called [Databot](https://posit.co/blog/positron-ai-product-announcement-aug-2025/). It's a data analysis assistant that can see your global environment and run R code inside of it via a tool `run_r_code()`. Databot works in short bursts, keeping the analyst in the loop and deferring to them on what directions to head next. It's pretty remarkable; if you haven't tried it out, I highly recommend giving it a whir.
+
+{{< video databot.mov >}}
+
+Coming from the [tidymodels](https://www.tidymodels.org/) team, my first question when I saw the early prototypes of Databot early this year was "how good is this thing at developing ML models?" Specifically, was Databot a proficient tidymodels user?
+
+Immediately, I ran into issues.
+
+1)  LLMs would make silly mistakes when writing tidymodels code, again and again.
+2)  An assumption under the hood in Databot is that code that the assistant passes to `run_r_code()` will execute relatively quickly; if you're just filtering out rows or creating plots, it's safe to assume in many situations that results will come back quickly. This is not the case with modeling code; resampling even simple model fits on datasets as small as tens of thousands of rows can take several minutes. In that case, as an analyst, you're just staring at a dial spinning. No good.
+
+So, [I've been experimenting](https://github.com/simonpcouch/predictive) with what Databot might feel like in a "predictive modeling mode." The proof of concept is called Predictive. The main difference between Databot and Predictive is 1) a shitton of prompting to provide context on tidymodels and 2) a tool called `run_experiment()`.
+
+### Prompting
+
+In thinking through how to "teach" LLMs how to use tidymodels (or any other package), there's a tradeoff between completeness and cost. Provide too much context and you're paying too much, provide too little context and LLMs won't actually be able to use the packages.
+
+At its most minimal, I needed to provide high-level context on using tidymodels: what are [model specifications](https://parsnip.tidymodels.org/reference/model_spec.html)? [Recipes](https://recipes.tidymodels.org/reference/recipe.html)? [Workflows](https://workflows.tidymodels.org/articles/extras/getting-started.html)? I wrote these bits of context myself. [For example](https://github.com/simonpcouch/predictive/blob/8cff83a1639cd40a7abc4704587cef3d3c488ec7/inst/prompts/model.md), on model specifications:
+
+```{r}
+#| results: asis
+#| echo: false
+spec_prompt <- readLines("https://raw.githubusercontent.com/simonpcouch/predictive/8cff83a1639cd40a7abc4704587cef3d3c488ec7/inst/prompts/model.md")
+l <- length(spec_prompt)
+cat(paste0("> ", spec_prompt[c(-l, -l-1)]))
+```
+
+Then, I wanted to provide context to prevent the most common failure modes, like hallucinating possible modeling engines for a given model type, misspelling an argument name, or thinking that a modeling engine supports a modeling mode that it doesn't. To do so, for each model type, I [concatenated all of the documentation for that model type together and then presented it to an LLM](https://github.com/simonpcouch/predictive/blob/8cff83a1639cd40a7abc4704587cef3d3c488ec7/inst/sandbox/write_model_documentation.R), asking for a specific, information-dense output format. So, for example, the documentation for the modeling function `linear_reg()` looked [like this](https://github.com/simonpcouch/predictive/blob/8cff83a1639cd40a7abc4704587cef3d3c488ec7/inst/context/models/linear_reg.md):
+
+```{r}
+#| label: linear-reg-context
+#| results: asis
+#| echo: false
+linear_reg_context <- readLines("https://raw.githubusercontent.com/simonpcouch/predictive/8cff83a1639cd40a7abc4704587cef3d3c488ec7/inst/context/models/linear_reg.md")
+linear_reg_context <- paste0("> ", linear_reg_context, collapse = "\n")
+linear_reg_context <- stringr::str_replace_all(linear_reg_context, "\n>   - ", ": ")
+linear_reg_context <- stringr::str_replace_all(linear_reg_context, ":\n", ":\n\n")
+cat(linear_reg_context)
+```
+
+I did the same for all recipes and all possible steps, too. 
+
+Altogether, this resulted in something like 20,000 tokens of very, very dense documentation on modeling functionality available in tidymodels.
+
+### The `run_experiment()` tool
+
+In addition to the extra prompting, Predictive has one more tool beyond Databot's `run_r_code()`. It's sort of like `run_r_code()`, but it's tuned specifically for running tidymodels modeling code:
+
+-   Every time an LLM wants to run code that fits ML models with tidymodels (like `fit()`, `tune_grid()`, etc), it will run that code inside of `run_experiment()` rather than `run_r_code()`.
+-   `run_experiment()` makes use of "hooks" inside of tidymodels that allow the Predictive app to track execution progress and resulting performance metrics.
+-   `run_experiment()` can run asynchronously. Normally, with the `run_r_code()` tool, the LLM would choose to run code, then that code would run in the R session, and only when that code finished running would the tool return the results to the LLM. `run_experiment()` works differently—when the tool is called, it launches a [mirai](https://mirai.r-lib.org/) to run the modeling code and then immediately returns with a string like "Got it—your modeling code is running. You will be notified when it finishes." Once modeling code finishes running, the next time an HTTP request is sent to the LLM (either for some other tool result or when a user sends a message), the results of the modeling code are presented to the LLM.
+
+This means that, when an LLM runs modeling code, the Predictive app stays responsive for the user. The additional "hooks" also mean that we can introduce custom UI that allow users to track execution, view bespoke result summaries, stop undesired modeling experiments, and compile information across many experiments to determine whether changes to modeling code result in more performant fits. This makes the Databot experience much more pleasant when building predictive models. 
+
+## Evaluating Predictive
+
+So, this proof of concept for a predictive modeling mode for Databot is working pretty well. Some months go by as I'm building it, with LLM releases from Anthropic, Google Gemini, and OpenAI, all of which make the experience of using Predictive even better. 
+
+{{< video predictive.mov >}}
+
+How can I measure how well this thing works, though? On and off this last month, I've been poking at an [eval](https://github.com/simonpcouch/predictivebench) that aims to measure 1) how much better Predictive is at predictive modeling than Databot itself, and 2) how well a given LLM does at powering the Predictive app. It's been quite the engineering lift, but I finally got it to a point where I could run some initial samples a couple weeks ago.
+
+So, I ran this evaluation against three configurations:
+
+-   `run_r_code()` tool only: Situate an LLM inside of a directory and give it the ability to run R code.
+-   Databot: In addition to running R code, the model is prompted with the same prompt that is provided to Databot.
+-   Predictive: The model is further prompted with a bunch of information on how tidymodels works as well as the `run_experiment()` tool.
+
+In my [mockup of how I'd plot the results](https://github.com/simonpcouch/predictivebench/issues/6#issuecomment-3206712424) I put together while the eval was running, I expected the results to look something like this:
+
+```{r}
+#| echo: false
+#| label: mockup-plot
+#| out-extra: 'style="border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.05);"'
+#| fig-alt: "A ggplot2 bar plot showing synthetic data. On the x axis are two LLMs, Claude Sonnet 4 and Gemini Pro 2.5. On the y axis is relative performance, ranging from 0 (baseline model) to 100 (best human modelers). Both of the two bars are colored according to the three configurations mentioned above, with Predictive resulting in the best performance, followed by Databot."
+library(tidyverse)
+
+example_data <- expand_grid(
+ model = c("Claude Sonnet 4", "Gemini Pro 2.5"),
+ setup = factor(c("`run_r_code()` tool", "Databot", "Predictive"))
+) %>%
+ mutate(
+   base_score = case_when(
+     model == "Claude Sonnet 4" ~ 52,
+     model == "Gemini Pro 2.5" ~ 38
+   ),
+   setup_bonus = case_when(
+     setup == "`run_r_code()` tool" ~ 8,
+     setup == "Databot" ~ 15,
+     setup == "Predictive" ~ 22
+   ),
+   score = base_score + setup_bonus + rnorm(nrow(.))
+ ) %>%
+  select(model, configuration = setup, score)
+
+example_data %>%
+  group_by(model, configuration) %>%
+  summarize(mean_score = mean(score, na.rm = TRUE), .groups = "drop") %>%
+  mutate(configuration = fct_rev(configuration)) %>%
+  arrange(desc(mean_score)) %>%
+  ggplot(
+    aes(x = model, y = mean_score, fill = configuration)
+  ) +
+  geom_col(position = position_identity()) +
+  labs(
+    x = NULL,
+    y = "Relative performance",
+    fill = "Configuration",
+    caption = "Performance values are synthetic."
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    axis.text.y = element_text(angle = 45, hjust = 1),
+    plot.caption = element_text(face = "italic", hjust = -4)
+  ) +
+  scale_y_continuous(
+    limits = c(0, 100),
+    breaks = c(0, 50, 100),
+    labels = c("(Baseline model) - 0", "50", "(Best human modelers) - 100")
+  ) +
+  scale_fill_manual(values = c("#B3D1FF", "#66A3FF", "#0066CC"))
+```
+
+I expected that only supplying a `run_r_code()` tool would provide some baseline performance, then Databot's prompting would provide a bit more of a boost, and then Predictive's additional prompt and `run_experiment()` tool would seal the deal. I even used `position = "identity"` because I was so confident about this; since the scores from Predictive would be greater than from Databot, I could just plot them on top of each other.
+
+Once the initial round of results came in, I discovered that my use of `position = "identity"` in the above was overoptimistic, to say the least.
+
+```{r}
+#| echo: false
+#| label: actual-plot
+#| out-extra: 'style="border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.05);"'
+#| fig-alt: "The same plot as before, but with real data. In reality, the bar heights for Claude Sonnet 4 are all about the same and, for Gemini 2.5 Pro, the height for Predictive is much lower. (Around 20, rather than scores around 80 for all other LLMs and configurations.)"
+modeling_results <- readRDS("modeling_results.rds")
+
+modeling_results %>%
+  mutate(configuration = 
+    if_else(
+      configuration == "`run_r_code()` tool only", 
+      "`run_r_code()` tool", 
+      configuration
+    )
+  ) %>%
+  group_by(model, configuration) %>%
+  summarize(mean_score = mean(score, na.rm = TRUE), .groups = "drop") %>%
+  ggplot(
+    aes(x = model, y = mean_score, fill = configuration)
+  ) +
+  geom_col(position = position_dodge()) +
+  labs(
+    x = NULL,
+    y = "Relative performance",
+    fill = "Configuration"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    axis.text.y = element_text(angle = 45, hjust = 1),
+    plot.caption = element_text(face = "italic", hjust = 0)
+  ) +
+  scale_y_continuous(
+    limits = c(0, 100),
+    breaks = c(0, 50, 100),
+    labels = c("(Baseline model) - 0", "50", "(Best human modelers) - 100")
+  ) +
+  scale_fill_manual(values = c("#0066CC", "#66A3FF", "#B3D1FF")) +
+  guides(fill = guide_legend(reverse = TRUE))
+```
+
+With Claude Sonnet 4, the results were a bit of a wash; providing a `run_r_code()` tool was all that the LLM needed to do it's thing. Additional prompting from Databot and all of the prompting and tooling from Predictive were no help. In the `run_r_code()` eval, Sonnet "chose" to use tidymodels in its solutions, and did so fluently. This didn't totally blindside me, but I was surprised to see Claude Sonnet 4 "just knew" tidymodels.
+
+Then the results for Gemini Pro 2.5 came in. *Holy smokes*. Not only did Predictive's `run_experiment()` tool not help Gemini Pro 2.5 develop ML models, but it hurt its performance significantly. The LLM struggled with setting the tool arguments appropriately and, awash in more context tokens than it needed, sometimes failed to present its best ML model with the appropriate formatting (resulting in scores of 0).
+
+In reading these results, I realized that I was wrong about how well modern frontier LLMs know tidymodels. There was no need to provide those carefully crafted 20,000 tokens of context and, worse than that, doing so actually *hurt* performance.
+
+After sitting with the results for a couple minutes, I was quite happy to be wrong. Passing along an extra 20,000 input tokens with every request is expensive[^1] and results in hitting rate limits much more often; in removing all those extra tokens, the resulting app can be much cheaper for users.
+
+[^1]: Claude Sonnet 4 is \$3 per million input tokens, so 20,000 input tokens is \$3 x .02 = 6 cents per request. (This ignores the cache hit rate, but we're already in the footnotes.) It's not uncommon for this app to make 100 or more requests while developing an ML model.
+
+## From here
+
+I wrote earlier that my first goal in working on this eval was to measure "how much better Predictive is at predictive modeling than Databot itself." From this first experiment, I learned that it's no better at all. Check.
+
+The second goal was to measure "how well a given LLM does at powering the Predictive app." Even though I've learned that all of that extra context is not actually needed, *it's still true that the `run_experiment()` tool is needed.* I initially introduced that tool not to improve the predictive performance of outputted ML models, but to make the experience of developing them better for the user. Without the additional structure provided by `run_experiment()`, and the improvements in UX that result from it, using Databot for predictive modeling is a bummer. So, the question I'll focus on using this eval to answer, now, is this second one; given that asynchronous execution and known "hooks" into modeling code are needed to make predictive modeling with an LLM assistant pleasant, how well can a given LLM do at making use of that tool structure?
+
+In the coming weeks, I'm hoping to tighten up a few more components of this eval. After I do, we can use it to 1) determine which LLMs we can officially support as capable of powering this application, and also 2) write about new LLM releases as they come out. I'm designing this eval to look as close to my real-world interactions with LLMs as possible, in hopes that I can use the results of the eval as a much higher-signal benchmark for whether I'll find some LLM useful than the sorts of evals that tend to live in release posts from AI labs.
+
+Also, keep an eye out for a proper integration of similar capabilities into Databot. For now, [Predictive](https://github.com/simonpcouch/predictive) is a fork of the [Databot proof of concept](https://github.com/jcheng5/databot) that's implemented as a Shiny app; we're hoping to implement these predictive modeling-focused features into the real deal in the coming months.

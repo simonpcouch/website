@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.33">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta name="dcterms.date" content="2025-08-26">
+<title>I was wrong about tidymodels and LLMs | Simon P. Couch – Simon P. Couch</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../assets/cabin.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-edbd123714173c2d5d98bd1252cecc27.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-contrib/videojs/video.min.js"></script>
+<link href="../../site_libs/quarto-contrib/videojs/video-js.css" rel="stylesheet"><script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script><script async="" src="https://www.googletagmanager.com/gtag/js?id=G-DDB8R0B1ZW"></script><script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
+</script>
+</head>
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner"><nav class="navbar navbar-expand-lg " data-bs-theme="dark"><div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../assets/cabin.png" alt="" class="navbar-logo"></a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Simon P. Couch</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+<li class="nav-item">
+    <a class="nav-link" href="../../about/index.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog/index.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../software.html"> 
+<span class="menu-text">Software</span></a>
+  </li>  
+</ul>
+</div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+    <a href="https://www.github.com/simonpcouch/website" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav></header><!-- content --><header id="title-block-header" class="quarto-title-block default page-columns page-full"><div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">I was wrong about tidymodels and LLMs</h1>
+            <p class="subtitle lead">Today’s frontier LLMs know much more about tidymodels than I thought.</p>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">August 26, 2025</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content"><p>One of my most visceral memories of my first interactions with LLMs was asking that first release of ChatGPT in late 2022 to write code to fit a linear regression with tidymodels. The model hallucinated a function <code>tidymodels::install_tidymodels()</code> again and again. That function does not exist. If it did, there’d be some serious chicken and egg happening. This thing was goofy.</p>
+<p>A year or two went by. Around this time last year, I started engaging with LLMs more seriously. At the time, I found that the modern frontier LLMs at the time “just knew” tidyverse in a way that they didn’t with tidymodels. Those LLMs might not have been up to date with the newest syntax, but by and large, I didn’t need to paste in a bunch of documentation on tidyverse in order to use those LLMs to write tidyverse code. This was not the case with tidymodels, though; at the time, I felt that LLMs required a good bit of prompting in order to write tidymodels code fluently.</p>
+<p>In working on a tidymodels assistant in recent months, I had been under the assumption that this was still the case. Now that I’ve put together some evals to measure the assistant’s performance, though, I realize this is no longer the case; today’s frontier LLMs “just know” tidymodels.</p>
+<section id="enter-databot" class="level2"><h2 class="anchored" data-anchor-id="enter-databot">Enter Databot</h2>
+<p>Posit just announced a research preview feature in Positron called <a href="https://posit.co/blog/positron-ai-product-announcement-aug-2025/">Databot</a>. It’s a data analysis assistant that can see your global environment and run R code inside of it via a tool <code>run_r_code()</code>. Databot works in short bursts, keeping the analyst in the loop and deferring to them on what directions to head next. It’s pretty remarkable; if you haven’t tried it out, I highly recommend giving it a whir.</p>
+<div class="quarto-video"><video id="video_shortcode_videojs_video1" class="video-js vjs-default-skin vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="databot.mov"></video></div>
+<p>Coming from the <a href="https://www.tidymodels.org/">tidymodels</a> team, my first question when I saw the early prototypes of Databot early this year was “how good is this thing at developing ML models?” Specifically, was Databot a proficient tidymodels user?</p>
+<p>Immediately, I ran into issues.</p>
+<ol type="1">
+<li>LLMs would make silly mistakes when writing tidymodels code, again and again.</li>
+<li>An assumption under the hood in Databot is that code that the assistant passes to <code>run_r_code()</code> will execute relatively quickly; if you’re just filtering out rows or creating plots, it’s safe to assume in many situations that results will come back quickly. This is not the case with modeling code; resampling even simple model fits on datasets as small as tens of thousands of rows can take several minutes. In that case, as an analyst, you’re just staring at a dial spinning. No good.</li>
+</ol>
+<p>So, <a href="https://github.com/simonpcouch/predictive">I’ve been experimenting</a> with what Databot might feel like in a “predictive modeling mode.” The proof of concept is called Predictive. The main difference between Databot and Predictive is 1) a shitton of prompting to provide context on tidymodels and 2) a tool called <code>run_experiment()</code>.</p>
+<section id="prompting" class="level3"><h3 class="anchored">Prompting</h3>
+<p>In thinking through how to “teach” LLMs how to use tidymodels (or any other package), there’s a tradeoff between completeness and cost. Provide too much context and you’re paying too much, provide too little context and LLMs won’t actually be able to use the packages.</p>
+<p>At its most minimal, I needed to provide high-level context on using tidymodels: what are <a href="https://parsnip.tidymodels.org/reference/model_spec.html">model specifications</a>? <a href="https://recipes.tidymodels.org/reference/recipe.html">Recipes</a>? <a href="https://workflows.tidymodels.org/articles/extras/getting-started.html">Workflows</a>? I wrote these bits of context myself. <a href="https://github.com/simonpcouch/predictive/blob/8cff83a1639cd40a7abc4704587cef3d3c488ec7/inst/prompts/model.md">For example</a>, on model specifications:</p>
+<blockquote class="blockquote">
+<p>R code that returns a parsnip model specification. For example, to specify a linear regression:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">linear_reg</span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Or, to use a different engine and set some arguments:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">linear_reg</span><span class="op">(</span>penalty <span class="op">=</span> <span class="fl">.1</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span><span class="fu">set_engine</span><span class="op">(</span><span class="st">"glmnet"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>To tune argument values, set their value to <code>tune()</code>:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">linear_reg</span><span class="op">(</span>penalty <span class="op">=</span> <span class="fu">tune</span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span><span class="fu">set_engine</span><span class="op">(</span><span class="st">"glmnet"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>When using a model type with an ambiguous mode, be sure to set it explicitly:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">decision_tree</span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span><span class="fu">set_mode</span><span class="op">(</span><span class="st">"regression"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>In all of the above cases, the triple backticks are for example only and should not be included in the argument specification.</p>
+</blockquote>
+<p>Then, I wanted to provide context to prevent the most common failure modes, like hallucinating possible modeling engines for a given model type, misspelling an argument name, or thinking that a modeling engine supports a modeling mode that it doesn’t. To do so, for each model type, I <a href="https://github.com/simonpcouch/predictive/blob/8cff83a1639cd40a7abc4704587cef3d3c488ec7/inst/sandbox/write_model_documentation.R">concatenated all of the documentation for that model type together and then presented it to an LLM</a>, asking for a specific, information-dense output format. So, for example, the documentation for the modeling function <code>linear_reg()</code> looked <a href="https://github.com/simonpcouch/predictive/blob/8cff83a1639cd40a7abc4704587cef3d3c488ec7/inst/context/models/linear_reg.md">like this</a>:</p>
+<blockquote class="blockquote">
+<h2 id="linear_reg" class="anchored" data-anchor-id="prompting"><code>linear_reg()</code></h2>
+<p>Linear regression models fit a linear relationship between predictors and a numeric outcome. Fast to fit and interpret.</p>
+<p>Arguments:</p>
+</blockquote>
+<blockquote class="blockquote">
+<ul>
+<li>
+<code>penalty</code>: Amount of regularization. tune.</li>
+<li>
+<code>mixture</code>: Proportion of L1 regularization (0=ridge, 1=lasso). tune.</li>
+</ul>
+<p>Engines:</p>
+</blockquote>
+<blockquote class="blockquote">
+<ul>
+<li>
+<code>lm</code> (regression): Standard OLS implementation. Fast and interpretable.</li>
+<li>
+<code>brulee</code> (regression): Efficient GPU-accelerated implementation.</li>
+<li>
+<code>gee</code> (regression): For correlated data. Requires multilevelmod extension.</li>
+<li>
+<code>glm</code> (regression): Similar to lm but with flexibility for non-gaussian distributions.</li>
+<li>
+<code>glmer</code> (regression): For mixed effects models with grouped data. Requires multilevelmod extension.</li>
+<li>
+<code>glmnet</code> (regression): Best for high-dimensional data with many predictors.</li>
+<li>
+<code>quantreg</code> (quantile regression): For modeling conditional quantiles rather than means.</li>
+<li>
+<code>spark</code> (regression): For big data that doesn’t fit in memory.</li>
+<li>
+<code>stan</code> (regression): Bayesian implementation with uncertainty estimates.</li>
+</ul>
+</blockquote>
+<p>I did the same for all recipes and all possible steps, too.</p>
+<p>Altogether, this resulted in something like 20,000 tokens of very, very dense documentation on modeling functionality available in tidymodels.</p>
+</section><section id="the-run_experiment-tool" class="level3"><h3 class="anchored" data-anchor-id="the-run_experiment-tool">The <code>run_experiment()</code> tool</h3>
+<p>In addition to the extra prompting, Predictive has one more tool beyond Databot’s <code>run_r_code()</code>. It’s sort of like <code>run_r_code()</code>, but it’s tuned specifically for running tidymodels modeling code:</p>
+<ul>
+<li>Every time an LLM wants to run code that fits ML models with tidymodels (like <code>fit()</code>, <code>tune_grid()</code>, etc), it will run that code inside of <code>run_experiment()</code> rather than <code>run_r_code()</code>.</li>
+<li>
+<code>run_experiment()</code> makes use of “hooks” inside of tidymodels that allow the Predictive app to track execution progress and resulting performance metrics.</li>
+<li>
+<code>run_experiment()</code> can run asynchronously. Normally, with the <code>run_r_code()</code> tool, the LLM would choose to run code, then that code would run in the R session, and only when that code finished running would the tool return the results to the LLM. <code>run_experiment()</code> works differently—when the tool is called, it launches a <a href="https://mirai.r-lib.org/">mirai</a> to run the modeling code and then immediately returns with a string like “Got it—your modeling code is running. You will be notified when it finishes.” Once modeling code finishes running, the next time an HTTP request is sent to the LLM (either for some other tool result or when a user sends a message), the results of the modeling code are presented to the LLM.</li>
+</ul>
+<p>This means that, when an LLM runs modeling code, the Predictive app stays responsive for the user. The additional “hooks” also mean that we can introduce custom UI that allow users to track execution, view bespoke result summaries, stop undesired modeling experiments, and compile information across many experiments to determine whether changes to modeling code result in more performant fits. This makes the Databot experience much more pleasant when building predictive models.</p>
+</section></section><section id="evaluating-predictive" class="level2"><h2 class="anchored" data-anchor-id="evaluating-predictive">Evaluating Predictive</h2>
+<p>So, this proof of concept for a predictive modeling mode for Databot is working pretty well. Some months go by as I’m building it, with LLM releases from Anthropic, Google Gemini, and OpenAI, all of which make the experience of using Predictive even better.</p>
+<div class="quarto-video"><video id="video_shortcode_videojs_video2" class="video-js vjs-default-skin vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="predictive.mov"></video></div>
+<p>How can I measure how well this thing works, though? On and off this last month, I’ve been poking at an <a href="https://github.com/simonpcouch/predictivebench">eval</a> that aims to measure 1) how much better Predictive is at predictive modeling than Databot itself, and 2) how well a given LLM does at powering the Predictive app. It’s been quite the engineering lift, but I finally got it to a point where I could run some initial samples a couple weeks ago.</p>
+<p>So, I ran this evaluation against three configurations:</p>
+<ul>
+<li>
+<code>run_r_code()</code> tool only: Situate an LLM inside of a directory and give it the ability to run R code.</li>
+<li>Databot: In addition to running R code, the model is prompted with the same prompt that is provided to Databot.</li>
+<li>Predictive: The model is further prompted with a bunch of information on how tidymodels works as well as the <code>run_experiment()</code> tool.</li>
+</ul>
+<p>In my <a href="https://github.com/simonpcouch/predictivebench/issues/6#issuecomment-3206712424">mockup of how I’d plot the results</a> I put together while the eval was running, I expected the results to look something like this:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="index_files/figure-html/mockup-plot-1.png" class="img-fluid figure-img" style="border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.05);;width:100.0%" alt="A ggplot2 bar plot showing synthetic data. On the x axis are two LLMs, Claude Sonnet 4 and Gemini Pro 2.5. On the y axis is relative performance, ranging from 0 (baseline model) to 100 (best human modelers). Both of the two bars are colored according to the three configurations mentioned above, with Predictive resulting in the best performance, followed by Databot."></p>
+</figure>
+</div>
+</div>
+</div>
+<p>I expected that only supplying a <code>run_r_code()</code> tool would provide some baseline performance, then Databot’s prompting would provide a bit more of a boost, and then Predictive’s additional prompt and <code>run_experiment()</code> tool would seal the deal. I even used <code>position = "identity"</code> because I was so confident about this; since the scores from Predictive would be greater than from Databot, I could just plot them on top of each other.</p>
+<p>Once the initial round of results came in, I discovered that my use of <code>position = "identity"</code> in the above was overoptimistic, to say the least.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="index_files/figure-html/actual-plot-1.png" class="img-fluid figure-img" style="border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.05);;width:100.0%" alt="The same plot as before, but with real data. In reality, the bar heights for Claude Sonnet 4 are all about the same and, for Gemini 2.5 Pro, the height for Predictive is much lower. (Around 20, rather than scores around 80 for all other LLMs and configurations.)"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>With Claude Sonnet 4, the results were a bit of a wash; providing a <code>run_r_code()</code> tool was all that the LLM needed to do it’s thing. Additional prompting from Databot and all of the prompting and tooling from Predictive were no help. In the <code>run_r_code()</code> eval, Sonnet “chose” to use tidymodels in its solutions, and did so fluently. This didn’t totally blindside me, but I was surprised to see Claude Sonnet 4 “just knew” tidymodels.</p>
+<p>Then the results for Gemini Pro 2.5 came in. <em>Holy smokes</em>. Not only did Predictive’s <code>run_experiment()</code> tool not help Gemini Pro 2.5 develop ML models, but it hurt its performance significantly. The LLM struggled with setting the tool arguments appropriately and, awash in more context tokens than it needed, sometimes failed to present its best ML model with the appropriate formatting (resulting in scores of 0).</p>
+<p>In reading these results, I realized that I was wrong about how well modern frontier LLMs know tidymodels. There was no need to provide those carefully crafted 20,000 tokens of context and, worse than that, doing so actually <em>hurt</em> performance.</p>
+<p>After sitting with the results for a couple minutes, I was quite happy to be wrong. Passing along an extra 20,000 input tokens with every request is expensive<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> and results in hitting rate limits much more often; in removing all those extra tokens, the resulting app can be much cheaper for users.</p>
+</section><section id="from-here" class="level2"><h2 class="anchored" data-anchor-id="from-here">From here</h2>
+<p>I wrote earlier that my first goal in working on this eval was to measure “how much better Predictive is at predictive modeling than Databot itself.” From this first experiment, I learned that it’s no better at all. Check.</p>
+<p>The second goal was to measure “how well a given LLM does at powering the Predictive app.” Even though I’ve learned that all of that extra context is not actually needed, <em>it’s still true that the <code>run_experiment()</code> tool is needed.</em> I initially introduced that tool not to improve the predictive performance of outputted ML models, but to make the experience of developing them better for the user. Without the additional structure provided by <code>run_experiment()</code>, and the improvements in UX that result from it, using Databot for predictive modeling is a bummer. So, the question I’ll focus on using this eval to answer, now, is this second one; given that asynchronous execution and known “hooks” into modeling code are needed to make predictive modeling with an LLM assistant pleasant, how well can a given LLM do at making use of that tool structure?</p>
+<p>In the coming weeks, I’m hoping to tighten up a few more components of this eval. After I do, we can use it to 1) determine which LLMs we can officially support as capable of powering this application, and also 2) write about new LLM releases as they come out. I’m designing this eval to look as close to my real-world interactions with LLMs as possible, in hopes that I can use the results of the eval as a much higher-signal benchmark for whether I’ll find some LLM useful than the sorts of evals that tend to live in release posts from AI labs.</p>
+<p>Also, keep an eye out for a proper integration of similar capabilities into Databot. For now, <a href="https://github.com/simonpcouch/predictive">Predictive</a> is a fork of the <a href="https://github.com/jcheng5/databot">Databot proof of concept</a> that’s implemented as a Shiny app; we’re hoping to implement these predictive modeling-focused features into the real deal in the coming months.</p>
+
+
+</section><a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a><div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+<ol>
+<li id="fn1"><p>Claude Sonnet 4 is $3 per million input tokens, so 20,000 input tokens is $3 x .02 = 6 cents per request. (This ignores the cache hit rate, but we’re already in the footnotes.) It’s not uncommon for this app to make 100 or more requests while developing an ML model.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol></section><section class="quarto-appendix-contents" id="quarto-reuse"><h2 class="anchored quarto-appendix-heading">Reuse</h2><div class="quarto-appendix-contents"><div><a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a></div></div></section></div></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/simonpcouch\.com");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script><script src="https://utteranc.es/client.js" repo="simonpcouch/website" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script>
+</div> <!-- /content -->
+<footer class="footer"><div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© 2024 Simon P. Couch ∙ Made with <a href="https://quarto.org">Quarto</a></p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer><script>videojs(video_shortcode_videojs_video1);</script><script>videojs(video_shortcode_videojs_video2);</script>
+
+
+</body></html>

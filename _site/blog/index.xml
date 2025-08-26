@@ -9,8 +9,16 @@
 <link>https://simonpcouch.com/blog/</link>
 <atom:link href="https://simonpcouch.com/blog/index.xml" rel="self" type="application/rss+xml"/>
 <description>A data science blog</description>
-<generator>quarto-1.6.40</generator>
-<lastBuildDate>Thu, 14 Aug 2025 05:00:00 GMT</lastBuildDate>
+<generator>quarto-1.7.33</generator>
+<lastBuildDate>Tue, 26 Aug 2025 05:00:00 GMT</lastBuildDate>
+<item>
+  <title>I was wrong about tidymodels and LLMs</title>
+  <link>https://simonpcouch.com/blog/2025-08-26-predictive/</link>
+  <description><![CDATA[ One of my most visceral memories of my first interactions with LLMs was asking that first release of ChatGPT in late 2022 to write code to fit a linear regression with tidymodels. The model hallucinated a function <code>tidymodels::install_tidymodels()</code> again and again. That function does not exist. If it did, there’d be some serious chicken and egg happening. This thing was goofy. ]]></description>
+  <guid>https://simonpcouch.com/blog/2025-08-26-predictive/</guid>
+  <pubDate>Tue, 26 Aug 2025 05:00:00 GMT</pubDate>
+  <media:content url="https://simonpcouch.com/blog/2025-08-26-predictive/featured.png" medium="image" type="image/png" height="143" width="144"/>
+</item>
 <item>
   <title>R and the Model Context Protocol</title>
   <link>https://simonpcouch.com/blog/2025-08-14-mcptools/</link>
@@ -162,14 +170,6 @@
   <guid>https://simonpcouch.com/blog/2024-03-14-oracle/</guid>
   <pubDate>Thu, 14 Mar 2024 05:00:00 GMT</pubDate>
   <media:content url="https://simonpcouch.com/blog/2024-03-14-oracle/featured.png" medium="image" type="image/png" height="144" width="144"/>
-</item>
-<item>
-  <title>Analyzing my own music listening data with R and the tidyverse (2023)</title>
-  <link>https://simonpcouch.com/blog/2023-11-30-listening-2023/</link>
-  <description><![CDATA[ Aside from exchanging playlists with my partner every once in a while, I’m not much of a Spotify user. Around this time every year, though, all of my friends start posting their Spotify Wrapped, and I get jealous, as the platform that I listen to music on doesn’t have anything like it. Of course, though, it collects data about me (it’s 2023!); <a href="https://www.simonpcouch.com/blog/2022-12-01-listening-2022/">last year</a>, I got to wondering whether I could make a lo-fi knockoff of wrapped using R, the tidyverse, and the data that I have access to. You already know: ]]></description>
-  <guid>https://simonpcouch.com/blog/2023-11-30-listening-2023/</guid>
-  <pubDate>Thu, 30 Nov 2023 06:00:00 GMT</pubDate>
-  <media:content url="https://simonpcouch.com/blog/2023-11-30-listening-2023/featured.png" medium="image" type="image/png" height="156" width="144"/>
 </item>
 </channel>
 </rss>
