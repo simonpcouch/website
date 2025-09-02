@@ -10,6 +10,7 @@ project:
     - "assets/2025-05-21-gemini-2-5-flash/viewer/logs"
     - "assets/2025-05-27-claude-4/viewer/logs"
     - "assets/2025-07-14-kimi-k2/viewer/logs"
+    - "assets/predictiveBenchFail/logs"
   post-render: 
     - "cp -rv static/. _site" # source: https://github.com/quarto-dev/quarto-cli/discussions/4162#discussioncomment-4831352
 
