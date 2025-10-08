@@ -10,7 +10,15 @@
 <atom:link href="https://simonpcouch.com/blog/index.xml" rel="self" type="application/rss+xml"/>
 <description>A data science blog</description>
 <generator>quarto-1.7.33</generator>
-<lastBuildDate>Tue, 26 Aug 2025 05:00:00 GMT</lastBuildDate>
+<lastBuildDate>Wed, 08 Oct 2025 05:00:00 GMT</lastBuildDate>
+<item>
+  <title>I’m… writing a newsletter?</title>
+  <link>https://simonpcouch.com/blog/2025-10-08-newsletter/</link>
+  <description><![CDATA[ Between Positron Assistant, Databot, ellmer, chatlas, and their offshoots, there’s been a lot of LLM-related news coming out of Posit in 2025. Many folks across the organization felt that it was hard to keep up with new developments in the space, both internally and in the wider world. With this in mind, my colleague <a href="https://www.linkedin.com/in/sarakaltman/">Sara Altman</a> and I started working on an internal newsletter in June; released every two weeks, we’d give the most concise possible synopsis of movements within the company as well as the news from the wider space that we were paying the closest attention to. ]]></description>
+  <guid>https://simonpcouch.com/blog/2025-10-08-newsletter/</guid>
+  <pubDate>Wed, 08 Oct 2025 05:00:00 GMT</pubDate>
+  <media:content url="https://simonpcouch.com/blog/2025-10-08-newsletter/featured.png" medium="image" type="image/png" height="141" width="144"/>
+</item>
 <item>
   <title>I was wrong about tidymodels and LLMs</title>
   <link>https://simonpcouch.com/blog/2025-08-26-predictive/</link>
@@ -162,14 +170,6 @@
   <guid>https://simonpcouch.com/blog/2024-04-08-fit-time/</guid>
   <pubDate>Mon, 08 Apr 2024 05:00:00 GMT</pubDate>
   <media:content url="https://simonpcouch.com/blog/2024-04-08-fit-time/featured.png" medium="image" type="image/png" height="144" width="144"/>
-</item>
-<item>
-  <title>Run an Oracle Database with Docker Desktop on ARM (M1, M2, M3) MacOS</title>
-  <link>https://simonpcouch.com/blog/2024-03-14-oracle/</link>
-  <description><![CDATA[ I recently sunk a few days into getting an Oracle database deployed on MacOS with an M1 chip in a docker container via Docker Desktop. The few solutions that I found recommended using the Docker Desktop alternative Colima and/or using publicly available, community-contributed images; I had various troubles getting these solutions to work, and found myself missing the bells and whistles of Docker Desktop along the way. This morning, I finally got this database deployed by building the image myself from the official Oracle source, in Docker Desktop rather than Colima, and thought it’d be worth writing up how I did so, especially given the countless GitHub issue comments, StackOverflow posts, and forum discussion I came across from others in my situation. ]]></description>
-  <guid>https://simonpcouch.com/blog/2024-03-14-oracle/</guid>
-  <pubDate>Thu, 14 Mar 2024 05:00:00 GMT</pubDate>
-  <media:content url="https://simonpcouch.com/blog/2024-03-14-oracle/featured.png" medium="image" type="image/png" height="144" width="144"/>
 </item>
 </channel>
 </rss>
