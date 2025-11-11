@@ -9,8 +9,16 @@
 <link>https://simonpcouch.com/blog/</link>
 <atom:link href="https://simonpcouch.com/blog/index.xml" rel="self" type="application/rss+xml"/>
 <description>A data science blog</description>
-<generator>quarto-1.7.33</generator>
-<lastBuildDate>Wed, 08 Oct 2025 05:00:00 GMT</lastBuildDate>
+<generator>quarto-1.7.32</generator>
+<lastBuildDate>Tue, 11 Nov 2025 06:00:00 GMT</lastBuildDate>
+<item>
+  <title>side::kick(), a coding agent for RStudio</title>
+  <link>https://simonpcouch.com/blog/2025-11-11-sidekick/</link>
+  <description><![CDATA[ I’m excited to share <a href="https://simonpcouch.github.io/side/"><code>side::kick()</code></a>, an experimental coding agent for RStudio users, built entirely in R. It can interact with your files, talk to your active R session, and run code. ]]></description>
+  <guid>https://simonpcouch.com/blog/2025-11-11-sidekick/</guid>
+  <pubDate>Tue, 11 Nov 2025 06:00:00 GMT</pubDate>
+  <media:content url="https://simonpcouch.com/blog/2025-11-11-sidekick/featured.png" medium="image" type="image/png" height="145" width="144"/>
+</item>
 <item>
   <title>I’m… writing a newsletter?</title>
   <link>https://simonpcouch.com/blog/2025-10-08-newsletter/</link>
@@ -162,14 +170,6 @@
   <guid>https://simonpcouch.com/blog/2024-05-13-parallel/</guid>
   <pubDate>Mon, 13 May 2024 05:00:00 GMT</pubDate>
   <media:content url="https://simonpcouch.com/blog/2024-05-13-parallel/featured.png" medium="image" type="image/png" height="145" width="144"/>
-</item>
-<item>
-  <title>Measuring elapsed time to fit with tidymodels</title>
-  <link>https://simonpcouch.com/blog/2024-04-08-fit-time/</link>
-  <description><![CDATA[ <strong>tl;dr</strong>: The development versions of tidymodels packages include methods for a <a href="https://workflows.tidymodels.org/dev/reference/extract-workflow.html">new extract function</a>, <code>extract_fit_time()</code>, that returns the time required to train a workflow. Pass <code>extract_fit_time()</code> as a control option while tuning and run <code>collect_extracts()</code> to see training times for resampled workflows. In this example, we can identify a modeling workflow that trains more than 10x faster than the most performant model with very little decrease in predictive performance. ]]></description>
-  <guid>https://simonpcouch.com/blog/2024-04-08-fit-time/</guid>
-  <pubDate>Mon, 08 Apr 2024 05:00:00 GMT</pubDate>
-  <media:content url="https://simonpcouch.com/blog/2024-04-08-fit-time/featured.png" medium="image" type="image/png" height="144" width="144"/>
 </item>
 </channel>
 </rss>
