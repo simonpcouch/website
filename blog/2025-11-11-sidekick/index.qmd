@@ -1,0 +1,38 @@
+---
+title: "side::kick(), a coding agent for RStudio"
+date: '2025-11-11'
+tags:
+  - ai
+  - rstats
+subtitle: "Open-source AI for RStudio, built entirely in R."
+image: featured.png
+summary: ''
+---
+
+I'm excited to share [`side::kick()`](https://simonpcouch.github.io/side/), an experimental coding agent for RStudio users, built entirely in R. It can interact with your files, talk to your active R session, and run code.
+
+{{< video sidekick.mp4 >}}
+
+`side::kick()` was my best attempt at replicating a Claude Code-like experience with [btw](https://posit-dev.github.io/btw/), [ellmer](https://ellmer.tidyverse.org/), and [shinychat](https://posit-dev.github.io/shinychat/). Beyond what's in those packages, it has a good few bells and whistles:
+
+* **Use any LLM** supported by [ellmer](https://ellmer.tidyverse.org/)--Anthropic, OpenAI, Google Gemini, OpenRouter, and even local models are fair game.
+* **See your active R session** to explore your computational environment.
+* **Use tools** to read and write files, run shell commands, and read R documentation.
+* **Create and execute plans**, allowing it to take on longer-horizon tasks.
+* **Persist state** across R sessions so that you can close RStudio and come back to a chat later.
+* Respond to **interrupts** so that you can stop execution and reroute the agent.
+* Read **skills**, markdown files that describe how to carry out a given task in the way you need it to.
+
+## Getting started
+
+To get started, install with:
+
+```r
+pak::pak("simonpcouch/side")
+```
+
+Then, run `side::kick()`. You might place `side::kick()` in your `.Rprofile` (perhaps with `usethis::edit_r_profile()`) to launch `side::kick()` every time you start R.
+
+`side::kick()` is intended for use with RStudio's *Sidebar*, a full-height pane that's currently only available in [RStudio Dailies](https://dailies.rstudio.com/). Install RStudio, then search for "Sidebar" in the command palette.
+
+The [introductory vignette](https://simonpcouch.github.io/side/articles/side.html) goes into much more depth on configuring and using the tool!
