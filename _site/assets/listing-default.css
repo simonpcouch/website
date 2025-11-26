@@ -39,3 +39,10 @@
 .card-img {
     border-radius: 8px 8px 0px 0px;
 }
+
+.quarto-listing .listing-subtitle,
+.quarto-listing .listing-subtitle a {
+  color: #666 !important;
+  font-style: italic;
+  padding-top: 0.25em;
+}

@@ -15,7 +15,7 @@ listing:
   feed: 
     type: partial
     description: "A data science blog"
-  fields: [title, summary, author, categories, date, image]
+  fields: [title, subtitle, summary, author, categories, date, image]
   image-placeholder: featured.png
   image-align: right
   page-size: 6
