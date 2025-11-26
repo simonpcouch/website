@@ -10,7 +10,15 @@
 <atom:link href="https://simonpcouch.com/blog/index.xml" rel="self" type="application/rss+xml"/>
 <description>A data science blog</description>
 <generator>quarto-1.7.32</generator>
-<lastBuildDate>Tue, 11 Nov 2025 06:00:00 GMT</lastBuildDate>
+<lastBuildDate>Wed, 26 Nov 2025 06:00:00 GMT</lastBuildDate>
+<item>
+  <title>When plotting, LLMs see what they expect to see</title>
+  <link>https://simonpcouch.com/blog/2025-11-26-bluffbench/</link>
+  <description><![CDATA[ <em>This post is a cross-post of a <a href="https://posit.co/blog/introducing-bluffbench/">post</a> on the Posit Blog, co-written with Sara Altman.</em> ]]></description>
+  <guid>https://simonpcouch.com/blog/2025-11-26-bluffbench/</guid>
+  <pubDate>Wed, 26 Nov 2025 06:00:00 GMT</pubDate>
+  <media:content url="https://simonpcouch.com/assets/blank.png" medium="image" type="image/png" height="1" width="1"/>
+</item>
 <item>
   <title>side::kick(), a coding agent for RStudio</title>
   <link>https://simonpcouch.com/blog/2025-11-11-sidekick/</link>
@@ -162,14 +170,6 @@
   <guid>https://simonpcouch.com/blog/2024-07-15-syrup/</guid>
   <pubDate>Mon, 15 Jul 2024 05:00:00 GMT</pubDate>
   <media:content url="https://simonpcouch.com/blog/2024-07-15-syrup/featured.png" medium="image" type="image/png" height="148" width="144"/>
-</item>
-<item>
-  <title>How to best parallelize boosted tree model fits with tidymodels</title>
-  <link>https://simonpcouch.com/blog/2024-05-13-parallel/</link>
-  <description><![CDATA[ The <a href="https://xgboost.readthedocs.io/">XGBoost</a> and <a href="https://lightgbm.readthedocs.io/en/stable/">LightGBM</a> modeling engines both enable distributing the computations needed to train a single boosted tree model across several CPU cores. Similarly, the <a href="https://tidymodels.org">tidymodels framework</a> enables distributing model fits across cores. The natural question, then, is whether tidymodels users ought to make use of the engine’s parallelism implementation, tidymodels’ implementation, or both at the same time. This blog post is a scrappy attempt at finding which of those approaches will lead to the smallest elapsed time when fitting many models. ]]></description>
-  <guid>https://simonpcouch.com/blog/2024-05-13-parallel/</guid>
-  <pubDate>Mon, 13 May 2024 05:00:00 GMT</pubDate>
-  <media:content url="https://simonpcouch.com/blog/2024-05-13-parallel/featured.png" medium="image" type="image/png" height="145" width="144"/>
 </item>
 </channel>
 </rss>
