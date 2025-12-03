@@ -10,7 +10,15 @@
 <atom:link href="https://simonpcouch.com/blog/index.xml" rel="self" type="application/rss+xml"/>
 <description>A data science blog</description>
 <generator>quarto-1.7.32</generator>
-<lastBuildDate>Wed, 26 Nov 2025 06:00:00 GMT</lastBuildDate>
+<lastBuildDate>Thu, 04 Dec 2025 06:00:00 GMT</lastBuildDate>
+<item>
+  <title>Local models are not there (yet)</title>
+  <link>https://simonpcouch.com/blog/2025-12-04-local-agents/</link>
+  <description><![CDATA[ I understand the appeal of local models. Using coding agents like Claude Code or Codex, it’s not difficult to rack up a hundred dollars of usage in the course of a work week. Besides the price, if you’re working with sensitive IP or confidential data, you need to really believe that providers like Anthropic and OpenAI can be trusted with your data. And then, there’s evil billionaires. What if you could run models that were nearly as good on your own laptop? ]]></description>
+  <guid>https://simonpcouch.com/blog/2025-12-04-local-agents/</guid>
+  <pubDate>Thu, 04 Dec 2025 06:00:00 GMT</pubDate>
+  <media:content url="https://simonpcouch.com/blog/2025-12-04-local-agents/featured.png" medium="image" type="image/png"/>
+</item>
 <item>
   <title>When plotting, LLMs see what they expect to see</title>
   <link>https://simonpcouch.com/blog/2025-11-26-bluffbench/</link>
@@ -162,14 +170,6 @@
   <guid>https://simonpcouch.com/blog/2024-10-16-postprocessing/</guid>
   <pubDate>Wed, 16 Oct 2024 05:00:00 GMT</pubDate>
   <media:content url="https://simonpcouch.com/blog/2024-10-16-postprocessing/featured.png" medium="image" type="image/png" height="130" width="144"/>
-</item>
-<item>
-  <title>A new package for profiling parallel R code</title>
-  <link>https://simonpcouch.com/blog/2024-07-15-syrup/</link>
-  <description><![CDATA[ I’ve found that the following pattern looms large in content about parallel processing with R (including my own): ]]></description>
-  <guid>https://simonpcouch.com/blog/2024-07-15-syrup/</guid>
-  <pubDate>Mon, 15 Jul 2024 05:00:00 GMT</pubDate>
-  <media:content url="https://simonpcouch.com/blog/2024-07-15-syrup/featured.png" medium="image" type="image/png" height="148" width="144"/>
 </item>
 </channel>
 </rss>
