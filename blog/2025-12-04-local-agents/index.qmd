@@ -66,9 +66,9 @@ optimize_image <- function(
 
 I understand the appeal of local models. Using coding agents like Claude Code or Codex, it's not difficult to rack up a hundred dollars of usage in the course of a work week. Besides the price, if you're working with sensitive IP or confidential data, you need to really believe that providers like Anthropic and OpenAI can be trusted with your data. And then, there's evil billionaires. What if you could run models that were nearly as good on your own laptop?
 
-Because of this, one of the most commonly asked questions we get about coding agents like [Positron Assistant](https://positron.posit.co/assistant) or [side::kick()](https://simonpcouch.github.io/side/) is whether they can be used with local models. (For the purposes of this post, when I say "local model", I mean an LLM that can be served on a high-end laptop with decent tokens per second. Think GPT-OSS 20B.) The answer is yes, but also that we don't recommend doing so; while you _can_ connect to a local model through an OpenAI API-compatible endpoint with either of those systems, you likely won't have a good experience if you do so.
+Because of this, one of the most commonly asked questions we get about coding agents like [Positron Assistant](https://positron.posit.co/assistant), [Databot](https://positron.posit.co/databot.html), or [side::kick()](https://simonpcouch.github.io/side/) is whether they can be used with local models. (For the purposes of this post, when I say "local model", I mean an LLM that can be served on a high-end laptop with decent tokens per second. Think GPT-OSS 20B.) The answer is yes, but also that we don't recommend doing so; while you _can_ connect to a local model through an OpenAI API-compatible endpoint with either of those systems, you likely won't have a good experience if you do so.
 
-This is an argument I've tried to make in a paragraph or two many times, but I thought it would be worth fleshing out in more detail. To do so, I put together an LLM evaluation that demonstrate the issues we've seen when trying to get these models working.
+This is an argument I've tried to make in a paragraph or two many times, but I thought it would be worth fleshing out in more detail. To do so, I put together [an LLM evaluation](https://github.com/simonpcouch/helperbench) that demonstrate the issues we've seen when trying to get these models working.
 
 ## The problem
 
@@ -137,14 +137,14 @@ In practice, that might look something like this:
 {{< video simple-refactor.mp4 >}}
 
 :::callout-note
-In case this interface is unfamiliar, this is the [RStudio IDE](https://posit.co/download/rstudio-desktop/) running an open source coding agent [side::kick()](https://simonpcouch.github.io/side/).
+In case this interface is unfamiliar, this is the [RStudio IDE](https://posit.co/download/rstudio-desktop/) running an open source coding agent [side::kick()](https://simonpcouch.github.io/side/). You'll need a daily version of the RStudio IDE to get that full-height sidebar.
 :::
 
 This is something that a coding agent should get perfect almost always; my initial prompt is a bit more detailed than I'd usually provide for such a simple task, there's no context rot that could affect the agent's effectiveness, and the task is a simple one.
 
 ## Evaluation
 
-Using the [vitals](https://vitals.tidyverse.org/) package, I implemented an LLM evaluation where various models are tasked with that refactor multiple times. You can install it with `pak::pak("simonpcouch/helperbench")`.
+Using the [vitals](https://vitals.tidyverse.org/) package, I implemented [an LLM evaluation](https://github.com/simonpcouch/helperbench) where various models are tasked with that refactor multiple times. You can install it with `pak::pak("simonpcouch/helperbench")`.
 
 ```{r}
 #| label: packages
@@ -158,7 +158,7 @@ library(helperbench)
 For a given run, the setup goes like this:
 
 * The [side::kick()](https://simonpcouch.github.io/side/) GitHub repository is copied into a temporary directory.
-* An [ellmer](https://ellmer.tidyverse.org/) chat is provided with the side::kick() prompt and tools that tell it to basically act like a Claude Code- or Codex-flavored agent and situated in that directory.
+* An [ellmer](https://ellmer.tidyverse.org/) chat is provided with the side::kick() prompt and tools that tell it to basically act like a Claude Code- or Codex-flavored agent and is situated in that directory.
 * The agent is provided with the user prompt shown above ("Can you refactor this...") and allowed to work until completion.
 * Once the agent finishes,
      - The eval checks whether the agent actually made any edits to (at least) the relevant file. If it didn't, that run is a failure. 
@@ -182,6 +182,7 @@ We can first plot the proportion of runs that succeeded by model:
 #| label: plot-accuracy
 #| fig.alt: "Performance of various AI models across three categories: Frontier (closed-source commercial models), Budget (smaller commercial models), and Local (open-source models that can run locally). In the Frontier category, Claude Sonnet 4.5 achieves the highest accuracy at approximately 95%, followed by Gemini Pro 2.5 at around 85% and GPT-4.1 at roughly 82%. The Budget and Local categories show significantly lower performance, with Claude Haiku 4.5 leading Budget models at about 95% accuracy, while the local open-source models (Qwen Coder, Mistral, and GPT OSS) all score near 0% correct."
 #| fig-align: center
+#| out-extra: 'style="border-radius: 8px; box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.1);"'
 helper_results %>%
   mutate(
     correct = score == "C",
@@ -277,6 +278,7 @@ Again, my categorizations of models here aren't a given. Within those categories
 #| label: plot-cost
 #| fig.alt: "The cost-per-run comparison across the same model categories, revealing dramatically different economics. Claude Sonnet 4.5 costs approximately $0.04 per run, while GPT-4.1 is substantially more expensive at around $0.10, and Gemini Pro 2.5 falls between them; Claude Haiku 4.5 costs significantly more than both Gemini Flash 2.5 and GPT-4.1 Mini. Local models have negligible operating costs, though this must be weighed against their near-zero accuracy demonstrated in the previous chart."
 #| fig-align: center
+#| out-extra: 'style="border-radius: 8px; box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.1);"'
 helper_results %>%
   mutate(
     correct = score == "C",
@@ -308,8 +310,18 @@ helper_results %>%
   scale_y_continuous(labels = scales::dollar_format()) +
   facet_wrap(~type, nrow = 3, dir = "v", scales = "free_y") +
   coord_flip() +
-  labs(y = "Average Cost Per Run", x = NULL) +
-  theme(legend.position = "none")
+  labs(
+    y = "Average Cost Per Run", 
+    x = NULL,
+    title = "Cost by model",
+    subtitle = "There's more to LLM pricing than cost per token."
+  ) +
+  theme(
+    legend.position = "none", 
+    plot.title = element_text(hjust = -0.1),
+    plot.subtitle = element_text(hjust = -0.25, face = "italic"),
+    axis.text.y = element_text(angle = 15, hjust = 1)
+  )
 ```
 
 The bar heights represent the average cost _per refactor_. So, it costed about 4 cents for Claude Sonnet 4.5 to "read" the side::kick() prompt and tool descriptions, call tools to check out its surroundings, and apply the edits once. Altogether, this eval costed me about $22 to run.
@@ -318,8 +330,9 @@ Since we have a proxy for performance and the cost, we might as well do the perf
 
 ```{r}
 #| label: plot-cost-vs-accuracy
-#| fig.alt: "Scatter plot revealing the cost-performance tradeoff across all models. Claude models occupy the upper-middle, with perfect accuracy and moderate cost. Notably, Haiku is a greater cost than Sonnet. Gemini models tend to be cheaper but less performant. OpenAI models are more variable. The local (and budget Flash and Mini) models cluster in the lower-left, with minimal cost but zero performance."
+#| fig.alt: "Scatter plot revealing the cost-performance tradeoff across all models. Claude models occupy the upper-middle, with perfect accuracy and moderate cost. The model closest to the 'top left', being cheap but powerful, is Claude Haiku. Gemini models tend to be cheaper but less performant. OpenAI models are more variable. The local (and budget Flash and Mini) models cluster in the lower-left, with minimal cost but zero performance."
 #| fig-align: center
+#| out-extra: 'style="border-radius: 8px; box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.1);"'
 helper_results %>%
   mutate(
     correct = score == "C",
@@ -353,12 +366,17 @@ helper_results %>%
   scale_size_identity() +
   labs(
     x = "Average Cost Per Run",
-    y = "Percent Correct"
+    y = "Percent Correct",
+    title = "Refactoring reliability by price",
+    subtitle = "Cost per token is very different than cost per success."
   ) +
   theme(
-    legend.position = "none"
+    legend.position = "none",
+    plot.subtitle = element_text(face = "italic")
   )
 ```
+
+Note that the proportions in pricing don't map directly to the cost per token. The cost per token is different than the cost per attempt, and _very_ different than the cost per success. Models that "think" for a while before acting will use up more tokens than models that don't, and models that struggle to use tools fluently can use many more tokens in their attempts to resolve tool errors.
 
 ## Conclusion
 

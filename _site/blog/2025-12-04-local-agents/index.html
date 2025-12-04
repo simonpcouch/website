@@ -171,8 +171,8 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
     
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content"><p>I understand the appeal of local models. Using coding agents like Claude Code or Codex, it’s not difficult to rack up a hundred dollars of usage in the course of a work week. Besides the price, if you’re working with sensitive IP or confidential data, you need to really believe that providers like Anthropic and OpenAI can be trusted with your data. And then, there’s evil billionaires. What if you could run models that were nearly as good on your own laptop?</p>
-<p>Because of this, one of the most commonly asked questions we get about coding agents like <a href="https://positron.posit.co/assistant">Positron Assistant</a> or <a href="https://simonpcouch.github.io/side/">side::kick()</a> is whether they can be used with local models. (For the purposes of this post, when I say “local model”, I mean an LLM that can be served on a high-end laptop with decent tokens per second. Think GPT-OSS 20B.) The answer is yes, but also that we don’t recommend doing so; while you <em>can</em> connect to a local model through an OpenAI API-compatible endpoint with either of those systems, you likely won’t have a good experience if you do so.</p>
-<p>This is an argument I’ve tried to make in a paragraph or two many times, but I thought it would be worth fleshing out in more detail. To do so, I put together an LLM evaluation that demonstrate the issues we’ve seen when trying to get these models working.</p>
+<p>Because of this, one of the most commonly asked questions we get about coding agents like <a href="https://positron.posit.co/assistant">Positron Assistant</a>, <a href="https://positron.posit.co/databot.html">Databot</a>, or <a href="https://simonpcouch.github.io/side/">side::kick()</a> is whether they can be used with local models. (For the purposes of this post, when I say “local model”, I mean an LLM that can be served on a high-end laptop with decent tokens per second. Think GPT-OSS 20B.) The answer is yes, but also that we don’t recommend doing so; while you <em>can</em> connect to a local model through an OpenAI API-compatible endpoint with either of those systems, you likely won’t have a good experience if you do so.</p>
+<p>This is an argument I’ve tried to make in a paragraph or two many times, but I thought it would be worth fleshing out in more detail. To do so, I put together <a href="https://github.com/simonpcouch/helperbench">an LLM evaluation</a> that demonstrate the issues we’ve seen when trying to get these models working.</p>
 <section id="the-problem" class="level2"><h2 class="anchored" data-anchor-id="the-problem">The problem</h2>
 <p>Let’s consider a table-stakes capability for a coding agent; a simple refactor. Here, when I say “coding agent,” a mean an LLM that’s equipped with tools to explore and make changes to your working directory. That could be Claude Code, Codex, Positron Assistant, or side::kick().</p>
 <p>So, say I have some file <code>tool-fetch_skill.R</code> pulled up that looks like this:</p>
@@ -240,12 +240,12 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>In case this interface is unfamiliar, this is the <a href="https://posit.co/download/rstudio-desktop/">RStudio IDE</a> running an open source coding agent <a href="https://simonpcouch.github.io/side/">side::kick()</a>.</p>
+<p>In case this interface is unfamiliar, this is the <a href="https://posit.co/download/rstudio-desktop/">RStudio IDE</a> running an open source coding agent <a href="https://simonpcouch.github.io/side/">side::kick()</a>. You’ll need a daily version of the RStudio IDE to get that full-height sidebar.</p>
 </div>
 </div>
 <p>This is something that a coding agent should get perfect almost always; my initial prompt is a bit more detailed than I’d usually provide for such a simple task, there’s no context rot that could affect the agent’s effectiveness, and the task is a simple one.</p>
 </section><section id="evaluation" class="level2"><h2 class="anchored" data-anchor-id="evaluation">Evaluation</h2>
-<p>Using the <a href="https://vitals.tidyverse.org/">vitals</a> package, I implemented an LLM evaluation where various models are tasked with that refactor multiple times. You can install it with <code>pak::pak("simonpcouch/helperbench")</code>.</p>
+<p>Using the <a href="https://vitals.tidyverse.org/">vitals</a> package, I implemented <a href="https://github.com/simonpcouch/helperbench">an LLM evaluation</a> where various models are tasked with that refactor multiple times. You can install it with <code>pak::pak("simonpcouch/helperbench")</code>.</p>
 <div class="cell">
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggrepel.slowkow.com/">ggrepel</a></span><span class="op">)</span></span>
@@ -254,7 +254,7 @@ Note
 <p>For a given run, the setup goes like this:</p>
 <ul>
 <li>The <a href="https://simonpcouch.github.io/side/">side::kick()</a> GitHub repository is copied into a temporary directory.</li>
-<li>An <a href="https://ellmer.tidyverse.org/">ellmer</a> chat is provided with the side::kick() prompt and tools that tell it to basically act like a Claude Code- or Codex-flavored agent and situated in that directory.</li>
+<li>An <a href="https://ellmer.tidyverse.org/">ellmer</a> chat is provided with the side::kick() prompt and tools that tell it to basically act like a Claude Code- or Codex-flavored agent and is situated in that directory.</li>
 <li>The agent is provided with the user prompt shown above (“Can you refactor this…”) and allowed to work until completion.</li>
 <li>Once the agent finishes,
 <ul>
@@ -269,18 +269,18 @@ Note
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/sample_n.html">sample_n</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 10 × 6
-   model            score type          cost  input output
-   &lt;chr&gt;            &lt;ord&gt; &lt;chr&gt;        &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
- 1 Qwen 3 14B       I     Local    0.00143     2916   5006
- 2 Gemini Pro 2.5   C     Frontier 0.152      42801   9888
- 3 GPT OSS 20B      I     Local    0.000277    8811     87
- 4 GPT-4.1          C     Frontier 1.48      720546   4372
- 5 Claude Haiku 4.5 C     Budget   0.327     305204   4399
- 6 Gemini Pro 2.5   C     Frontier 0.0932     16030   7320
- 7 Claude Haiku 4.5 C     Budget   0.102      95380   1290
- 8 Mistral 3.1 24B  I     Local    0.0000153      1    139
- 9 GPT-4.1          C     Frontier 0.745     364150   2138
-10 Mistral 3.1 24B  I     Local    0.000143    4054    192</code></pre>
+   model             score type        cost  input output
+   &lt;chr&gt;             &lt;ord&gt; &lt;chr&gt;      &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+ 1 Gemini Pro 2.5    C     Frontier 0.0932   16030   7320
+ 2 Qwen 3 14B        I     Local    0.00132  10817   2686
+ 3 GPT-4.1           C     Frontier 1.32    640982   4151
+ 4 Gemini Pro 2.5    C     Frontier 0.128    31498   8834
+ 5 Claude Haiku 4.5  C     Budget   0.235   220858   2797
+ 6 GPT OSS 20B       I     Local    0.00158  48270    971
+ 7 Qwen 3 14B        I     Local    0.00298  35268   3470
+ 8 Claude Sonnet 4.5 C     Frontier 0.444   139822   1614
+ 9 GPT-4.1 Mini      I     Budget   0.187   451432   4198
+10 Qwen 3 14B        I     Local    0.00166  21685   1420</code></pre>
 </div>
 </div>
 <p>Each row is a given run, where <code>score == "C"</code> means the run succeeded.</p>
@@ -331,7 +331,7 @@ Note
 <span>  <span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><img src="index_files/figure-html/plot-accuracy-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" alt="Performance of various AI models across three categories: Frontier (closed-source commercial models), Budget (smaller commercial models), and Local (open-source models that can run locally). In the Frontier category, Claude Sonnet 4.5 achieves the highest accuracy at approximately 95%, followed by Gemini Pro 2.5 at around 85% and GPT-4.1 at roughly 82%. The Budget and Local categories show significantly lower performance, with Claude Haiku 4.5 leading Budget models at about 95% accuracy, while the local open-source models (Qwen Coder, Mistral, and GPT OSS) all score near 0% correct."></p>
+<figure class="figure"><p><img src="index_files/figure-html/plot-accuracy-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="border-radius: 8px; box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.1);;width:100.0%" alt="Performance of various AI models across three categories: Frontier (closed-source commercial models), Budget (smaller commercial models), and Local (open-source models that can run locally). In the Frontier category, Claude Sonnet 4.5 achieves the highest accuracy at approximately 95%, followed by Gemini Pro 2.5 at around 85% and GPT-4.1 at roughly 82%. The Budget and Local categories show significantly lower performance, with Claude Haiku 4.5 leading Budget models at about 95% accuracy, while the local open-source models (Qwen Coder, Mistral, and GPT OSS) all score near 0% correct."></p>
 </figure>
 </div>
 </div>
@@ -406,11 +406,21 @@ Note
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_y_continuous</a></span><span class="op">(</span>labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://scales.r-lib.org/reference/dollar_format.html">dollar_format</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">type</span>, nrow <span class="op">=</span> <span class="fl">3</span>, dir <span class="op">=</span> <span class="st">"v"</span>, scales <span class="op">=</span> <span class="st">"free_y"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_flip.html">coord_flip</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>y <span class="op">=</span> <span class="st">"Average Cost Per Run"</span>, x <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span></span>
+<span>    y <span class="op">=</span> <span class="st">"Average Cost Per Run"</span>, </span>
+<span>    x <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>    title <span class="op">=</span> <span class="st">"Cost by model"</span>,</span>
+<span>    subtitle <span class="op">=</span> <span class="st">"There's more to LLM pricing than cost per token."</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span></span>
+<span>    legend.position <span class="op">=</span> <span class="st">"none"</span>, </span>
+<span>    plot.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>hjust <span class="op">=</span> <span class="op">-</span><span class="fl">0.1</span><span class="op">)</span>,</span>
+<span>    plot.subtitle <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>hjust <span class="op">=</span> <span class="op">-</span><span class="fl">0.25</span>, face <span class="op">=</span> <span class="st">"italic"</span><span class="op">)</span>,</span>
+<span>    axis.text.y <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">15</span>, hjust <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><img src="index_files/figure-html/plot-cost-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" alt="The cost-per-run comparison across the same model categories, revealing dramatically different economics. Claude Sonnet 4.5 costs approximately $0.04 per run, while GPT-4.1 is substantially more expensive at around $0.10, and Gemini Pro 2.5 falls between them; Claude Haiku 4.5 costs significantly more than both Gemini Flash 2.5 and GPT-4.1 Mini. Local models have negligible operating costs, though this must be weighed against their near-zero accuracy demonstrated in the previous chart."></p>
+<figure class="figure"><p><img src="index_files/figure-html/plot-cost-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="border-radius: 8px; box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.1);;width:100.0%" alt="The cost-per-run comparison across the same model categories, revealing dramatically different economics. Claude Sonnet 4.5 costs approximately $0.04 per run, while GPT-4.1 is substantially more expensive at around $0.10, and Gemini Pro 2.5 falls between them; Claude Haiku 4.5 costs significantly more than both Gemini Flash 2.5 and GPT-4.1 Mini. Local models have negligible operating costs, though this must be weighed against their near-zero accuracy demonstrated in the previous chart."></p>
 </figure>
 </div>
 </div>
@@ -451,18 +461,22 @@ Note
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_identity.html">scale_size_identity</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span></span>
 <span>    x <span class="op">=</span> <span class="st">"Average Cost Per Run"</span>,</span>
-<span>    y <span class="op">=</span> <span class="st">"Percent Correct"</span></span>
+<span>    y <span class="op">=</span> <span class="st">"Percent Correct"</span>,</span>
+<span>    title <span class="op">=</span> <span class="st">"Refactoring reliability by price"</span>,</span>
+<span>    subtitle <span class="op">=</span> <span class="st">"Cost per token is very different than cost per success."</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span></span>
-<span>    legend.position <span class="op">=</span> <span class="st">"none"</span></span>
+<span>    legend.position <span class="op">=</span> <span class="st">"none"</span>,</span>
+<span>    plot.subtitle <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>face <span class="op">=</span> <span class="st">"italic"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><img src="index_files/figure-html/plot-cost-vs-accuracy-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" alt="Scatter plot revealing the cost-performance tradeoff across all models. Claude models occupy the upper-middle, with perfect accuracy and moderate cost. Notably, Haiku is a greater cost than Sonnet. Gemini models tend to be cheaper but less performant. OpenAI models are more variable. The local (and budget Flash and Mini) models cluster in the lower-left, with minimal cost but zero performance."></p>
+<figure class="figure"><p><img src="index_files/figure-html/plot-cost-vs-accuracy-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="border-radius: 8px; box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.1);;width:100.0%" alt="Scatter plot revealing the cost-performance tradeoff across all models. Claude models occupy the upper-middle, with perfect accuracy and moderate cost. The model closest to the 'top left', being cheap but powerful, is Claude Haiku. Gemini models tend to be cheaper but less performant. OpenAI models are more variable. The local (and budget Flash and Mini) models cluster in the lower-left, with minimal cost but zero performance."></p>
 </figure>
 </div>
 </div>
 </div>
+<p>Note that the proportions in pricing don’t map directly to the cost per token. The cost per token is different than the cost per attempt, and <em>very</em> different than the cost per success. Models that “think” for a while before acting will use up more tokens than models that don’t, and models that struggle to use tools fluently can use many more tokens in their attempts to resolve tool errors.</p>
 </section><section id="conclusion" class="level2"><h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
 <p>I don’t really enjoy telling folks that they ought not to use local models. Again, the advantages are clear; free (as in, the cost of electricity to charge your laptop), perfect privacy, no mega-corporations involved. In the medium run (1-2 years?), I’d love for it to be the case that you can run a Claude Sonnet 4-ish model on a base Macbook Pro, and I think that’s a plausible future. For now, though, if you’d like to get value out of coding agents, you’ll need to opt for the most capable models out there.</p>
 
