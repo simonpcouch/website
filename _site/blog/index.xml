@@ -18,6 +18,14 @@
   <guid>https://simonpcouch.com/blog/2025-12-04-local-agents/</guid>
   <pubDate>Thu, 04 Dec 2025 06:00:00 GMT</pubDate>
   <media:content url="https://simonpcouch.com/blog/2025-12-04-local-agents/featured.png" medium="image" type="image/png"/>
+<lastBuildDate>Wed, 03 Dec 2025 06:00:00 GMT</lastBuildDate>
+<item>
+  <title>Analyzing my music listening data with Databot</title>
+  <link>https://simonpcouch.com/blog/2025-12-03-wrapped-databot/</link>
+  <description><![CDATA[ It’s Spotify Wrapped season, which means that everyone I follow on instagram is posting screenshots on their stories and I need to export my iTunes Library metadata as an .xml file and analyze it with the tidyverse. (If you’re new here, I do a little <code>group_by() %&gt;% summarize()</code> on my own music listening data <a href="https://www.simonpcouch.com/blog/2023-11-30-listening-2023/">each</a> <a href="https://www.simonpcouch.com/blog/2022-12-01-listening-2022/">year</a>.) ]]></description>
+  <guid>https://simonpcouch.com/blog/2025-12-03-wrapped-databot/</guid>
+  <pubDate>Wed, 03 Dec 2025 06:00:00 GMT</pubDate>
+  <media:content url="https://simonpcouch.com/blog/2025-12-03-wrapped-databot/featured.png" medium="image" type="image/png" height="144" width="144"/>
 </item>
 <item>
   <title>When plotting, LLMs see what they expect to see</title>
