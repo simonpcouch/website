@@ -256,14 +256,15 @@ You can explore the logs from each of these runs in more detail in the log viewe
 #| eval: false
 vitals::vitals_bundle(
   "blog/2025-12-04-local-agents/logs", 
-  "assets/2025-12-04-local-agents/logs"
+  "assets/2025-12-04-local-agents/logs",
+  overwrite = TRUE
 )
 ```
 
 ```{r viewer}
 #| echo: false
 htmltools::tags$iframe(
-  src = "/assets/2025-12-04-local-agents/logs/index.html#/logs/2025-11-26T11-47-56-06-00_helperbench_bb648cf67f64feecacdc28.json",
+  src = "/assets/2025-12-04-local-agents/logs/index.html#/logs",
   width = "100%", 
   height = "600px",
   style = "border-radius: 10px; box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);"
