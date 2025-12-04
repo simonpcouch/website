@@ -10,7 +10,15 @@
 <atom:link href="https://simonpcouch.com/blog/index.xml" rel="self" type="application/rss+xml"/>
 <description>A data science blog</description>
 <generator>quarto-1.7.32</generator>
-<lastBuildDate>Wed, 03 Dec 2025 06:00:00 GMT</lastBuildDate>
+<lastBuildDate>Thu, 04 Dec 2025 06:00:00 GMT</lastBuildDate>
+<item>
+  <title>Local models are not there (yet)</title>
+  <link>https://simonpcouch.com/blog/2025-12-04-local-agents/</link>
+  <description><![CDATA[ I understand the appeal of local models. Using coding agents like Claude Code or Codex, it’s not difficult to rack up a hundred dollars of usage in the course of a work week. Besides the price, if you’re working with sensitive IP or confidential data, you need to really believe that providers like Anthropic and OpenAI can be trusted with your data. And then, there’s evil billionaires. What if you could run models that were nearly as good on your own laptop? ]]></description>
+  <guid>https://simonpcouch.com/blog/2025-12-04-local-agents/</guid>
+  <pubDate>Thu, 04 Dec 2025 06:00:00 GMT</pubDate>
+  <media:content url="https://simonpcouch.com/blog/2025-12-04-local-agents/featured.png" medium="image" type="image/png" height="144" width="144"/>
+</item>
 <item>
   <title>Analyzing my music listening data with Databot</title>
   <link>https://simonpcouch.com/blog/2025-12-03-wrapped-databot/</link>
@@ -162,14 +170,6 @@
   <guid>https://simonpcouch.com/blog/2024-10-29-book/</guid>
   <pubDate>Tue, 29 Oct 2024 05:00:00 GMT</pubDate>
   <media:content url="https://simonpcouch.com/blog/2024-10-29-book/featured.png" medium="image" type="image/png" height="140" width="144"/>
-</item>
-<item>
-  <title>Postprocessing is coming to tidymodels</title>
-  <link>https://simonpcouch.com/blog/2024-10-16-postprocessing/</link>
-  <description><![CDATA[ This is a cross-post of <a href="https://www.tidyverse.org/blog/2024/10/postprocessing-preview/">a post of mine</a> on the tidyverse blog. ]]></description>
-  <guid>https://simonpcouch.com/blog/2024-10-16-postprocessing/</guid>
-  <pubDate>Wed, 16 Oct 2024 05:00:00 GMT</pubDate>
-  <media:content url="https://simonpcouch.com/blog/2024-10-16-postprocessing/featured.png" medium="image" type="image/png" height="130" width="144"/>
 </item>
 </channel>
 </rss>
