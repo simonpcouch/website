@@ -44,5 +44,6 @@
 .quarto-listing .listing-subtitle a {
   color: #666 !important;
   font-style: italic;
+  font-size: 1.05rem;
   padding-top: 0.25em;
 }
