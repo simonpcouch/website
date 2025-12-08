@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta name="dcterms.date" content="2025-12-10">
+<title>chores 0.3.0 and local LLMs | Simon P. Couch – Simon P. Couch</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../assets/cabin.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-edbd123714173c2d5d98bd1252cecc27.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-contrib/videojs/video.min.js"></script>
+<link href="../../site_libs/quarto-contrib/videojs/video-js.css" rel="stylesheet"><script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script><script async="" src="https://www.googletagmanager.com/gtag/js?id=G-DDB8R0B1ZW"></script><script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
+</script>
+</head>
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner"><nav class="navbar navbar-expand-lg " data-bs-theme="dark"><div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../assets/cabin.png" alt="" class="navbar-logo"></a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Simon P. Couch</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+<li class="nav-item">
+    <a class="nav-link" href="../../about/index.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog/index.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../software.html"> 
+<span class="menu-text">Software</span></a>
+  </li>  
+</ul>
+</div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+    <a href="https://www.github.com/simonpcouch/website" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav></header><!-- content --><header id="title-block-header" class="quarto-title-block default page-columns page-full"><div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">chores 0.3.0 and local LLMs</h1>
+            <p class="subtitle lead">There are now small models capable of powering chores helpers.</p>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">December 10, 2025</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content"><p>The tl;dr:</p>
+<ul>
+<li>The <a href="https://github.com/simonpcouch/chores">chores</a> package, up to this point, needed a frontier-ish model to be useful; local models were more trouble than they were worth.</li>
+<li>Qwen3 4B Instruct 2507 is good enough, and it’s small enough to comfortably run on high-end laptops.</li>
+</ul>
+<section id="the-chores-package" class="level2"><h2 class="anchored" data-anchor-id="the-chores-package">The chores package</h2>
+<p>The chores package provides a library of ergonomic LLM assistants designed to help you complete repetitive, hard-to-automate tasks quickly. After selecting some code, you can press a keyboard shortcut, select a helper that corresponds to a system prompt, and watch your code be rewritten.</p>
+<div class="quarto-video"><video id="video_shortcode_videojs_video1" class="video-js vjs-default-skin vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="claude_3_7_chores.mov"></video></div>
+<p>When you select some code and a chore helper, what’s happening under the hood is that the package first retrieves the prompt corresponding the system prompt you chose. For example, the prompt for templating out roxygen2 function documentation looks like this:</p>
+<style>
+.chores-prompt pre {
+  background-color: #f6f6f6 !important;
+  font-size: 1.15em;
+}
+.chores-prompt code {
+  background-color: #e9ecef !important;
+  font-size: 0.9em;
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+.chores-prompt pre {
+  font-size: 1.15em;
+}
+.chores-prompt pre code {
+  background-color: transparent !important;
+  font-size: 1em;
+}
+.chores-prompt h1 {
+  font-size: 2.5em;
+  font-weight: bold !important;
+}
+.chores-prompt h2 {
+  font-size: 2.2em;
+  font-weight: bold !important;
+}
+.chores-prompt li {
+  font-size: 1.8em;
+}
+</style>
+<div class="chores-prompt" style="height: 600px; overflow-y: auto; border: 1px solid #ddd; border-radius: 10px; padding: 20px; background-color: #f8f9fa; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); font-size: 0.5em;">
+<p><strong>Templating function documentation</strong></p>
+<p>You are a terse assistant designed to help R package developers quickly template out their function documentation using roxygen2. Given some highlighted function code, return minimal documentation on the function’s parameters and return type. Beyond those two elements, be sparing so as not to describe things you don’t have context for. Respond with <em>only</em> R <code>#'</code> roxygen2 comments—no backticks or newlines around the response, no further commentary.</p>
+<p>For function parameters in <code>@params</code>, describe each according to their type (e.g.&nbsp;“A numeric vector” or “A single string”) and note if the parameter isn’t required by writing “Optional” if it has a default value. If the parameters have a default enum (e.g.&nbsp;<code>arg = c("a", "b", "c")</code>), write them out as ‘one of <code>"a"</code>, <code>"b"</code>, or <code>"c"</code>.’ If there are ellipses in the function signature, note what happens to them. If they’re checked with <code><a href="https://rlang.r-lib.org/reference/check_dots_empty.html">rlang::check_dots_empty()</a></code> or otherwise, document them as “Currently unused; must be empty.” If the ellipses are passed along to another function, note which function they’re passed to.</p>
+<p>For the return type in <code>@returns</code>, note any important errors or warnings that might occur and under what conditions. If the <code>output</code> is returned with <code>invisible(output)</code>, note that it’s returned “invisibly.”</p>
+<p><strong>Here are some examples:</strong></p>
+<p>Given:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">key_get</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">name</span>, <span class="va">error_call</span> <span class="op">=</span> <span class="fu">caller_env</span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">val</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html">Sys.getenv</a></span><span class="op">(</span><span class="va">name</span><span class="op">)</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/identical.html">identical</a></span><span class="op">(</span><span class="va">val</span>, <span class="st">""</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">val</span></span>
+<span>  <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
+<span>    <span class="kw">if</span> <span class="op">(</span><span class="fu">is_testing</span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>      <span class="fu">testthat</span><span class="fu">::</span><span class="fu"><a href="https://testthat.r-lib.org/reference/skip.html">skip</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span><span class="op">(</span><span class="st">"%s env var is not configured"</span>, <span class="va">name</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
+<span>      <span class="fu">cli</span><span class="fu">::</span><span class="fu"><a href="https://cli.r-lib.org/reference/cli_abort.html">cli_abort</a></span><span class="op">(</span><span class="st">"Can't find env var {.code {name}}."</span>, call <span class="op">=</span> <span class="va">error_call</span><span class="op">)</span></span>
+<span>    <span class="op">}</span></span>
+<span>  <span class="op">}</span></span>
+<span><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Reply with:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">#' Get key</span></span>
+<span><span class="co">#'</span></span>
+<span><span class="co">#' @description</span></span>
+<span><span class="co">#' A short description...</span></span>
+<span><span class="co">#' </span></span>
+<span><span class="co">#' @param name A single string.</span></span>
+<span><span class="co">#' @param error_call A call to mention in error messages. Optional.</span></span>
+<span><span class="co">#'</span></span>
+<span><span class="co">#' @returns </span></span>
+<span><span class="co">#' If found, the value corresponding to the provided `name`. Otherwise,</span></span>
+<span><span class="co">#' the function will error.</span></span>
+<span><span class="co">#'</span></span>
+<span><span class="co">#' @export</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Given:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">chat_perform</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">provider</span>,</span>
+<span>                         <span class="va">mode</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"value"</span>, <span class="st">"stream"</span>, <span class="st">"async-stream"</span>, <span class="st">"async-value"</span><span class="op">)</span>,</span>
+<span>                         <span class="va">turns</span>,</span>
+<span>                         <span class="va">tools</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>                         <span class="va">extra_args</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span></span>
+<span>  <span class="va">mode</span> <span class="op">&lt;-</span> <span class="fu">arg_match</span><span class="op">(</span><span class="va">mode</span><span class="op">)</span></span>
+<span>  <span class="va">stream</span> <span class="op">&lt;-</span> <span class="va">mode</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"stream"</span>, <span class="st">"async-stream"</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="va">req</span> <span class="op">&lt;-</span> <span class="fu">chat_request</span><span class="op">(</span></span>
+<span>    provider <span class="op">=</span> <span class="va">provider</span>,</span>
+<span>    turns <span class="op">=</span> <span class="va">turns</span>,</span>
+<span>    tools <span class="op">=</span> <span class="va">tools</span>,</span>
+<span>    stream <span class="op">=</span> <span class="va">stream</span>,</span>
+<span>    extra_args <span class="op">=</span> <span class="va">extra_args</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/switch.html">switch</a></span><span class="op">(</span><span class="va">mode</span>,</span>
+<span>    <span class="st">"value"</span> <span class="op">=</span> <span class="fu">chat_perform_value</span><span class="op">(</span><span class="va">provider</span>, <span class="va">req</span><span class="op">)</span>,</span>
+<span>    <span class="st">"stream"</span> <span class="op">=</span> <span class="fu">chat_perform_stream</span><span class="op">(</span><span class="va">provider</span>, <span class="va">req</span><span class="op">)</span>,</span>
+<span>    <span class="st">"async-value"</span> <span class="op">=</span> <span class="fu">chat_perform_async_value</span><span class="op">(</span><span class="va">provider</span>, <span class="va">req</span><span class="op">)</span>,</span>
+<span>    <span class="st">"async-stream"</span> <span class="op">=</span> <span class="fu">chat_perform_async_stream</span><span class="op">(</span><span class="va">provider</span>, <span class="va">req</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Reply with:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">#' Perform chat</span></span>
+<span><span class="co">#'</span></span>
+<span><span class="co">#' @description</span></span>
+<span><span class="co">#' A short description...</span></span>
+<span><span class="co">#' </span></span>
+<span><span class="co">#' @param provider A provider.</span></span>
+<span><span class="co">#' @param mode One of `"value"`, `"stream"`, `"async-stream"`, or `"async-value"`.</span></span>
+<span><span class="co">#' @param turns Turns.</span></span>
+<span><span class="co">#' @param tools Optional. A list of tools.</span></span>
+<span><span class="co">#' @param extra_args Optional. A list of extra arguments.</span></span>
+<span><span class="co">#'</span></span>
+<span><span class="co">#' @returns </span></span>
+<span><span class="co">#' A result.</span></span>
+<span><span class="co">#'</span></span>
+<span><span class="co">#' @export</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Given:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">check_args</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">fn</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/check_dots_empty.html">check_dots_empty</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="va">arg_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/formals.html">formals</a></span><span class="op">(</span><span class="va">fn</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">arg_names</span><span class="op">)</span> <span class="op">&lt;</span> <span class="fl">2</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="fu">cli</span><span class="fu">::</span><span class="fu"><a href="https://cli.r-lib.org/reference/cli_abort.html">cli_abort</a></span><span class="op">(</span><span class="st">"Function must have at least two arguments."</span>, .internal <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>  <span class="op">}</span> <span class="kw">else</span> <span class="kw">if</span> <span class="op">(</span><span class="va">arg_names</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> <span class="op">!=</span> <span class="st">"self"</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="fu">cli</span><span class="fu">::</span><span class="fu"><a href="https://cli.r-lib.org/reference/cli_abort.html">cli_abort</a></span><span class="op">(</span><span class="st">"First argument must be {.arg self}."</span>, .internal <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>  <span class="op">}</span> <span class="kw">else</span> <span class="kw">if</span> <span class="op">(</span><span class="va">arg_names</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span> <span class="op">!=</span> <span class="st">"private"</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="fu">cli</span><span class="fu">::</span><span class="fu"><a href="https://cli.r-lib.org/reference/cli_abort.html">cli_abort</a></span><span class="op">(</span><span class="st">"Second argument must be {.arg private}."</span>, .internal <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/invisible.html">invisible</a></span><span class="op">(</span><span class="va">fn</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Reply with:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">#' Check a function's arguments</span></span>
+<span><span class="co">#'</span></span>
+<span><span class="co">#' @description</span></span>
+<span><span class="co">#' A short description...</span></span>
+<span><span class="co">#' </span></span>
+<span><span class="co">#' @param fn A function.</span></span>
+<span><span class="co">#' @param ... Currently unused; must be empty.</span></span>
+<span><span class="co">#'</span></span>
+<span><span class="co">#' @returns </span></span>
+<span><span class="co">#' `fn`, invisibly. The function will instead raise an error if the function</span></span>
+<span><span class="co">#' doesn't take first argument `self` and second argument `private`.</span></span>
+<span><span class="co">#'</span></span>
+<span><span class="co">#' @export</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>When two functions are supplied, only provide documentation for the first function, only making use of later functions as additional context. For example:</p>
+<p>Given:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">check_args</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">fn</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/check_dots_empty.html">check_dots_empty</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="va">arg_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/formals.html">formals</a></span><span class="op">(</span><span class="va">fn</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">arg_names</span><span class="op">)</span> <span class="op">&lt;</span> <span class="fl">2</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="fu">error_less_than_two_args</span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="op">}</span> <span class="kw">else</span> <span class="kw">if</span> <span class="op">(</span><span class="va">arg_names</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> <span class="op">!=</span> <span class="st">"self"</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="fu">cli</span><span class="fu">::</span><span class="fu"><a href="https://cli.r-lib.org/reference/cli_abort.html">cli_abort</a></span><span class="op">(</span><span class="st">"First argument must be {.arg self}."</span>, .internal <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>  <span class="op">}</span> <span class="kw">else</span> <span class="kw">if</span> <span class="op">(</span><span class="va">arg_names</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span> <span class="op">!=</span> <span class="st">"private"</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="fu">cli</span><span class="fu">::</span><span class="fu"><a href="https://cli.r-lib.org/reference/cli_abort.html">cli_abort</a></span><span class="op">(</span><span class="st">"Second argument must be {.arg private}."</span>, .internal <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/invisible.html">invisible</a></span><span class="op">(</span><span class="va">fn</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="va">error_less_than_two_args</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">call</span> <span class="op">=</span> <span class="fu">caller_env</span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu">cli</span><span class="fu">::</span><span class="fu"><a href="https://cli.r-lib.org/reference/cli_abort.html">cli_abort</a></span><span class="op">(</span><span class="st">"Function must have at least two arguments."</span>, call <span class="op">=</span> <span class="va">call</span>, .internal <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Reply with:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">#' Check a function's arguments</span></span>
+<span><span class="co">#'</span></span>
+<span><span class="co">#' @description</span></span>
+<span><span class="co">#' A short description...</span></span>
+<span><span class="co">#' </span></span>
+<span><span class="co">#' @param fn A function.</span></span>
+<span><span class="co">#' @param ... Currently unused; must be empty.</span></span>
+<span><span class="co">#'</span></span>
+<span><span class="co">#' @returns </span></span>
+<span><span class="co">#' `fn`, invisibly. The function will instead raise an error if the function</span></span>
+<span><span class="co">#' doesn't take first argument `self` and second argument `private`.</span></span>
+<span><span class="co">#'</span></span>
+<span><span class="co">#' @export</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><br></p>
+<p>Then, the selected helper prompt is set as the system prompt and the code you selected is set as the user prompt in a call to <code><a href="https://ellmer.tidyverse.org/reference/Chat.html">ellmer::Chat()</a></code>. It looks something like this:</p>
+<div class="cell">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ellmer.tidyverse.org">ellmer</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">ch</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ellmer.tidyverse.org/reference/chat_anthropic.html">chat_anthropic</a></span><span class="op">(</span>system_prompt <span class="op">=</span> <span class="va">the_prompt_from_above</span><span class="op">)</span></span>
+<span> </span>
+<span><span class="va">ch</span><span class="op">$</span><span class="fu">chat</span><span class="op">(</span><span class="st">"&lt;the code you selected&gt;"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; #' The documentation for the selected code.</span></span>
+<span><span class="co">#&gt; #' </span></span>
+<span><span class="co">#&gt; #' Yada yada yada.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section><section id="choosing-a-model" class="level2"><h2 class="anchored" data-anchor-id="choosing-a-model">Choosing a model</h2>
+<p>The chores package allows you to use any model you can connect to with ellmer. So, how do you choose which one to use?</p>
+<p>The model powering chores needs the following characteristics:</p>
+<ul>
+<li>Strict instruction-following: Looking back at that roxygen prompt, those instructions make two asks of LLMs that are pretty difficult for models that have been trained so strictly into the “helpful assistant” role: no exposition or explanatory text before or after the roxygen comments, and no (triple) backticks around the response. The chores package writes the LLMs’ output directly to the source file, so it’s really frustrating when models provide any text other than what’s requested.</li>
+<li>Minimally- or non-thinking: Thinking adds latency and shouldn’t be necessary to complete these tasks. There are many interfaces where thinking is nice, but this isn’t one of them.</li>
+</ul>
+<p>Notably, the model does <em>not</em> need the ability to call tools, carry out long-horizon tasks, or be a pleasant conversationalist. It’s fine if the model used with chores is bad at pretty much everything besides writing syntactically valid code in compliance with the instructions in the provided prompt.</p>
+<p>In the package documentation, I recommend Claude 3.7 Sonnet and GPT 4.1 (optionally, -mini). Up to this point, though, I’d thought you really <em>had</em> needed to use a frontier-ish model to get any value out of chores. It’s seemed to me that many of the models that I can currently run on my laptop (up to late 2025) had been trained into the “I’m a helpful assistant” persona so strictly–even those that are advertised as instruction-tuned–that they’ll ramble on and on before and after providing the requested code, even if the provided code is reasonable.</p>
+<p>In some ways, some time just needed to pass, but I also had overlooked a critical issue (and seemingly everyone else that’s tried to use chores with local models). In working on <a href="https://www.simonpcouch.com/blog/2025-12-04-local-agents/">another problem</a>, I learned that:</p>
+<ol type="1">
+<li>ollama’s and LM Studio’s default context length is 4,096 tokens, even for models that support much longer context windows, and</li>
+<li>If you provide a prompt that’s greater than the size of the context length, it will be truncated to fit inside the length rather than erroring.</li>
+</ol>
+<p>I think this probably contributed to my misconception that models small enough to run on my laptop weren’t capable of powering chores. Once I <a href="https://github.com/simonpcouch/chores/commit/8ca18453763dceb8fad5274d880c3eb068e213bc">trimmed</a> the cli helper prompt to fit inside the context window (and/or increased the size of the context window in ollama), I saw much more promising results on these tasks than I had seen from local models before.</p>
+</section><section id="a-new-kid-on-the-block" class="level2"><h2 class="anchored" data-anchor-id="a-new-kid-on-the-block">A new kid on the block</h2>
+<p>So, even with the models that I had <code>ollama pull</code>ed a few months ago, I realized we were already closer to local models powering chores than I had thought. At that point, I wondered what the newest releases were that might show stronger performance. The Qwen team is cracked, so I started there.</p>
+<p>After some pokings-around, I think that <a href="https://lmstudio.ai/models/qwen/qwen3-4b-2507">Qwen3 4B Instruct 2507</a> is a great model for local use with chores. Here’s a real-time (as in, not sped up) demo of that model in action on my M4 Macbook:</p>
+<div class="quarto-video"><video id="video_shortcode_videojs_video2" class="video-js vjs-default-skin vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="qwen3_4b_chores.mov"></video></div>
+<p>The cli refactor is a little bit wonky; the model chose to use backticks around the env var markup rather than curly braces, which won’t render correctly. The templating for the roxygen2 documentation is totally reasonable. Performance isn’t quite Claude 3.7 Sonnet, but I’m pretty blown away by how good it is.</p>
+<p>On Apple Silicon (Mac M-series), I recommend <a href="https://lmstudio.ai/">LM Studio</a>; LM Studio supports MLX, an array framework for Apple Silicon, which helps the model run much more quickly than with ollama. Click “Discover”, search “Qwen3 4B Instruct 2507”, and click “Download.” Once downloaded, click the “Developer” tab and change the Status from Stopped to Running. Then, in R, configure chores with:</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">qwen3_4b</span> <span class="op">&lt;-</span> <span class="fu">ellmer</span><span class="fu">::</span><span class="fu"><a href="https://ellmer.tidyverse.org/reference/chat_openai_compatible.html">chat_openai_compatible</a></span><span class="op">(</span></span>
+<span>  base_url <span class="op">=</span> <span class="st">"http://127.0.0.1:1234/v1"</span>,</span>
+<span>  model <span class="op">=</span> <span class="st">"qwen/qwen3-4b-2507"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>chores.chat <span class="op">=</span> <span class="va">qwen3_4b</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Note the <code>/v1</code> in the base URL; this will hit LM Studio’s OpenAI API v1 endpoint.</p>
+<p>On other systems, use <a href="https://ollama.com">Ollama</a>. Run <code>ollama pull qwen3:4b</code> at the terminal, then set <code>options(chores.chat = ellmer::chat_ollama(model = "qwen3:4b"))</code>.</p>
+<p>At least with MLX on LM Studio, the model takes up 2.5GB of disk space and requires 2.5GB of RAM to run.</p>
+</section><section id="oh-and-chores" class="level2"><h2 class="anchored" data-anchor-id="oh-and-chores">Oh, and chores</h2>
+<p>For a good experience “by default” (i.e.&nbsp;without the need to change the context length in LM Studio to use the default helpers), install the <a href="https://github.com/simonpcouch/chores/releases">new release</a> of chores with <code>install.packages("chores")</code>!</p>
+
+
+</section><a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a><div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-reuse"><h2 class="anchored quarto-appendix-heading">Reuse</h2><div class="quarto-appendix-contents"><div><a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a></div></div></section></div></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/simonpcouch\.com");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script><script src="https://utteranc.es/client.js" repo="simonpcouch/website" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script>
+</div> <!-- /content -->
+<footer class="footer"><div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© 2024 Simon P. Couch ∙ Made with <a href="https://quarto.org">Quarto</a></p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer><script>videojs(video_shortcode_videojs_video1);</script><script>videojs(video_shortcode_videojs_video2);</script>
+
+
+</body></html>
