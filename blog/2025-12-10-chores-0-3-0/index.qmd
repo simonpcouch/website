@@ -286,4 +286,4 @@ At least with MLX on LM Studio, the model takes up 2.5GB of disk space and requi
 
 ## Oh, and chores 0.3.0
 
-For a good experience "by default" (i.e. without the need to change the context length in LM Studio to use the default helpers), install the [new release](https://github.com/simonpcouch/chores/releases) of chores with `install.packages("chores")`!
+For a good experience "by default" (i.e. without the need to change the context length in LM Studio to use the default helpers), install the [new release](https://github.com/simonpcouch/chores/releases/tag/v0.3.0) of chores with `install.packages("chores")`!
