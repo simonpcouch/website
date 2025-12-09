@@ -26,13 +26,10 @@ knitr::opts_chunk$set(
   warning = FALSE
 )
 
-library(ggplot2)
-theme_set(
-  theme_minimal() +
-  theme(
-    plot.title = element_text(hjust = 0),
-    plot.subtitle = element_text(face = "italic", hjust = 0)
-  )
+source("../common.R")
+
+theme_update(
+  plot.subtitle = element_text(face = "italic")
 )
 
 cat <- function(x, width = 0.9 * getOption("width")) {
@@ -221,8 +218,8 @@ helper_results %>%
   ) +
   theme(
     legend.position = "none",
-    plot.title = element_text(hjust = -0.343),
-    plot.subtitle = element_text(hjust = 10, face = "italic"),
+    plot.title = element_text(hjust = -.295),
+    plot.subtitle = element_text(hjust = 1.5),
     axis.text.y = element_text(angle = 15, hjust = 1)
   )
 ```
@@ -319,7 +316,7 @@ helper_results %>%
   ) +
   theme(
     legend.position = "none", 
-    plot.title = element_text(hjust = -0.1),
+    plot.title = element_text(hjust = -0.08),
     plot.subtitle = element_text(hjust = -0.25, face = "italic"),
     axis.text.y = element_text(angle = 15, hjust = 1)
   )

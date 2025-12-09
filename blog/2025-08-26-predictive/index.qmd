@@ -25,16 +25,7 @@ knitr::opts_chunk$set(
   warning = FALSE
 )
 
-library(ggplot2)
-theme_set(
-  theme_bw() +
-  theme(
-    panel.border = element_blank(),
-    panel.background = element_rect(fill = "#f8f8f1", color = NA),
-    plot.background = element_rect(fill = "#f8f8f1", color = NA),
-    legend.background = element_rect(fill = "#F3F3EE", color = NA)
-  )
-)
+source("../common.R")
 
 options(
   ggplot2.discrete.colour = c(
