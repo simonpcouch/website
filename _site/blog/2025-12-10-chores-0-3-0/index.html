@@ -173,7 +173,8 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 <main class="content quarto-banner-title-block" id="quarto-document-content"><p>The tl;dr:</p>
 <ul>
 <li>The <a href="https://github.com/simonpcouch/chores">chores</a> package, up to this point, needed a frontier-ish model to be useful; local models were more trouble than they were worth.</li>
-<li>Qwen3 4B Instruct 2507 is good enough, and it’s small enough to comfortably run on high-end laptops.</li>
+<li>
+<a href="https://lmstudio.ai/models/qwen/qwen3-4b-2507">Qwen3 4B Instruct 2507</a> is good enough, and it’s small enough to comfortably run on high-end laptops.</li>
 </ul>
 <section id="the-chores-package" class="level2"><h2 class="anchored" data-anchor-id="the-chores-package">The chores package</h2>
 <p>The chores package provides a library of ergonomic LLM assistants designed to help you complete repetitive, hard-to-automate tasks quickly. After selecting some code, you can press a keyboard shortcut, select a helper that corresponds to a system prompt, and watch your code be rewritten.</p>
@@ -356,25 +357,26 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 <span><span class="co">#&gt; #' Yada yada yada.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="choosing-a-model" class="level2"><h2 class="anchored" data-anchor-id="choosing-a-model">Choosing a model</h2>
-<p>The chores package allows you to use any model you can connect to with ellmer. So, how do you choose which one to use?</p>
+<p>The chores package allows you to use any model you can connect to with <a href="https://ellmer.tidyverse.org">ellmer</a>. So, how do you choose which one to use?</p>
 <p>The model powering chores needs the following characteristics:</p>
 <ul>
 <li>Strict instruction-following: Looking back at that roxygen prompt, those instructions make two asks of LLMs that are pretty difficult for models that have been trained so strictly into the “helpful assistant” role: no exposition or explanatory text before or after the roxygen comments, and no (triple) backticks around the response. The chores package writes the LLMs’ output directly to the source file, so it’s really frustrating when models provide any text other than what’s requested.</li>
-<li>Minimally- or non-thinking: Thinking adds latency and shouldn’t be necessary to complete these tasks. There are many interfaces where thinking is nice, but this isn’t one of them.</li>
+<li>Minimally- or non-thinking: Thinking adds latency and shouldn’t be necessary to complete these tasks. There are many interfaces where thinking is nice and/or necessary, but this isn’t one of them.</li>
 </ul>
 <p>Notably, the model does <em>not</em> need the ability to call tools, carry out long-horizon tasks, or be a pleasant conversationalist. It’s fine if the model used with chores is bad at pretty much everything besides writing syntactically valid code in compliance with the instructions in the provided prompt.</p>
-<p>In the package documentation, I recommend Claude 3.7 Sonnet and GPT 4.1 (optionally, -mini). Up to this point, though, I’d thought you really <em>had</em> needed to use a frontier-ish model to get any value out of chores. It’s seemed to me that many of the models that I can currently run on my laptop (up to late 2025) had been trained into the “I’m a helpful assistant” persona so strictly–even those that are advertised as instruction-tuned–that they’ll ramble on and on before and after providing the requested code, even if the provided code is reasonable.</p>
+<p>In the package documentation, I recommend Claude 3.7 Sonnet and GPT 4.1 (optionally, -mini).<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> Up to this point, though, I’d thought you really <em>had</em> needed to use a frontier-ish model to get any value out of chores. It’s seemed to me that many of the models that I can currently run on my laptop (up to late 2025) had been trained into the “I’m a helpful assistant” persona so strictly–even those that are advertised as instruction-tuned–that they’ll ramble on and on before and after providing the requested code, even if the provided code is reasonable.</p>
 <p>In some ways, some time just needed to pass, but I also had overlooked a critical issue (and seemingly everyone else that’s tried to use chores with local models). In working on <a href="https://www.simonpcouch.com/blog/2025-12-04-local-agents/">another problem</a>, I learned that:</p>
 <ol type="1">
 <li>ollama’s and LM Studio’s default context length is 4,096 tokens, even for models that support much longer context windows, and</li>
 <li>If you provide a prompt that’s greater than the size of the context length, it will be truncated to fit inside the length rather than erroring.</li>
 </ol>
-<p>I think this probably contributed to my misconception that models small enough to run on my laptop weren’t capable of powering chores. Once I <a href="https://github.com/simonpcouch/chores/commit/8ca18453763dceb8fad5274d880c3eb068e213bc">trimmed</a> the cli helper prompt to fit inside the context window (and/or increased the size of the context window in ollama), I saw much more promising results on these tasks than I had seen from local models before.</p>
+<p>I think this probably contributed to my misconception that models small enough to run on my laptop weren’t capable of powering chores. Once I <a href="https://github.com/simonpcouch/chores/commit/8ca18453763dceb8fad5274d880c3eb068e213bc">trimmed</a> the cli helper prompt to fit inside the context window (and/or increased the size of the context length in LM Studio) with some wiggle room, I saw much more promising results on these tasks than I had seen from local models before.</p>
 </section><section id="a-new-kid-on-the-block" class="level2"><h2 class="anchored" data-anchor-id="a-new-kid-on-the-block">A new kid on the block</h2>
-<p>So, even with the models that I had <code>ollama pull</code>ed a few months ago, I realized we were already closer to local models powering chores than I had thought. At that point, I wondered what the newest releases were that might show stronger performance. The Qwen team is cracked, so I started there.</p>
+<p>So, even with the models that I had <code>ollama pull</code>ed a few months ago, I realized we were already closer to local models powering chores than I had thought. At that point, I wondered what the newest releases were that might show stronger performance. In particular, I’ve been pretty amazed by several of the <a href="https://huggingface.co/collections/Qwen/qwen3">Qwen3</a> models, so I started there.</p>
 <p>After some pokings-around, I think that <a href="https://lmstudio.ai/models/qwen/qwen3-4b-2507">Qwen3 4B Instruct 2507</a> is a great model for local use with chores. Here’s a real-time (as in, not sped up) demo of that model in action on my M4 Macbook:</p>
 <div class="quarto-video"><video id="video_shortcode_videojs_video2" class="video-js vjs-default-skin vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="qwen3_4b_chores.mov"></video></div>
 <p>The cli refactor is a little bit wonky; the model chose to use backticks around the env var markup rather than curly braces, which won’t render correctly. The templating for the roxygen2 documentation is totally reasonable. Performance isn’t quite Claude 3.7 Sonnet, but I’m pretty blown away by how good it is.</p>
+<p>If you’re interested in trying this model out, you can either use LM Studio or ollama.</p>
 <p>On Apple Silicon (Mac M-series), I recommend <a href="https://lmstudio.ai/">LM Studio</a>; LM Studio supports MLX, an array framework for Apple Silicon, which helps the model run much more quickly than with ollama. Click “Discover”, search “Qwen3 4B Instruct 2507”, and click “Download.” Once downloaded, click the “Developer” tab and change the Status from Stopped to Running. Then, in R, configure chores with:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">qwen3_4b</span> <span class="op">&lt;-</span> <span class="fu">ellmer</span><span class="fu">::</span><span class="fu"><a href="https://ellmer.tidyverse.org/reference/chat_openai_compatible.html">chat_openai_compatible</a></span><span class="op">(</span></span>
 <span>  base_url <span class="op">=</span> <span class="st">"http://127.0.0.1:1234/v1"</span>,</span>
@@ -382,14 +384,17 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>chores.chat <span class="op">=</span> <span class="va">qwen3_4b</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Note the <code>/v1</code> in the base URL; this will hit LM Studio’s OpenAI API v1 endpoint.</p>
-<p>On other systems, use <a href="https://ollama.com">Ollama</a>. Run <code>ollama pull qwen3:4b</code> at the terminal, then set <code>options(chores.chat = ellmer::chat_ollama(model = "qwen3:4b"))</code>.</p>
+<p>Note the <code>/v1</code> in the base URL; this will hit LM Studio’s OpenAI API completions v1 endpoint.</p>
+<p>On other systems, you could also use <a href="https://ollama.com">Ollama</a>. Run <code>ollama pull qwen3:4b</code> at the terminal, then set <code>options(chores.chat = ellmer::chat_ollama(model = "qwen3:4b"))</code>.</p>
 <p>At least with MLX on LM Studio, the model takes up 2.5GB of disk space and requires 2.5GB of RAM to run.</p>
-</section><section id="oh-and-chores" class="level2"><h2 class="anchored" data-anchor-id="oh-and-chores">Oh, and chores</h2>
+</section><section id="oh-and-chores-0.3.0" class="level2"><h2 class="anchored" data-anchor-id="oh-and-chores-0.3.0">Oh, and chores 0.3.0</h2>
 <p>For a good experience “by default” (i.e.&nbsp;without the need to change the context length in LM Studio to use the default helpers), install the <a href="https://github.com/simonpcouch/chores/releases">new release</a> of chores with <code>install.packages("chores")</code>!</p>
 
 
-</section><a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a><div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-reuse"><h2 class="anchored quarto-appendix-heading">Reuse</h2><div class="quarto-appendix-contents"><div><a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a></div></div></section></div></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+</section><a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a><div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+<ol>
+<li id="fn1"><p>Notably, I do not currently recommend Claude 4 Sonnet, Claude 4.5 Sonnet, or Claude 4.5. Haiku. The newer Claude models tend to include triple backticks in their responses even when prompted not to.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol></section><section class="quarto-appendix-contents" id="quarto-reuse"><h2 class="anchored quarto-appendix-heading">Reuse</h2><div class="quarto-appendix-contents"><div><a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a></div></div></section></div></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
     const anchorJS = new window.AnchorJS();

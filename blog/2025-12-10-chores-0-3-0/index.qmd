@@ -12,7 +12,7 @@ summary: ''
 The tl;dr:
 
 * The [chores](https://github.com/simonpcouch/chores) package, up to this point, needed a frontier-ish model to be useful; local models were more trouble than they were worth.
-* Qwen3 4B Instruct 2507 is good enough, and it's small enough to comfortably run on high-end laptops.
+* [Qwen3 4B Instruct 2507](https://lmstudio.ai/models/qwen/qwen3-4b-2507) is good enough, and it's small enough to comfortably run on high-end laptops.
 
 ## The chores package
 
@@ -237,33 +237,35 @@ ch$chat("<the code you selected>")
 
 ## Choosing a model
 
-The chores package allows you to use any model you can connect to with ellmer. So, how do you choose which one to use?
+The chores package allows you to use any model you can connect to with [ellmer](https://ellmer.tidyverse.org). So, how do you choose which one to use?
 
 The model powering chores needs the following characteristics:
 
 * Strict instruction-following: Looking back at that roxygen prompt, those instructions make two asks of LLMs that are pretty difficult for models that have been trained so strictly into the "helpful assistant" role: no exposition or explanatory text before or after the roxygen comments, and no (triple) backticks around the response. The chores package writes the LLMs' output directly to the source file, so it's really frustrating when models provide any text other than what's requested.
-* Minimally- or non-thinking: Thinking adds latency and shouldn't be necessary to complete these tasks. There are many interfaces where thinking is nice, but this isn't one of them.
+* Minimally- or non-thinking: Thinking adds latency and shouldn't be necessary to complete these tasks. There are many interfaces where thinking is nice and/or necessary, but this isn't one of them.
 
 Notably, the model does _not_ need the ability to call tools, carry out long-horizon tasks, or be a pleasant conversationalist. It's fine if the model used with chores is bad at pretty much everything besides writing syntactically valid code in compliance with the instructions in the provided prompt.
 
-In the package documentation, I recommend Claude 3.7 Sonnet and GPT 4.1 (optionally, -mini). Up to this point, though, I'd thought you really _had_ needed to use a frontier-ish model to get any value out of chores. It's seemed to me that many of the models that I can currently run on my laptop (up to late 2025) had been trained into the "I'm a helpful assistant" persona so strictly--even those that are advertised as instruction-tuned--that they'll ramble on and on before and after providing the requested code, even if the provided code is reasonable. 
+In the package documentation, I recommend Claude 3.7 Sonnet and GPT 4.1 (optionally, -mini).^[Notably, I do not currently recommend Claude 4 Sonnet, Claude 4.5 Sonnet, or Claude 4.5. Haiku. The newer Claude models tend to include triple backticks in their responses even when prompted not to.] Up to this point, though, I'd thought you really _had_ needed to use a frontier-ish model to get any value out of chores. It's seemed to me that many of the models that I can currently run on my laptop (up to late 2025) had been trained into the "I'm a helpful assistant" persona so strictly--even those that are advertised as instruction-tuned--that they'll ramble on and on before and after providing the requested code, even if the provided code is reasonable. 
 
 In some ways, some time just needed to pass, but I also had overlooked a critical issue (and seemingly everyone else that's tried to use chores with local models). In working on [another problem](https://www.simonpcouch.com/blog/2025-12-04-local-agents/), I learned that:
 
 1) ollama's and LM Studio's default context length is 4,096 tokens, even for models that support much longer context windows, and 
 2) If you provide a prompt that's greater than the size of the context length, it will be truncated to fit inside the length rather than erroring.
 
-I think this probably contributed to my misconception that models small enough to run on my laptop weren't capable of powering chores. Once I [trimmed](https://github.com/simonpcouch/chores/commit/8ca18453763dceb8fad5274d880c3eb068e213bc) the cli helper prompt to fit inside the context window (and/or increased the size of the context window in ollama), I saw much more promising results on these tasks than I had seen from local models before.
+I think this probably contributed to my misconception that models small enough to run on my laptop weren't capable of powering chores. Once I [trimmed](https://github.com/simonpcouch/chores/commit/8ca18453763dceb8fad5274d880c3eb068e213bc) the cli helper prompt to fit inside the context window (and/or increased the size of the context length in LM Studio) with some wiggle room, I saw much more promising results on these tasks than I had seen from local models before.
 
 ## A new kid on the block
 
-So, even with the models that I had `ollama pull`ed a few months ago, I realized we were already closer to local models powering chores than I had thought. At that point, I wondered what the newest releases were that might show stronger performance. The Qwen team is cracked, so I started there.
+So, even with the models that I had `ollama pull`ed a few months ago, I realized we were already closer to local models powering chores than I had thought. At that point, I wondered what the newest releases were that might show stronger performance. In particular, I've been pretty amazed by several of the [Qwen3](https://huggingface.co/collections/Qwen/qwen3) models, so I started there.
 
 After some pokings-around, I think that [Qwen3 4B Instruct 2507](https://lmstudio.ai/models/qwen/qwen3-4b-2507) is a great model for local use with chores. Here's a real-time (as in, not sped up) demo of that model in action on my M4 Macbook:
 
 {{< video qwen3_4b_chores.mov >}}
 
 The cli refactor is a little bit wonky; the model chose to use backticks around the env var markup rather than curly braces, which won't render correctly. The templating for the roxygen2 documentation is totally reasonable. Performance isn't quite Claude 3.7 Sonnet, but I'm pretty blown away by how good it is.
+
+If you're interested in trying this model out, you can either use LM Studio or ollama.
 
 On Apple Silicon (Mac M-series), I recommend [LM Studio](https://lmstudio.ai/); LM Studio supports MLX, an array framework for Apple Silicon, which helps the model run much more quickly than with ollama. Click "Discover", search "Qwen3 4B Instruct 2507", and click "Download." Once downloaded, click the "Developer" tab and change the Status from Stopped to Running. Then, in R, configure chores with:
 
@@ -276,12 +278,12 @@ qwen3_4b <- ellmer::chat_openai_compatible(
 options(chores.chat = qwen3_4b)
 ```
 
-Note the `/v1` in the base URL; this will hit LM Studio's OpenAI API v1 endpoint.
+Note the `/v1` in the base URL; this will hit LM Studio's OpenAI API completions v1 endpoint.
 
-On other systems, use [Ollama](https://ollama.com). Run `ollama pull qwen3:4b` at the terminal, then set `options(chores.chat = ellmer::chat_ollama(model = "qwen3:4b"))`.
+On other systems, you could also use [Ollama](https://ollama.com). Run `ollama pull qwen3:4b` at the terminal, then set `options(chores.chat = ellmer::chat_ollama(model = "qwen3:4b"))`.
 
 At least with MLX on LM Studio, the model takes up 2.5GB of disk space and requires 2.5GB of RAM to run.
 
-## Oh, and chores
+## Oh, and chores 0.3.0
 
 For a good experience "by default" (i.e. without the need to change the context length in LM Studio to use the default helpers), install the [new release](https://github.com/simonpcouch/chores/releases) of chores with `install.packages("chores")`!
