@@ -52,5 +52,9 @@
       "/blog/2020-10-27-gentle-intro-stacks/index.html",
       "/blog/2020-10-11-intro/index.html"
     ]
+  },
+  {
+    "listing": "/about/index.html",
+    "items": []
   }
 ]
