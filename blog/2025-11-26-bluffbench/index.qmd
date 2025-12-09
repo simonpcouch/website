@@ -19,6 +19,8 @@ image: ../../assets/blank.png
 # pak::pak("simonpcouch/bluffbench")
 library(bluffbench)
 library(tidyverse)
+
+source("../common.R")
 ```
 
 ```{r}

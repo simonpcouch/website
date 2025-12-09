@@ -19,7 +19,8 @@ $code-block-bg: $buttonTextColorCustom;
 @import 'https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,100;9..144,200&display=swap';
 @import 'https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap';
 
-// Misc. Edits
+/*-- scss:rules --*/
+
 div.quarto-about-jolla .quarto-title h1.title {
   font-weight: 100;
   font-size: 4rem;
@@ -28,7 +29,7 @@ div.quarto-about-jolla .quarto-title h1.title {
 }
 
 .callout {
-  background-color: $buttonTextColorCustom !important;
+  background-color: #fdfdfb !important;
 }
 
 h1, h2, h3, h4, h5, h1.title, .title.h1 {
@@ -36,29 +37,56 @@ h1, h2, h3, h4, h5, h1.title, .title.h1 {
   font-family: Fraunces, serif;
 }
 
+h1 code, h2 code, h3 code, h4 code, h5 code {
+  background-color: transparent;
+  color: inherit;
+  font-size: 90%;
+}
+
+h2, .h2 {
+  font-size: calc(1.42rem + 0.53vw);
+}
+
+h3, .h3 {
+  font-size: calc(1.32rem + 0.36vw);
+}
+
+h4, .h4 {
+  font-size: calc(1.22rem + 0.24vw);
+}
+
+h5, .h5 {
+  font-size: 1.15rem;
+}
 
 #title-block-header.quarto-title-block.default .description {
   color: $headlineColorCustom;
   font-size: 1.25rem;
 }
 
-div.quarto-post .body h3.listing-title, div.quarto-post .body .listing-title.h3 {
+div.quarto-post .body h3.listing-title, div.quarto-post .body .listing-title.h3,
+div.quarto-post .body h3.listing-title a, div.quarto-post .body .listing-title.h3 a {
   font-family: Fraunces, serif;
   color: $headingColorCustom;
   text-decoration-line: underline;
+  text-decoration-thickness: 1px;
   font-weight: 200;
 }
 
-p {
-  font-size: 1.2rem !important;
-  font-weight: 330 !important;
-  font-family: "Source Sans 3" !important;
+p, li {
+  font-size: 1.2rem;
+  font-weight: 350;
+  font-family: "Source Sans 3";
 }
 
 body {
-  font-size: 1.2rem !important;
-  font-weight: 330 !important;
-  font-family: "Source Sans 3" !important;
+  font-size: 1.2rem;
+  font-weight: 350;
+  font-family: "Source Sans 3";
+}
+
+p strong, p b, li strong, li b {
+  font-weight: 500;
 }
 
 .blockquote {
@@ -71,5 +99,23 @@ p code:not(.sourceCode), li code:not(.sourceCode), td code:not(.sourceCode) {
 }
 
 pre code {
-  background-color: #f9f9f3 !important;
+  font-size: 0.875rem;
+}
+
+div.sourceCode {
+  background-color: #fdfdfb !important;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+div.cell-output pre {
+  background-color: #fdfdfb !important;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  padding: 1rem;
+}
+
+.figure-img, .img-fluid, img {
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
