@@ -10,7 +10,15 @@
 <atom:link href="https://simonpcouch.com/blog/index.xml" rel="self" type="application/rss+xml"/>
 <description>A data science blog</description>
 <generator>quarto-1.7.32</generator>
-<lastBuildDate>Thu, 04 Dec 2025 06:00:00 GMT</lastBuildDate>
+<lastBuildDate>Wed, 10 Dec 2025 06:00:00 GMT</lastBuildDate>
+<item>
+  <title>chores 0.3.0 and local LLMs</title>
+  <link>https://simonpcouch.com/blog/2025-12-10-chores-0-3-0/</link>
+  <description><![CDATA[ The tl;dr: ]]></description>
+  <guid>https://simonpcouch.com/blog/2025-12-10-chores-0-3-0/</guid>
+  <pubDate>Wed, 10 Dec 2025 06:00:00 GMT</pubDate>
+  <media:content url="https://simonpcouch.com/blog/2025-12-10-chores-0-3-0/featured.png" medium="image" type="image/png" height="144" width="144"/>
+</item>
 <item>
   <title>Local models are not there (yet)</title>
   <link>https://simonpcouch.com/blog/2025-12-04-local-agents/</link>
@@ -162,14 +170,6 @@
   <guid>https://simonpcouch.com/blog/2024-12-23-names/</guid>
   <pubDate>Mon, 23 Dec 2024 06:00:00 GMT</pubDate>
   <media:content url="https://simonpcouch.com/blog/2024-12-23-names/featured.png" medium="image" type="image/png" height="134" width="144"/>
-</item>
-<item>
-  <title>Announcing a new book</title>
-  <link>https://simonpcouch.com/blog/2024-10-29-book/</link>
-  <description><![CDATA[ Over the last couple years, I’ve spent quite a bit of time focused on making tidymodels code run as fast as possible. Throughout, I’ve written about this work a good bit on this blog<sup>1</sup> and the tidyverse blog<sup>2</sup>. Early this year, I had the idea that maybe I ought to compile many of those learnings together in a book, focused on helping tidymodels users reduce the computational time needed to develop machine learning models without sacrificing predictive performance. I wrote portions of a couple chapters over the course of a couple weeks, and then mostly set the book aside for many months. ]]></description>
-  <guid>https://simonpcouch.com/blog/2024-10-29-book/</guid>
-  <pubDate>Tue, 29 Oct 2024 05:00:00 GMT</pubDate>
-  <media:content url="https://simonpcouch.com/blog/2024-10-29-book/featured.png" medium="image" type="image/png" height="140" width="144"/>
 </item>
 </channel>
 </rss>
