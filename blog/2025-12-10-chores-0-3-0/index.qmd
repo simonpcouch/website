@@ -280,7 +280,7 @@ options(chores.chat = qwen3_4b)
 
 Note the `/v1` in the base URL; this will hit LM Studio's OpenAI API completions v1 endpoint.
 
-On other systems, you could also use [Ollama](https://ollama.com). Run `ollama pull qwen3:4b` at the terminal, then set `options(chores.chat = ellmer::chat_ollama(model = "qwen3:4b"))`.
+On other systems, you could also use [Ollama](https://ollama.com). Run `ollama pull qwen3:4b-instruct` at the terminal, then set `options(chores.chat = ellmer::chat_ollama(model = "qwen3:4b-instruct"))`.
 
 At least with MLX on LM Studio, the model takes up 2.5GB of disk space and requires 2.5GB of RAM to run.
 
