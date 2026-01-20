@@ -10,7 +10,15 @@
 <atom:link href="https://simonpcouch.com/blog/index.xml" rel="self" type="application/rss+xml"/>
 <description>A data science blog</description>
 <generator>quarto-1.7.32</generator>
-<lastBuildDate>Wed, 10 Dec 2025 06:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 20 Jan 2026 06:00:00 GMT</lastBuildDate>
+<item>
+  <title>Electricity use of AI coding agents</title>
+  <link>https://simonpcouch.com/blog/2026-01-20-cc-impact/</link>
+  <description><![CDATA[ Throughout 2025, we got better estimates of electricity and water use of AI chatbots. There are all sorts of posts I could cite on this topic, but a favorite is <a href="https://www.sustainabilitybynumbers.com/p/ai-footprint-august-2025">this blog post</a> from Our World in Data’s Hannah Ritchie. On the electricity front: ]]></description>
+  <guid>https://simonpcouch.com/blog/2026-01-20-cc-impact/</guid>
+  <pubDate>Tue, 20 Jan 2026 06:00:00 GMT</pubDate>
+  <media:content url="https://simonpcouch.com/blog/2026-01-20-cc-impact/featured.png" medium="image" type="image/png" height="144" width="144"/>
+</item>
 <item>
   <title>chores 0.3.0 and local LLMs</title>
   <link>https://simonpcouch.com/blog/2025-12-10-chores-0-3-0/</link>
@@ -162,14 +170,6 @@
   <guid>https://simonpcouch.com/blog/2025-01-30-llm-biases/</guid>
   <pubDate>Thu, 30 Jan 2025 06:00:00 GMT</pubDate>
   <media:content url="https://simonpcouch.com/blog/2025-01-30-llm-biases/featured.png" medium="image" type="image/png" height="144" width="144"/>
-</item>
-<item>
-  <title>Which names that are also names of countries are most common?</title>
-  <link>https://simonpcouch.com/blog/2024-12-23-names/</link>
-  <description><![CDATA[ Sitting around the living room over the weekend, someone asked “Which names that are also names of countries are most common?” We all gave guesses, and then I gave in to the urge to reach for my laptop and generate an answer that was authoritative enough for our purposes. ]]></description>
-  <guid>https://simonpcouch.com/blog/2024-12-23-names/</guid>
-  <pubDate>Mon, 23 Dec 2024 06:00:00 GMT</pubDate>
-  <media:content url="https://simonpcouch.com/blog/2024-12-23-names/featured.png" medium="image" type="image/png" height="134" width="144"/>
 </item>
 </channel>
 </rss>
