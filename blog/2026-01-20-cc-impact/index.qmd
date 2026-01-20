@@ -78,7 +78,7 @@ A similar story applies to water usage. [This one from Benjamin Todd](https://be
 
 Generally, these analyses guide my own thinking about the environmental impacts of my individual usage of LLMs; if I'm interested in reducing my personal carbon footprint, I'm much better off driving a couple miles less a week or avoiding one flight each year. This is indeed the right conclusion for users of chat interfaces like chatgpt.com or claude.ai.
 
-That said, 1 or 10 or 100 median prompts a day is many orders of magnitude off from my own personal use of LLMs; I likely am, in Hannah Ritchie's words, an "extreme power user." I work in software and spend much of my workday driving 2 or 3 coding agents, like Claude Code, at a time. Thus, a much more relevant question for me is **how much energy does a typical Claude Code session consume?** (I'm not going to dicuss water use in this post.)
+That said, 1 or 10 or 100 median prompts a day is many orders of magnitude off from my own personal use of LLMs; I likely am, in Hannah Ritchie's words, an "extreme power user." I work in software and spend much of my workday driving 2 or 3 coding agents, like Claude Code, at a time. Thus, a much more relevant question for me is **how much energy does a typical Claude Code session consume?** (I'm not going to discuss water use in this post.)
 
 tl;dr, much more:
 
