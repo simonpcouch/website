@@ -551,3 +551,9 @@ estimated_cost
 ```
 
 I estimate the cost over the last month at $`r round(estimated_cost$cost_usd, 2)`, within a dollar of what ccusage reported. Close enough for me.
+
+## Appendix: Infrastructure-side gut-check
+
+Josh You, the author of the linked Epoch AI post, [pointed out another direction to come at this from](https://bsky.app/profile/justjoshinyou.bsky.social/post/3mcvexecibs2p) in a reply to this post: extrapolating from my usage to Anthropic's total inference power. At ~$17.50/day and ~`r scales::comma(round(median_daily_wh, -2))` Wh/day, that's `r round(median_daily_wh / 17.5, 1)` Wh per dollar. Scaling to Anthropic's ~$10B annual revenue gives ~85 MW for inference.
+
+Anthropic's total data center capacity is >1 GW, and Josh estimates inference is >8% of that (>80 MW). So 85 MW is in the right ballpark, though possibly low---subscription users might get more tokens per dollar than API pricing implies, meaning actual inference energy could be higher. (Or less, if the opposite.)
