@@ -1,0 +1,33 @@
+---
+title: "Introducing Posit AI"
+date: '2026-03-05'
+tags:
+  - ai
+subtitle: "We're launching a data science agent and next edit suggestion system for RStudio today."
+image: featured.png
+summary: ''
+---
+
+Today we released [Posit AI](https://posit.co/products/ai), an AI service for data scientists. This was a huge effort that spanned many teams over several months, and I'm really excited to have it out in the world. It's _really good._
+
+Posit AI is composed of two pieces, Posit Assistant and Next Edit Suggestions. Posit Assistant is a data science and coding agent, sort of [Claude Code](https://code.claude.com/docs/en/overview) meets [Databot](https://posit.co/blog/introducing-databot/). Next Edit Suggestions are souped-up autocomplete.
+
+It's launching first in RStudio, but it'll be coming to other platforms soon.
+
+For the full overview, I'd recommend you read the [announcement post on the Posit Blog](https://posit.co/blog/introducing-ai-in-rstudio/) from Joe, Nick, and Sara. I'll share a few notes about each that stick out to me, though.
+
+## Posit Assistant
+
+At this point, it's relatively straightforward to get "LLM calling read/write/bash tools in a loop" working in a variety of frameworks. That "last 10%", though—permissions and approvals, tool UI, context management and compaction, interruption, conversation forking—is a _huge_ engineering lift. It's also what makes the difference between a cool demo and something you want to reach for daily. We've really focused on making sure there aren't any gaps compared to the coding agents we otherwise use day-to-day, and it's become a really nice experience. 
+
+{{< video forested-pa.mp4 >}}
+
+I'm maybe 50/50 between Posit Assistant and Claude Code at this point. I didn't realize how much I was missing a "real UI" when using Claude Code until I had access to one. Easily copying + pasting, some nice markdown CSS, reactive tool UI... it's a much better experience. 
+
+## Next Edit Suggestions
+
+I've got a post drafted right now that delves much deeper into our NES system and how it works; that will come out in the coming days. In short, we deployed an 8B model on a GPU so that it can respond with an edit prediction in 100-200ms. It can see the edits you're making, some metadata about your R/Python environment, and where your cursor is. From that, it guesses what you'll do next. It's like other NES/supercomplete systems you may have used in other IDEs, but it doesn't hallucinate dataset and column names and doesn't f*** up Quarto documents. It was really fun to figure out how to make that work.
+
+{{< video forested-nes.mp4 >}}
+
+Broadly, I'm very interested in the mode of "I need to type a short snippet of text that is very obvious given the state of my IDE right now, and a reasonably smart model could guess what needs to be there 80% of the time." Beyond just writing code in the editor, I think there are a few use cases for this sort of system that I'm excited to make happen in future releases of the service. 

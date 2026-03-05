@@ -10,7 +10,15 @@
 <atom:link href="https://simonpcouch.com/blog/index.xml" rel="self" type="application/rss+xml"/>
 <description>A data science blog</description>
 <generator>quarto-1.8.27</generator>
-<lastBuildDate>Tue, 20 Jan 2026 06:00:00 GMT</lastBuildDate>
+<lastBuildDate>Thu, 05 Mar 2026 06:00:00 GMT</lastBuildDate>
+<item>
+  <title>Introducing Posit AI</title>
+  <link>https://simonpcouch.com/blog/2026-03-05-posit-ai/</link>
+  <description><![CDATA[ Today we released <a href="https://posit.co/products/ai">Posit AI</a>, an AI service for data scientists. This was a huge effort that spanned many teams over several months, and I’m really excited to have it out in the world. It’s <em>really good.</em> ]]></description>
+  <guid>https://simonpcouch.com/blog/2026-03-05-posit-ai/</guid>
+  <pubDate>Thu, 05 Mar 2026 06:00:00 GMT</pubDate>
+  <media:content url="https://simonpcouch.com/blog/2026-03-05-posit-ai/featured.png" medium="image" type="image/png" height="146" width="144"/>
+</item>
 <item>
   <title>Electricity use of AI coding agents</title>
   <link>https://simonpcouch.com/blog/2026-01-20-cc-impact/</link>
@@ -162,14 +170,6 @@
   <guid>https://simonpcouch.com/blog/2025-03-26-claude-code/</guid>
   <pubDate>Wed, 26 Mar 2025 05:00:00 GMT</pubDate>
   <media:content url="https://simonpcouch.com/blog/2025-03-26-claude-code/featured.png" medium="image" type="image/png" height="143" width="144"/>
-</item>
-<item>
-  <title>Exploring Biases in GPT-4o, Claude, and Qwen2.5 Judgements</title>
-  <link>https://simonpcouch.com/blog/2025-01-30-llm-biases/</link>
-  <description><![CDATA[ I’ve been spending some time recently learning about LLMs evaluating output from LLMs, or as its referred to in the literature, “LLM-as-a-judge.” That is, after asking a question to an LLM and receiving an answer, both the question and answer are provided to another language model and that model is asked to somehow judge whether the provided response was satisfactory. ]]></description>
-  <guid>https://simonpcouch.com/blog/2025-01-30-llm-biases/</guid>
-  <pubDate>Thu, 30 Jan 2025 06:00:00 GMT</pubDate>
-  <media:content url="https://simonpcouch.com/blog/2025-01-30-llm-biases/featured.png" medium="image" type="image/png" height="144" width="144"/>
 </item>
 </channel>
 </rss>
