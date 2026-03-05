@@ -2966,5 +2966,19 @@
     "title": "Electricity use of AI coding agents",
     "section": "Appendix: Infrastructure-side gut-check",
     "text": "Appendix: Infrastructure-side gut-check\nJosh You, the author of the linked Epoch AI post, pointed out another direction to come at this from in a reply to this post: extrapolating from my usage to Anthropic’s total inference power. At ~$17.50/day and ~1,300 Wh/day, that’s 75.5 Wh per dollar. Scaling to Anthropic’s ~$10B annual revenue gives ~85 MW for inference.\nAnthropic’s total data center capacity is &gt;1 GW, and Josh estimates inference is &gt;8% of that (&gt;80 MW). So 85 MW is in the right ballpark, though possibly low—subscription users might get more tokens per dollar than API pricing implies, meaning actual inference energy could be higher. (Or less, if the opposite.)"
+  },
+  {
+    "objectID": "blog/2025-11-11-sidekick/index.html",
+    "href": "blog/2025-11-11-sidekick/index.html",
+    "title": "side::kick(), a coding agent for RStudio",
+    "section": "",
+    "text": "I’m excited to share side::kick(), an experimental coding agent for RStudio users, built entirely in R. It can interact with your files, talk to your active R session, and run code.\nside::kick() was my best attempt at replicating a Claude Code-like experience with btw, ellmer, and shinychat. Beyond what’s in those packages, it has a good few bells and whistles:"
+  },
+  {
+    "objectID": "blog/2025-11-11-sidekick/index.html#getting-started",
+    "href": "blog/2025-11-11-sidekick/index.html#getting-started",
+    "title": "side::kick(), a coding agent for RStudio",
+    "section": "Getting started",
+    "text": "Getting started\nTo get started, install with:\npak::pak(\"simonpcouch/side\")\nThen, run side::kick(). You might place side::kick() in your .Rprofile (perhaps with usethis::edit_r_profile()) to launch side::kick() every time you start R.\nside::kick() is intended for use with RStudio’s Sidebar, a full-height pane that’s currently only available in RStudio Dailies. Install RStudio, then search for “Sidebar” in the command palette.\nThe introductory vignette goes into much more depth on configuring and using the tool!"
   }
 ]

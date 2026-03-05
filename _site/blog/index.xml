@@ -9,7 +9,7 @@
 <link>https://simonpcouch.com/blog/</link>
 <atom:link href="https://simonpcouch.com/blog/index.xml" rel="self" type="application/rss+xml"/>
 <description>A data science blog</description>
-<generator>quarto-1.7.32</generator>
+<generator>quarto-1.8.27</generator>
 <lastBuildDate>Tue, 20 Jan 2026 06:00:00 GMT</lastBuildDate>
 <item>
   <title>Electricity use of AI coding agents</title>

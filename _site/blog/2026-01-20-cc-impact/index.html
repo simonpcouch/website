@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.8.27">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="dcterms.date" content="2026-01-20">
 <title>Electricity use of AI coding agents | Simon P. Couch – Simon P. Couch</title>
@@ -65,14 +65,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../../assets/cabin.png" rel="icon" type="image/png">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-c1032820e43c09d93aab91433483bf4f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+<link href="../../site_libs/bootstrap/bootstrap-793184e1f3daa17555fd6227d3fd43a5.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
   "collapse-after": 3,
@@ -105,6 +106,18 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 </script>
+<meta property="og:title" content="Electricity use of AI coding agents | Simon P. Couch">
+<meta property="og:description" content="Most of the discourse about the environmental impact of LLM use focuses on a ‘median query.’ What about a Claude Code session?">
+<meta property="og:image" content="https://simonpcouch.com/blog/2026-01-20-cc-impact/featured.png">
+<meta property="og:site_name" content="Simon P. Couch">
+<meta property="og:image:height" content="501">
+<meta property="og:image:width" content="500">
+<meta name="twitter:title" content="Electricity use of AI coding agents | Simon P. Couch">
+<meta name="twitter:description" content="Most of the discourse about the environmental impact of LLM use focuses on a ‘median query.’ What about a Claude Code session?">
+<meta name="twitter:image" content="https://simonpcouch.com/blog/2026-01-20-cc-impact/featured.png">
+<meta name="twitter:image-height" content="501">
+<meta name="twitter:image-width" content="500">
+<meta name="twitter:card" content="summary_large_image">
 </head>
 <body class="nav-fixed fullcontent quarto-light">
 
@@ -112,7 +125,7 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
   <header id="quarto-header" class="headroom fixed-top quarto-banner"><nav class="navbar navbar-expand-lg " data-bs-theme="dark"><div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="../../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../../assets/cabin.png" alt="" class="navbar-logo"></a>
+    <img src="../../assets/cabin.png" alt="" class="navbar-logo light-content"><img src="../../assets/cabin.png" alt="" class="navbar-logo dark-content"></a>
     <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Simon P. Couch</span>
     </a>
@@ -364,7 +377,7 @@ input_rate ≈ 198 Wh/MTok</code></pre>
 </section><section id="my-claude-code-data" class="level2"><h2 class="anchored" data-anchor-id="my-claude-code-data">My Claude Code data</h2>
 <p>Claude Code stores session logs in <code>~/.claude/projects/</code>, with each session saved as a JSONL file containing usage data for every API call. Each log entry includes <code>input_tokens</code>, <code>output_tokens</code>, <code>cache_creation_input_tokens</code>, <code>cache_read_input_tokens</code>, and a <code>requestId</code> identifying the HTTP request. Multiple streaming events are logged per request with identical token counts, so we deduplicate by <code>requestId</code>.</p>
 <div class="cell">
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">usage_raw</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html">read_csv</a></span><span class="op">(</span><span class="st">"sessions/calls.csv"</span>, show_col_types <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
@@ -372,7 +385,7 @@ input_rate ≈ 198 Wh/MTok</code></pre>
 <span>  <span class="va">usage_raw</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/distinct.html">distinct</a></span><span class="op">(</span><span class="va">request_id</span>, .keep_all <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/sample_n.html">sample_n</a></span><span class="op">(</span><span class="va">usage</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">usage</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/sample_n.html">sample_n</a></span><span class="op">(</span><span class="va">usage</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">usage</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Rows: 8,825
 Columns: 10
@@ -399,7 +412,7 @@ $ cost_usd              &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…</c
 </div>
 <p>The median session had 24 requests and consumed 592,439 total tokens—5 user messages and 19 tool call responses. Applying our napkin math energy estimates:</p>
 <div class="cell">
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">wh_per_mtok</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">wh_per_mtok</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span></span>
 <span>  input <span class="op">=</span> <span class="fl">390</span>,</span>
 <span>  output <span class="op">=</span> <span class="fl">1950</span>,</span>
 <span>  cache_creation <span class="op">=</span> <span class="fl">490</span>,</span>
@@ -410,7 +423,7 @@ $ cost_usd              &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…</c
 <span>  <span class="va">median_session</span><span class="op">$</span><span class="va">input_tokens</span> <span class="op">*</span> <span class="va">wh_per_mtok</span><span class="op">[[</span><span class="st">"input"</span><span class="op">]</span><span class="op">]</span> <span class="op">/</span> <span class="fl">1e6</span> <span class="op">+</span></span>
 <span>  <span class="va">median_session</span><span class="op">$</span><span class="va">output_tokens</span> <span class="op">*</span> <span class="va">wh_per_mtok</span><span class="op">[[</span><span class="st">"output"</span><span class="op">]</span><span class="op">]</span> <span class="op">/</span> <span class="fl">1e6</span> <span class="op">+</span></span>
 <span>  <span class="va">median_session</span><span class="op">$</span><span class="va">cache_creation_tokens</span> <span class="op">*</span> <span class="va">wh_per_mtok</span><span class="op">[[</span><span class="st">"cache_creation"</span><span class="op">]</span><span class="op">]</span> <span class="op">/</span> <span class="fl">1e6</span> <span class="op">+</span></span>
-<span>  <span class="va">median_session</span><span class="op">$</span><span class="va">cache_read_tokens</span> <span class="op">*</span> <span class="va">wh_per_mtok</span><span class="op">[[</span><span class="st">"cache_read"</span><span class="op">]</span><span class="op">]</span> <span class="op">/</span> <span class="fl">1e6</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>  <span class="va">median_session</span><span class="op">$</span><span class="va">cache_read_tokens</span> <span class="op">*</span> <span class="va">wh_per_mtok</span><span class="op">[[</span><span class="st">"cache_read"</span><span class="op">]</span><span class="op">]</span> <span class="op">/</span> <span class="fl">1e6</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>My estimate is that my median Claude Code session consumes 41 Wh, 138x more than the “typical query.”</p>
 <p>In the course of a typical day at work, I’m usually programming for a few hours, and driving 2 or 3 Claude Code instances at a time throughout those hours. What’s the distribution of my energy usage daily?</p>
@@ -459,7 +472,7 @@ $ cost_usd              &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…</c
 </section><section id="appendix-cost-gut-check" class="level2"><h2 class="anchored" data-anchor-id="appendix-cost-gut-check">Appendix: Cost gut-check</h2>
 <p>Just to confirm that my parsing of the Claude session logs was reasonable, I decided to also estimate the dollar cost from our token data and compare the results to what <a href="https://ccusage.com/">ccusage</a> reports.</p>
 <div class="cell">
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">pricing</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tribble.html">tribble</a></span><span class="op">(</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">pricing</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tribble.html">tribble</a></span><span class="op">(</span></span>
 <span>  <span class="op">~</span><span class="va">model</span>,                        <span class="op">~</span><span class="va">input</span>, <span class="op">~</span><span class="va">output</span>,</span>
 <span>  <span class="st">"claude-opus-4-5-20251101"</span>,    <span class="fl">5</span>,      <span class="fl">25</span>,</span>
 <span>  <span class="st">"claude-sonnet-4-5-20250929"</span>,  <span class="fl">3</span>,      <span class="fl">15</span>,</span>
@@ -484,7 +497,7 @@ $ cost_usd              &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…</c
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
-<span><span class="va">estimated_cost</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="va">estimated_cost</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 1
   cost_usd
@@ -555,13 +568,14 @@ $ cost_usd              &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…</c
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy

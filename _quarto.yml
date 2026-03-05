@@ -21,6 +21,8 @@ website:
   title: "Simon P. Couch"
   site-url: https://simonpcouch.com
   description: "Building tools for data scientists at Posit (née RStudio)."
+  open-graph: true
+  twitter-card: true
   favicon: assets/cabin.png
   page-navigation: true
   back-to-top-navigation: true
