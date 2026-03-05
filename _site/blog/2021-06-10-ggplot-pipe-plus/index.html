@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.8.27">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -66,17 +66,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../assets/cabin.png" rel="icon" type="image/png">
+<link href="../../assets/sc.png" rel="icon" type="image/png">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-edbd123714173c2d5d98bd1252cecc27.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-3b752abc8aa7891907126f0ff35813fe.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -115,6 +116,14 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 </script>
 
 
+<meta property="og:title" content="Pipe-esque Programming with {ggplot2}’s Plus Operator | Simon P. Couch">
+<meta property="og:description" content="Writing iterative code with ‘+’ rather than ‘%>%’ was a tough transition my first time around.">
+<meta property="og:image" content="https://simonpcouch.com/blog/2021-06-10-ggplot-pipe-plus/featured.jpg">
+<meta property="og:site_name" content="Simon P. Couch">
+<meta name="twitter:title" content="Pipe-esque Programming with {ggplot2}’s Plus Operator | Simon P. Couch">
+<meta name="twitter:description" content="Writing iterative code with ‘+’ rather than ‘%>%’ was a tough transition my first time around.">
+<meta name="twitter:image" content="https://simonpcouch.com/blog/2021-06-10-ggplot-pipe-plus/featured.jpg">
+<meta name="twitter:card" content="summary_large_image">
 </head>
 
 <body class="nav-fixed fullcontent quarto-light">
@@ -125,7 +134,8 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="../../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../../assets/cabin.png" alt="" class="navbar-logo">
+    <img src="../../assets/sc.png" alt="" class="navbar-logo light-content">
+    <img src="../../assets/sc.png" alt="" class="navbar-logo dark-content">
     </a>
     <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Simon P. Couch</span>
@@ -194,17 +204,17 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 
 <p>Writing iterative code with {ggplot2}’s plus (<code>+</code>) operator rather than {magrittr}’s pipe (<code>%&gt;%</code>) was a tough transition my first time around.</p>
 <p>When working on a function—say, <code>boop()</code>—that takes the outputs of some other function—say, <code>beep()</code>:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">beep</span>(<span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">boop</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">beep</span>(<span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">boop</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>…I usually take for granted that I’ll have access to whatever <code>beep(1)</code> outputted, and will be able to modify that thing, inside of the <code>boop</code> function.</p>
 <p>With {ggplot2}’s plus operator, though, I wasn’t sure whether this was the case. I thought that ggplot layers, added with <code>+</code>, had to be able to operate somewhat independently. e.g., if I’m making some function <code>super_fancy_layer</code> that adds a layer to a ggplot:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>super_fancy_layer <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>super_fancy_layer <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(<span class="fu">theme_minimal</span>())</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mtcars, <span class="fu">aes</span>(<span class="at">x =</span> hp, <span class="at">y =</span> mpg)) <span class="sc">+</span> </span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">super_fancy_layer</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">super_fancy_layer</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://github.com/simonpcouch/website/blob/blog/content/blog/2021-06-10/index_files/figure-html/unnamed-chunk-3-1.png?raw=true" class="img-fluid figure-img"></p>
@@ -221,7 +231,7 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 <section id="wheee" class="level2">
 <h2 class="anchored" data-anchor-id="wheee">Wheee</h2>
 <p>It starts with the <code>+</code> operator we all know and (maybe) love. The <code>+</code> you use in {ggplot2} code, like you see above, is actually a “method.” That is, the meaning of <code>+</code> here is defined in the {ggplot2} source code, specifically in reference to <code>gg</code> objects. Here’s the <a href="https://github.com/tidyverse/ggplot2/blob/01fe5de937a1ec68a49cf2303161480e616b2ef9/R/plot-construction.r#L42-L56">current source code</a>:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="st">"+.gg"</span> <span class="ot">&lt;-</span> <span class="cf">function</span>(e1, e2) {</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="st">"+.gg"</span> <span class="ot">&lt;-</span> <span class="cf">function</span>(e1, e2) {</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">missing</span>(e2)) {</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">abort</span>(<span class="st">"Cannot use `+.gg()` with a single argument. Did you accidentally put + on a new line?"</span>)</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  }</span>
@@ -235,25 +245,25 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="cf">else</span> <span class="cf">if</span> (<span class="fu">is.ggproto</span>(e1)) {</span>
 <span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">abort</span>(<span class="st">"Cannot add ggproto objects together. Did you forget to add this object to a ggplot object?"</span>)</span>
 <span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Here, <code>e1</code> is what’s on the left-hand side of the <code>+</code> and <code>e2</code> is what’s on the right-hand side. So, in the code:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mtcars, <span class="fu">aes</span>(<span class="at">x =</span> hp, <span class="at">y =</span> mpg)) <span class="sc">+</span> <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mtcars, <span class="fu">aes</span>(<span class="at">x =</span> hp, <span class="at">y =</span> mpg)) <span class="sc">+</span> <span class="fu">geom_point</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>…<code>e1</code> is <code>ggplot(mtcars, aes(x = hp, y = mpg))</code> and <code>e2</code> is <code>geom_point()</code>. Another (goofy) way of writing the above code is:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="st">`</span><span class="at">+</span><span class="st">`</span>(<span class="fu">ggplot</span>(mtcars, <span class="fu">aes</span>(<span class="at">x =</span> hp, <span class="at">y =</span> mpg)), <span class="fu">geom_point</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="st">`</span><span class="at">+</span><span class="st">`</span>(<span class="fu">ggplot</span>(mtcars, <span class="fu">aes</span>(<span class="at">x =</span> hp, <span class="at">y =</span> mpg)), <span class="fu">geom_point</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>In the definition of <code>+.gg</code>, you may notice that the function eventually returns the output of <code>add_ggplot(e1, e2, e2name)</code> if the thing on the left-hand side of the <code>+</code> is a ggplot. Okay, sure.</p>
 <p>Here’s the <a href="https://github.com/tidyverse/ggplot2/blob/01fe5de937a1ec68a49cf2303161480e616b2ef9/R/plot-construction.r#L63-L70">current definition of <code>add_ggplot()</code></a>.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>add_ggplot <span class="ot">&lt;-</span> <span class="cf">function</span>(p, object, objectname) {</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>add_ggplot <span class="ot">&lt;-</span> <span class="cf">function</span>(p, object, objectname) {</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">is.null</span>(object)) <span class="fu">return</span>(p)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  p <span class="ot">&lt;-</span> <span class="fu">plot_clone</span>(p)</span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  p <span class="ot">&lt;-</span> <span class="fu">ggplot_add</span>(object, p, objectname)</span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_last_plot</span>(p)</span>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  p</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Okay, so–hmm. The part here doing the work of combining what used to be <code>e1</code> and <code>e2</code> is <code>ggplot_add(object, p, objectname)</code>. What’s the <a href="https://github.com/tidyverse/ggplot2/blob/01fe5de937a1ec68a49cf2303161480e616b2ef9/R/plot-construction.r#L84-L86">definition of <code>ggplot_add</code></a>?</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>ggplot_add <span class="ot">&lt;-</span> <span class="cf">function</span>(object, plot, object_name) {</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>ggplot_add <span class="ot">&lt;-</span> <span class="cf">function</span>(object, plot, object_name) {</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">UseMethod</span>(<span class="st">"ggplot_add"</span>)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Huzzah! Yippee!</p>
 <p>What this <code>UseMethod</code> means is that the definition of <code>ggplot_add</code> depends on <em>what kind of thing</em> <code>object</code> is–the thing on the right-hand side of the <code>+</code>. When I say <em>what kind of thing</em>, I mean the output of <code>class(object)</code>. <code>ggplot_add</code> is exported with <code>ggplot2</code>, so, as developers on extensions of {ggplot2}, we get to decide what the class of our <code>super_fancy_layer()</code> function is, so we also get to decide how <code>ggplot_add</code> will work in our extensions!</p>
 <p>Also, notice that <code>plot</code> (what used to be <code>e1</code>, or the thing on the left-hand side of the <code>+</code>) is <em>also</em> an input to <code>ggplot_add</code> and the output should be the result of adding those two things together. So, in implementing <code>super_fancy_layer()</code>,</p>
@@ -262,11 +272,11 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 <li>we can modify that thing and output the whole plot rather than just a layer on top of it</li>
 </ul>
 <p>To use a custom <code>ggplot_add</code> method in your own package, you’ll want to start with re-exporting the <code>ggplot_add</code> generic. (“Generic” is just a word for a function that uses this sort of <code>UseMethod</code> construction, “dispatching” to the method defined for the given input class.) To do so, add the following {roxygen2} lines somewhere in your R code and run <code>devtools::document()</code>:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' @importFrom ggplot2 ggplot_add</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' @importFrom ggplot2 ggplot_add</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">#' @export</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>ggplot2<span class="sc">::</span>ggplot_add</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>ggplot2<span class="sc">::</span>ggplot_add</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Now, define your <code>super_fancy_layer()</code> function. The idea here is that, since our contents of <code>super_fancy_layer()</code> need access to the underlying plot data, we won’t actually define all of the function’s logic inside of <code>super_fancy_layer()</code> (since requiring the underlying plot data as an explicit function argument for each layer is bad ggplot form). Instead, just store what the user inputted and <em>wait until they add the layer to a ggplot to actually do anything</em>.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' @export</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' @export</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>super_fancy_layer <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">arg1 =</span> <span class="dv">1</span>, <span class="at">arg2 =</span> <span class="dv">2</span>) {</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># store inputs in classed output that can </span></span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># be passed to a `ggplot_add` method</span></span>
@@ -277,9 +287,9 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 <span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">arg1 =</span> arg1,</span>
 <span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">arg2 =</span> arg2</span>
 <span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>So… pretty lame so far. If I call:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">super_fancy_layer</span>()</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">super_fancy_layer</span>()</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] "A super fancy layer."</span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="do">## attr(,"class")</span></span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] "fancy_layer"</span></span>
@@ -288,10 +298,10 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 <span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="do">## attr(,"arg1")</span></span>
 <span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 1</span></span>
 <span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="do">## attr(,"arg2")</span></span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>All that I’ve done is bundled up what the user passed to me into a little <code>fancy_layer</code> object.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(<span class="fu">super_fancy_layer</span>())</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] "fancy_layer"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(<span class="fu">super_fancy_layer</span>())</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] "fancy_layer"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>I also added an attribute with the name <code>fn</code> set to <code>"super_fancy_layer_"</code>, an arbitrary function name for the internal code you will write that actually implements the addition–more on that in a sec.</p>
 <p>Now, think back to how that <code>+</code> operator works–it calls <code>add_ggplot</code>, which calls <code>ggplot_add</code>, and the code for <code>ggplot_add</code> depends on the class of what’s on the right-hand side of the <code>+</code> in the original code. <em>We</em> set the class of <code>super_fancy_layer()</code> output to <code>fancy_layer</code>, so all we need to do now is define the instructions for adding <code>fancy_layer</code>s to existing ggplots.</p>
 <p>Our definition for <code>ggplot_add.fancy_layer</code> will:</p>
@@ -300,7 +310,7 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 <li>extract arguments <code>arg1</code> and <code>arg2</code> from <code>fancy_layer</code> output</li>
 <li>call <code>fn</code> with the arguments <code>plot</code>, <code>arg1</code>, and <code>arg2</code></li>
 </ul>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' @method ggplot_add fancy_layer</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' @method ggplot_add fancy_layer</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co">#' @export</span></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>ggplot_add.fancy_layer <span class="ot">&lt;-</span> <span class="cf">function</span>(object, plot, object_name) {</span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># a method for the `+` operator for fancy_layer objects.</span></span>
@@ -323,20 +333,20 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 <span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>  <span class="co"># return the new plot</span></span>
 <span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>  new_plot</span>
-<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The <code>do.call</code> lines are a programmatic way of writing <code>super_fancy_layer_(plot, arg1 = 1, arg2 = 2)</code>. That <code>fn</code> attribute is really just a string, but if there’s a function by the name of the string, <code>do.call</code> will call that function. The magic here is that <code>fn</code> (in our case, <code>"super_fancy_layer_"</code>) can reference a function containing code defining the result of adding the left and right hand sides of the <code>+</code> <em>based on both of them, rather than just the right-hand side</em>. That is, you can peek inside of—and modify—the existing plot inside of your layer function! So, define the function in that <code>fn</code> attribute as you will:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>super_fancy_layer_ <span class="ot">&lt;-</span> <span class="cf">function</span>(plot, arg1, arg2) {</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>super_fancy_layer_ <span class="ot">&lt;-</span> <span class="cf">function</span>(plot, arg1, arg2) {</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># fancy code that modifies `plot` based on</span></span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># arg1 and arg2...</span></span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(new_plot)</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>…and you’re good to go. Crazy.</p>
 </section>
 <section id="bonus-points-a-print-method" class="level2">
 <h2 class="anchored" data-anchor-id="bonus-points-a-print-method">Bonus points: a print method</h2>
 <p>Getting the <code>ggplot_add</code> method working is the biggest leap here, but my first move after making that happen was to put together a print method for that new custom layer object. The default output will print out all of the attributes you attached to the object, which could be a bit overwhelming and confusing for the user.</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">super_fancy_layer</span>()</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">super_fancy_layer</span>()</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] "A super fancy layer."</span></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="do">## attr(,"class")</span></span>
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] "fancy_layer"</span></span>
@@ -345,16 +355,16 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 <span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="do">## attr(,"arg1")</span></span>
 <span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 1</span></span>
 <span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="do">## attr(,"arg2")</span></span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Eep.</p>
 <p>To hide those internals from users, you can define your own print method–what gets printed out if a user calls <code>super_fancy_layer()</code> without adding it to an existing ggplot object with <code>+</code>?</p>
 <p>Here’s what my print method looks like:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' @export</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' @export</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>print.fancy_layer <span class="ot">&lt;-</span> <span class="cf">function</span>(x, ...) {</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(x)</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>With this loaded, printing <code>fancy_layer</code>s is a bit less overwhelming (if a bit underwhelming):</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">super_fancy_layer</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">super_fancy_layer</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <pre><code>## A super fancy layer.</code></pre>
 <p>Woop woop. :-)</p>
 </section>
@@ -423,13 +433,14 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy

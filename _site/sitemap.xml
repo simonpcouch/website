@@ -5,24 +5,36 @@
     <lastmod>2025-11-11T19:59:22.697Z</lastmod>
   </url>
   <url>
-    <loc>https://simonpcouch.com/blog/2024-05-13-parallel/index.html</loc>
-    <lastmod>2025-11-11T19:59:22.350Z</lastmod>
+    <loc>https://simonpcouch.com/blog/2025-10-08-newsletter/index.html</loc>
+    <lastmod>2025-11-11T19:59:22.691Z</lastmod>
   </url>
   <url>
-    <loc>https://simonpcouch.com/blog/2023-09-01-jmt-2023/index.html</loc>
-    <lastmod>2025-11-11T19:59:21.853Z</lastmod>
+    <loc>https://simonpcouch.com/blog/2025-05-21-gemini-2-5-flash/index.html</loc>
+    <lastmod>2025-11-11T19:59:22.448Z</lastmod>
   </url>
   <url>
-    <loc>https://simonpcouch.com/blog/2025-04-18-o3-o4-mini/index.html</loc>
-    <lastmod>2025-11-11T19:59:22.411Z</lastmod>
+    <loc>https://simonpcouch.com/blog/2025-03-26-claude-code/index.html</loc>
+    <lastmod>2025-11-11T19:59:22.366Z</lastmod>
   </url>
   <url>
-    <loc>https://simonpcouch.com/blog/2020-11-12-pdfs-from-data/index.html</loc>
-    <lastmod>2025-11-11T19:59:21.605Z</lastmod>
+    <loc>https://simonpcouch.com/blog/2024-07-15-syrup/index.html</loc>
+    <lastmod>2025-11-11T19:59:22.358Z</lastmod>
   </url>
   <url>
-    <loc>https://simonpcouch.com/blog/2022-07-20-netlify-subdomain-redirect/index.html</loc>
-    <lastmod>2025-11-11T19:59:21.662Z</lastmod>
+    <loc>https://simonpcouch.com/blog/2025-04-01-gemini-2-5-pro/index.html</loc>
+    <lastmod>2025-11-11T19:59:22.367Z</lastmod>
+  </url>
+  <url>
+    <loc>https://simonpcouch.com/blog/2025-11-11-sidekick/index.html</loc>
+    <lastmod>2025-11-11T20:09:36.326Z</lastmod>
+  </url>
+  <url>
+    <loc>https://simonpcouch.com/blog/2021-05-12-dev-docs-p3/index.html</loc>
+    <lastmod>2025-11-11T19:59:21.636Z</lastmod>
+  </url>
+  <url>
+    <loc>https://simonpcouch.com/blog/2021-05-11-dev-docs-p2/index.html</loc>
+    <lastmod>2025-11-11T19:59:21.633Z</lastmod>
   </url>
   <url>
     <loc>https://simonpcouch.com/blog/2023-11-30-listening-2023/index.html</loc>
@@ -41,8 +53,12 @@
     <lastmod>2025-11-11T19:59:21.651Z</lastmod>
   </url>
   <url>
-    <loc>https://simonpcouch.com/blog/2023-11-28-flights/index.html</loc>
-    <lastmod>2025-11-11T19:59:22.334Z</lastmod>
+    <loc>https://simonpcouch.com/blog/2020-11-30-stacks-0-1-0/index.html</loc>
+    <lastmod>2025-11-11T19:59:21.607Z</lastmod>
+  </url>
+  <url>
+    <loc>https://simonpcouch.com/blog/2021-05-13-dev-docs-p4/index.html</loc>
+    <lastmod>2025-11-11T19:59:21.638Z</lastmod>
   </url>
   <url>
     <loc>https://simonpcouch.com/blog/index.html</loc>
@@ -51,6 +67,10 @@
   <url>
     <loc>https://simonpcouch.com/blog/2024-10-16-postprocessing/index.html</loc>
     <lastmod>2025-11-11T19:59:22.360Z</lastmod>
+  </url>
+  <url>
+    <loc>https://simonpcouch.com/blog/2025-01-30-llm-biases/index.html</loc>
+    <lastmod>2025-11-11T19:59:22.365Z</lastmod>
   </url>
   <url>
     <loc>https://simonpcouch.com/blog/2024-04-08-fit-time/index.html</loc>
@@ -65,16 +85,24 @@
     <lastmod>2025-11-11T19:59:21.579Z</lastmod>
   </url>
   <url>
+    <loc>https://simonpcouch.com/blog/2025-12-10-chores-0-3-0/index.html</loc>
+    <lastmod>2025-12-12T03:17:10.906Z</lastmod>
+  </url>
+  <url>
     <loc>https://simonpcouch.com/blog/2021-03-23-whats-next-s21/index.html</loc>
     <lastmod>2025-11-11T19:59:21.622Z</lastmod>
   </url>
   <url>
-    <loc>https://simonpcouch.com/blog/2020-12-27-r-github-actions-commit/index.html</loc>
-    <lastmod>2025-11-11T19:59:21.609Z</lastmod>
+    <loc>https://simonpcouch.com/blog/2025-08-14-mcptools/index.html</loc>
+    <lastmod>2025-11-11T19:59:22.588Z</lastmod>
   </url>
   <url>
-    <loc>https://simonpcouch.com/blog/2021-06-10-ggplot-pipe-plus/index.html</loc>
-    <lastmod>2025-11-11T19:59:21.645Z</lastmod>
+    <loc>https://simonpcouch.com/blog/2022-12-01-listening-2022/index.html</loc>
+    <lastmod>2025-11-11T19:59:21.666Z</lastmod>
+  </url>
+  <url>
+    <loc>https://simonpcouch.com/blog/2025-12-03-wrapped-databot/index.html</loc>
+    <lastmod>2025-12-04T13:45:53.281Z</lastmod>
   </url>
   <url>
     <loc>https://simonpcouch.com/blog/2023-03-24-speedups-2023/index.html</loc>
@@ -93,8 +121,12 @@
     <lastmod>2025-11-11T19:59:22.363Z</lastmod>
   </url>
   <url>
-    <loc>https://simonpcouch.com/blog/2022-12-01-listening-2022/index.html</loc>
-    <lastmod>2025-11-11T19:59:21.666Z</lastmod>
+    <loc>https://simonpcouch.com/blog/2021-06-10-ggplot-pipe-plus/index.html</loc>
+    <lastmod>2025-11-11T19:59:21.645Z</lastmod>
+  </url>
+  <url>
+    <loc>https://simonpcouch.com/blog/2020-12-27-r-github-actions-commit/index.html</loc>
+    <lastmod>2025-11-11T19:59:21.609Z</lastmod>
   </url>
   <url>
     <loc>https://simonpcouch.com/blog/2023-08-04-parallel-racing/index.html</loc>
@@ -105,6 +137,10 @@
     <lastmod>2025-11-11T19:59:22.396Z</lastmod>
   </url>
   <url>
+    <loc>https://simonpcouch.com/blog/2026-01-20-cc-impact/index.html</loc>
+    <lastmod>2026-01-21T00:29:43.701Z</lastmod>
+  </url>
+  <url>
     <loc>https://simonpcouch.com/blog/2023-07-28-moving-on-s23/index.html</loc>
     <lastmod>2025-11-11T19:59:21.677Z</lastmod>
   </url>
@@ -113,20 +149,28 @@
     <lastmod>2025-11-11T19:59:22.395Z</lastmod>
   </url>
   <url>
-    <loc>https://simonpcouch.com/blog/2025-01-30-llm-biases/index.html</loc>
-    <lastmod>2025-11-11T19:59:22.365Z</lastmod>
+    <loc>https://simonpcouch.com/blog/2025-07-17-claude-code-2/index.html</loc>
+    <lastmod>2025-11-11T19:59:22.587Z</lastmod>
+  </url>
+  <url>
+    <loc>https://simonpcouch.com/blog/2025-07-14-kimi-k2/index.html</loc>
+    <lastmod>2025-11-11T19:59:22.536Z</lastmod>
   </url>
   <url>
     <loc>https://simonpcouch.com/blog/2021-08-21-infer-v-1-0-0/index.html</loc>
     <lastmod>2025-11-11T19:59:21.656Z</lastmod>
   </url>
   <url>
-    <loc>https://simonpcouch.com/blog/2021-05-13-dev-docs-p4/index.html</loc>
-    <lastmod>2025-11-11T19:59:21.638Z</lastmod>
+    <loc>https://simonpcouch.com/blog/2025-11-26-bluffbench/index.html</loc>
+    <lastmod>2025-12-09T21:17:08.660Z</lastmod>
   </url>
   <url>
-    <loc>https://simonpcouch.com/blog/2020-11-30-stacks-0-1-0/index.html</loc>
-    <lastmod>2025-11-11T19:59:21.607Z</lastmod>
+    <loc>https://simonpcouch.com/blog/2023-11-28-flights/index.html</loc>
+    <lastmod>2025-11-11T19:59:22.334Z</lastmod>
+  </url>
+  <url>
+    <loc>https://simonpcouch.com/blog/2025-08-26-predictive/index.html</loc>
+    <lastmod>2025-12-09T21:17:08.660Z</lastmod>
   </url>
   <url>
     <loc>https://simonpcouch.com/blog/2020-10-11-intro/index.html</loc>
@@ -141,24 +185,32 @@
     <lastmod>2025-11-11T19:59:21.854Z</lastmod>
   </url>
   <url>
-    <loc>https://simonpcouch.com/blog/2021-05-11-dev-docs-p2/index.html</loc>
-    <lastmod>2025-11-11T19:59:21.633Z</lastmod>
+    <loc>https://simonpcouch.com/blog/2025-12-04-local-agents/index.html</loc>
+    <lastmod>2026-01-18T15:16:40.698Z</lastmod>
   </url>
   <url>
-    <loc>https://simonpcouch.com/blog/2021-05-12-dev-docs-p3/index.html</loc>
-    <lastmod>2025-11-11T19:59:21.636Z</lastmod>
+    <loc>https://simonpcouch.com/blog/2022-07-20-netlify-subdomain-redirect/index.html</loc>
+    <lastmod>2025-11-11T19:59:21.662Z</lastmod>
   </url>
   <url>
-    <loc>https://simonpcouch.com/blog/2025-04-01-gemini-2-5-pro/index.html</loc>
-    <lastmod>2025-11-11T19:59:22.367Z</lastmod>
+    <loc>https://simonpcouch.com/blog/2025-05-27-claude-4/index.html</loc>
+    <lastmod>2025-11-11T19:59:22.510Z</lastmod>
   </url>
   <url>
-    <loc>https://simonpcouch.com/blog/2024-07-15-syrup/index.html</loc>
-    <lastmod>2025-11-11T19:59:22.358Z</lastmod>
+    <loc>https://simonpcouch.com/blog/2020-11-12-pdfs-from-data/index.html</loc>
+    <lastmod>2025-11-11T19:59:21.605Z</lastmod>
   </url>
   <url>
-    <loc>https://simonpcouch.com/blog/2025-03-26-claude-code/index.html</loc>
-    <lastmod>2025-11-11T19:59:22.366Z</lastmod>
+    <loc>https://simonpcouch.com/blog/2025-04-18-o3-o4-mini/index.html</loc>
+    <lastmod>2025-11-11T19:59:22.411Z</lastmod>
+  </url>
+  <url>
+    <loc>https://simonpcouch.com/blog/2023-09-01-jmt-2023/index.html</loc>
+    <lastmod>2025-11-11T19:59:21.853Z</lastmod>
+  </url>
+  <url>
+    <loc>https://simonpcouch.com/blog/2024-05-13-parallel/index.html</loc>
+    <lastmod>2025-11-11T19:59:22.350Z</lastmod>
   </url>
   <url>
     <loc>https://simonpcouch.com/blog/2024-10-29-book/index.html</loc>
@@ -167,277 +219,5 @@
   <url>
     <loc>https://simonpcouch.com/blog/2025-05-07-gemini-2-5-pro-new/index.html</loc>
     <lastmod>2025-11-11T19:59:22.433Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2025-05-19-germany/index.html</loc>
-    <lastmod>2025-05-17T15:14:13.916Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2025-05-21-gemini-2-5-flash/index.html</loc>
-    <lastmod>2025-11-11T19:59:22.448Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2025-05-27-claude-4/index.html</loc>
-    <lastmod>2025-11-11T19:59:22.510Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2025-07-14-kimi-k2/index.html</loc>
-    <lastmod>2025-11-11T19:59:22.536Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2025-07-17-claude-code-2/index.html</loc>
-    <lastmod>2025-11-11T19:59:22.587Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2025-08-14-mcptools/index.html</loc>
-    <lastmod>2025-11-11T19:59:22.588Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2025-08-26-predictive/index.html</loc>
-    <lastmod>2025-12-09T21:17:08.660Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2025-10-08-newsletter/index.html</loc>
-    <lastmod>2025-11-11T19:59:22.691Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2025-11-11-sidekick/index.html</loc>
-    <lastmod>2025-11-11T20:09:36.326Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2025-12-01-local-agents/index.html</loc>
-    <lastmod>2025-11-26T15:36:50.252Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2025-11-26-bluffbench/index.html</loc>
-    <lastmod>2025-12-09T21:17:08.660Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2025-12-03-wrapped-databot/index.html</loc>
-    <lastmod>2025-12-04T13:45:53.281Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2025-12-03-wrapped-databot/conversation-export.html</loc>
-    <lastmod>2025-12-03T21:06:50.532Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/conversation-export.html</loc>
-    <lastmod>2025-12-03T21:06:19.370Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2025-12-04-local-agents/index.html</loc>
-    <lastmod>2026-01-18T15:16:40.698Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2025-12-10-chores/index.html</loc>
-    <lastmod>2025-12-08T22:13:00.231Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2025-12-10-chores-0-3-0/index.html</loc>
-    <lastmod>2025-12-12T03:17:10.906Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2026-01-20-cc-impact/index.html</loc>
-    <lastmod>2026-01-21T00:29:43.701Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2026-01-20-cc-impact/per-million-tokens.html</loc>
-    <lastmod>2026-01-18T17:06:27.139Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2026-01-20-cc-impact/claude-research.html</loc>
-    <lastmod>2026-01-18T16:32:00.679Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2026-01-20-cc-impact/ccusage/apps/ccusage/CLAUDE.html</loc>
-    <lastmod>2026-01-18T18:43:18.746Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2026-01-20-cc-impact/ccusage/apps/opencode/CLAUDE.html</loc>
-    <lastmod>2026-01-18T18:43:18.755Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2026-01-20-cc-impact/ccusage/apps/amp/CLAUDE.html</loc>
-    <lastmod>2026-01-18T18:43:18.744Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2026-01-20-cc-impact/ccusage/apps/mcp/CLAUDE.html</loc>
-    <lastmod>2026-01-18T18:43:18.754Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2026-01-20-cc-impact/ccusage/apps/codex/CLAUDE.html</loc>
-    <lastmod>2026-01-18T18:43:18.751Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2026-01-20-cc-impact/ccusage/AGENTS.html</loc>
-    <lastmod>2026-01-18T18:43:18.744Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2026-01-20-cc-impact/ccusage/packages/terminal/AGENTS.html</loc>
-    <lastmod>2026-01-18T18:43:18.772Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2026-01-20-cc-impact/ccusage/packages/internal/AGENTS.html</loc>
-    <lastmod>2026-01-18T18:43:18.770Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2026-01-20-cc-impact/ccusage/docs/AGENTS.html</loc>
-    <lastmod>2026-01-18T18:43:18.759Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2026-01-20-cc-impact/ccusage/docs/guide/sponsors.html</loc>
-    <lastmod>2026-01-18T18:43:18.762Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2026-01-20-cc-impact/ccusage/docs/guide/installation.html</loc>
-    <lastmod>2026-01-18T18:43:18.761Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2026-01-20-cc-impact/ccusage/docs/guide/configuration.html</loc>
-    <lastmod>2026-01-18T18:43:18.760Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2026-01-20-cc-impact/ccusage/docs/guide/directory-detection.html</loc>
-    <lastmod>2026-01-18T18:43:18.761Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2026-01-20-cc-impact/ccusage/docs/guide/index.html</loc>
-    <lastmod>2026-01-18T18:43:18.761Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2026-01-20-cc-impact/ccusage/docs/guide/pi/index.html</loc>
-    <lastmod>2026-01-18T18:43:18.762Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2026-01-20-cc-impact/ccusage/docs/guide/mcp-server.html</loc>
-    <lastmod>2026-01-18T18:43:18.762Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2026-01-20-cc-impact/ccusage/docs/guide/codex/session.html</loc>
-    <lastmod>2026-01-18T18:43:18.760Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2026-01-20-cc-impact/ccusage/docs/guide/codex/monthly.html</loc>
-    <lastmod>2026-01-18T18:43:18.760Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2026-01-20-cc-impact/ccusage/docs/guide/config-files.html</loc>
-    <lastmod>2026-01-18T18:43:18.760Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2026-01-20-cc-impact/ccusage/docs/guide/library-usage.html</loc>
-    <lastmod>2026-01-18T18:43:18.761Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2026-01-20-cc-impact/ccusage/docs/guide/cli-options.html</loc>
-    <lastmod>2026-01-18T18:43:18.759Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2026-01-20-cc-impact/ccusage/docs/guide/weekly-reports.html</loc>
-    <lastmod>2026-01-18T18:43:18.763Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2026-01-20-cc-impact/ccusage/docs/guide/json-output.html</loc>
-    <lastmod>2026-01-18T18:43:18.761Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2026-01-20-cc-impact/ccusage/docs/guide/cost-modes.html</loc>
-    <lastmod>2026-01-18T18:43:18.760Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2026-01-20-cc-impact/ccusage/docs/guide/monthly-reports.html</loc>
-    <lastmod>2026-01-18T18:43:18.762Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2026-01-20-cc-impact/ccusage/docs/guide/environment-variables.html</loc>
-    <lastmod>2026-01-18T18:43:18.761Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2026-01-20-cc-impact/ccusage/docs/guide/live-monitoring.html</loc>
-    <lastmod>2026-01-18T18:43:18.761Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2026-01-20-cc-impact/ccusage/docs/guide/blocks-reports.html</loc>
-    <lastmod>2026-01-18T18:43:18.759Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2026-01-20-cc-impact/ccusage/docs/guide/codex/daily.html</loc>
-    <lastmod>2026-01-18T18:43:18.759Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2026-01-20-cc-impact/ccusage/docs/guide/codex/index.html</loc>
-    <lastmod>2026-01-18T18:43:18.759Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2026-01-20-cc-impact/ccusage/docs/guide/daily-reports.html</loc>
-    <lastmod>2026-01-18T18:43:18.760Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2026-01-20-cc-impact/ccusage/docs/guide/getting-started.html</loc>
-    <lastmod>2026-01-18T18:43:18.761Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2026-01-20-cc-impact/ccusage/docs/guide/statusline.html</loc>
-    <lastmod>2026-01-18T18:43:18.763Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2026-01-20-cc-impact/ccusage/docs/guide/related-projects.html</loc>
-    <lastmod>2026-01-18T18:43:18.762Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2026-01-20-cc-impact/ccusage/docs/guide/session-reports.html</loc>
-    <lastmod>2026-01-18T18:43:18.762Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2026-01-20-cc-impact/ccusage/docs/guide/custom-paths.html</loc>
-    <lastmod>2026-01-18T18:43:18.760Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2026-01-20-cc-impact/ccusage/docs/guide/opencode/index.html</loc>
-    <lastmod>2026-01-18T18:43:18.762Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2026-01-20-cc-impact/ccusage/docs/index.html</loc>
-    <lastmod>2026-01-18T18:43:18.763Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2026-01-20-cc-impact/ccusage/docs/CLAUDE.html</loc>
-    <lastmod>2026-01-18T18:43:18.759Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2026-01-20-cc-impact/ccusage/packages/internal/CLAUDE.html</loc>
-    <lastmod>2026-01-18T18:43:18.770Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2026-01-20-cc-impact/ccusage/packages/terminal/CLAUDE.html</loc>
-    <lastmod>2026-01-18T18:43:18.772Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2026-01-20-cc-impact/ccusage/apps/codex/AGENTS.html</loc>
-    <lastmod>2026-01-18T18:43:18.751Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2026-01-20-cc-impact/ccusage/apps/mcp/AGENTS.html</loc>
-    <lastmod>2026-01-18T18:43:18.754Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2026-01-20-cc-impact/ccusage/apps/pi/CLAUDE.html</loc>
-    <lastmod>2026-01-18T18:43:18.757Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2026-01-20-cc-impact/ccusage/apps/opencode/AGENTS.html</loc>
-    <lastmod>2026-01-18T18:43:18.755Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2026-01-20-cc-impact/ccusage/apps/ccusage/AGENTS.html</loc>
-    <lastmod>2026-01-18T18:43:18.746Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/blog/2026-01-20-cc-impact/ccusage/CLAUDE.html</loc>
-    <lastmod>2026-01-18T18:43:18.744Z</lastmod>
-  </url>
-  <url>
-    <loc>https://simonpcouch.com/CLAUDE.html</loc>
-    <lastmod>2026-01-19T19:53:27.600Z</lastmod>
   </url>
 </urlset>

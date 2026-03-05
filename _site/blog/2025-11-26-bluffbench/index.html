@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.8.27">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="dcterms.date" content="2025-11-26">
 <title>When plotting, LLMs see what they expect to see | Simon P. Couch – Simon P. Couch</title>
@@ -62,17 +62,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../assets/cabin.png" rel="icon" type="image/png">
+<link href="../../assets/sc.png" rel="icon" type="image/png">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-c1032820e43c09d93aab91433483bf4f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+<link href="../../site_libs/bootstrap/bootstrap-3b752abc8aa7891907126f0ff35813fe.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
   "collapse-after": 3,
@@ -105,6 +106,18 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 </script>
+<meta property="og:title" content="When plotting, LLMs see what they expect to see | Simon P. Couch">
+<meta property="og:description" content="Data science agents need to accurately read plots even when the content contradicts their expectations.">
+<meta property="og:image" content="https://simonpcouch.com/assets/blank.png">
+<meta property="og:site_name" content="Simon P. Couch">
+<meta property="og:image:height" content="1">
+<meta property="og:image:width" content="1">
+<meta name="twitter:title" content="When plotting, LLMs see what they expect to see | Simon P. Couch">
+<meta name="twitter:description" content="Data science agents need to accurately read plots even when the content contradicts their expectations.">
+<meta name="twitter:image" content="https://simonpcouch.com/assets/blank.png">
+<meta name="twitter:image-height" content="1">
+<meta name="twitter:image-width" content="1">
+<meta name="twitter:card" content="summary_large_image">
 </head>
 <body class="nav-fixed fullcontent quarto-light">
 
@@ -112,7 +125,7 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
   <header id="quarto-header" class="headroom fixed-top quarto-banner"><nav class="navbar navbar-expand-lg " data-bs-theme="dark"><div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="../../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../../assets/cabin.png" alt="" class="navbar-logo"></a>
+    <img src="../../assets/sc.png" alt="" class="navbar-logo light-content"><img src="../../assets/sc.png" alt="" class="navbar-logo dark-content"></a>
     <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Simon P. Couch</span>
     </a>
@@ -207,8 +220,8 @@ mtcars
 
 -->
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">hp</span>, y <span class="op">=</span> <span class="va">mpg</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">hp</span>, y <span class="op">=</span> <span class="va">mpg</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure"><p><img src="index_files/figure-html/plot-mtcars-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
@@ -220,7 +233,7 @@ mtcars
 <p>Wait… did you catch that? Read that again.</p>
 <p>That doesn’t seem right. As the horsepower of cars increases, we would expect their corresponding fuel efficiency values to <em>decrease</em>. Yet, this plot clearly shows that the opposite seems to be the case. That’s because, in a code chunk we didn’t show you, we applied this secret transformation:</p>
 <div class="cell">
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mtcars</span><span class="op">$</span><span class="va">hp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">hp</span><span class="op">)</span> <span class="op">-</span> <span class="va">mtcars</span><span class="op">$</span><span class="va">hp</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mtcars</span><span class="op">$</span><span class="va">hp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">hp</span><span class="op">)</span> <span class="op">-</span> <span class="va">mtcars</span><span class="op">$</span><span class="va">hp</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>This code replaces the true horsepower with a transformation of the horsepower that subtracts the car’s actual horsepower from the maximum value of the dataset. As such, any relationships between this variable and other variables in the dataset are “flipped” from their usual values.</p>
 <section id="tricking-llms" class="level2"><h2 class="anchored" data-anchor-id="tricking-llms">Tricking LLMs</h2>
@@ -245,7 +258,7 @@ mtcars
 <p>In reality, it’s not often the case that data scientists are secretly modifying base datasets to try and trick these models in the way that we do above. So, we also tested these models in more subtle situations, where we name datasets and variables in a way that suggests some intuitive relationship will likely be observed, but the actual relationship present in the data shows the opposite (or shows no relationship at all).</p>
 <p>For example, we can generate some data weekly study time and exam scores that looks like this:</p>
 <div class="cell">
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">students</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">students</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 75 × 2
    study_hours_weekly exam_score
@@ -265,8 +278,8 @@ mtcars
 </div>
 <p>Both humans and LLMs likely expect study time to be correlated with exam time, but this dataset shows essentially no correlation between these two variables and a large discontinuity in one range of the data:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="va">students</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">study_hours_weekly</span>, y <span class="op">=</span> <span class="va">exam_score</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="va">students</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">study_hours_weekly</span>, y <span class="op">=</span> <span class="va">exam_score</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure"><p><img src="index_files/figure-html/plot-students-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
@@ -346,13 +359,14 @@ mtcars
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy

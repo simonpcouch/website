@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.8.27">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -66,17 +66,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../assets/cabin.png" rel="icon" type="image/png">
+<link href="../../assets/sc.png" rel="icon" type="image/png">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-edbd123714173c2d5d98bd1252cecc27.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-3b752abc8aa7891907126f0ff35813fe.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -115,6 +116,14 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 </script>
 
 
+<meta property="og:title" content="Naming the Things (Developer Documentation pt.&nbsp;3) | Simon P. Couch">
+<meta property="og:description" content="Weighing the pros and cons of several possible schemas for naming the core functions in {stacks}.">
+<meta property="og:image" content="https://simonpcouch.com/blog/2021-05-12-dev-docs-p3/featured.jpg">
+<meta property="og:site_name" content="Simon P. Couch">
+<meta name="twitter:title" content="Naming the Things (Developer Documentation pt.&nbsp;3) | Simon P. Couch">
+<meta name="twitter:description" content="Weighing the pros and cons of several possible schemas for naming the core functions in {stacks}.">
+<meta name="twitter:image" content="https://simonpcouch.com/blog/2021-05-12-dev-docs-p3/featured.jpg">
+<meta name="twitter:card" content="summary_large_image">
 </head>
 
 <body class="nav-fixed fullcontent quarto-light">
@@ -125,7 +134,8 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="../../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../../assets/cabin.png" alt="" class="navbar-logo">
+    <img src="../../assets/sc.png" alt="" class="navbar-logo light-content">
+    <img src="../../assets/sc.png" alt="" class="navbar-logo dark-content">
     </a>
     <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Simon P. Couch</span>
@@ -231,11 +241,11 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 <p>However, while the behavior of a function likely ought not to depend on the order of recently loaded packages, it could very well be useful for the behavior of a function to depend on the structure of what is passed to it. This is the premise of object-orientated programming, for which the most mainstream implementation in R software is the S3 system.</p>
 <p>As an example, if I pass a <code>data_stack</code> object to a function called <code>fit</code>, the most sensical thing to do would probably be to fit the meta-learner that ultimately will inform how to best combine the predictions contained in the data stack. However, this is probably not also the case for a <code>model_stack</code> object. In the case of a model stack, the meta-learner has already been fitted, so a <code>fit</code> function applied to a <code>model_stack</code> probably ought to fit the member models whose predictions will be combined by the meta-learner.</p>
 <p>To implement this kind of framework, one could define a <em>generic</em> function, <code>fit</code>, which just looks at the class of what’s passed to it, and then <em>dispatches</em> to the correct <em>method</em>, or implementation of <code>fit</code> as applied to a specific object class. In the case of <code>fit</code>, specifically, the <a href="http://generics.r-lib.org/">{generics}</a> package supplies a number of helpful function generics, including <code>fit</code>. Thus, to implement this kind of framework in {stacks}, the package would re-export the {generics} package’s <code>fit</code> generic function and then implement <code>fit</code> methods for the <code>data_stack</code> and <code>model_stack</code> classes. Such an implementation would result in {stacks} pipelines appearing something like the following.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">stacks</span>() <span class="sc">%&gt;%</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">stacks</span>() <span class="sc">%&gt;%</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add</span>(candidate1) <span class="sc">%&gt;%</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add</span>(candidate2) <span class="sc">%&gt;%</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Understanding this code requires a strong understanding of S3 object-orientation, as well its application within the package specifically, in order for a practitioner to know how many times to she ought to call <code>fit</code> and which operations were happening with each call. This need not be a requisite for fitting ensemble models in R. Even then, though, this grammar results in the juxtaposition of an iterative <code>add</code> method, which does not alter the object class, and two <code>fit</code> methods, one of which alters the object class and neither of which can be called iteratively.</p>
 <p>One could use two non-<code>fit</code> verbs for these two steps, but our creativity failed us in coming up with appropriate names given that approach.</p>
 <!-- sharing help-files - sharing fit doc vs the length of the fit_members documentation -->
@@ -244,11 +254,11 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 <h3 class="anchored" data-anchor-id="add_candidates-blend_predictions-fit_members">add_candidates, blend_predictions, &amp; fit_members</h3>
 <p>While working with a grammar like <code>add_candidates</code>, <code>blend_predictions</code>, &amp; <code>fit_members</code> is surely made easier by an auto-complete feature, it only takes advantage of one of two notable benefits to auto-complete. If a practitioner remembers the name of the function she is planning on using, auto-complete is very much helpful here; after typing the first three characters, the large majority of keystrokes can then be eliminated through the use of the tooltip. However, this grammar does not make effective use of the tooltip in the case that the practitioner does not remember the name of the function she intends to use. Grammars making use of prefixing, where functions with shared functionality are prefixed with the same three (or more) characters, only ask that a practitioner can recall that one prefix in order to see the possible options suggested. In addition to saving keystrokes, then, such grammars can uniquely provide access to short-form, “fly-by” documentation—the grammars discussed in the following two subsections are such examples.</p>
 <p>This grammar also introduces a somewhat strange interface in regard to the first argument supplied by the practitioner. Per tidyverse design principles, core functions meant to be called in succession ought to be “pipable”—that is, the first argument (supplied via the <a href="https://magrittr.tidyverse.org/">{magrittr}</a> pipe <code>%&gt;%</code> operator) to each function ought to be the output of the function called previously. The grammar in consideration presents as such:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">stacks</span>() <span class="sc">%&gt;%</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">stacks</span>() <span class="sc">%&gt;%</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_candidates</span>(...) <span class="sc">%&gt;%</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ... %&gt;%</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">blend_predictions</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit_members</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit_members</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Aligning with this convention results in inconsistent relationships between the direct object in the function name and the argument to which that direct object refers. Walking through the initialization function and three core verbs, consider:</p>
 <ul>
 <li><p>The <code>stacks</code> initialization function does not take arguments.</p></li>
@@ -379,13 +389,14 @@ Figure 1: Beginning function and method names with a common prefix allows for us
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy

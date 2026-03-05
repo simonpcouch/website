@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.8.27">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -66,17 +66,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../assets/cabin.png" rel="icon" type="image/png">
+<link href="../../assets/sc.png" rel="icon" type="image/png">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-edbd123714173c2d5d98bd1252cecc27.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-3b752abc8aa7891907126f0ff35813fe.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -115,6 +116,14 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 </script>
 
 
+<meta property="og:title" content="Big Things (Developer Documentation pt.&nbsp;4) | Simon P. Couch">
+<meta property="og:description" content="On the tension between documenting R packages exhaustively and maintainably.">
+<meta property="og:image" content="https://simonpcouch.com/blog/2021-05-13-dev-docs-p4/featured.jpg">
+<meta property="og:site_name" content="Simon P. Couch">
+<meta name="twitter:title" content="Big Things (Developer Documentation pt.&nbsp;4) | Simon P. Couch">
+<meta name="twitter:description" content="On the tension between documenting R packages exhaustively and maintainably.">
+<meta name="twitter:image" content="https://simonpcouch.com/blog/2021-05-13-dev-docs-p4/featured.jpg">
+<meta name="twitter:card" content="summary_large_image">
 </head>
 
 <body class="nav-fixed fullcontent quarto-light">
@@ -125,7 +134,8 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="../../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../../assets/cabin.png" alt="" class="navbar-logo">
+    <img src="../../assets/sc.png" alt="" class="navbar-logo light-content">
+    <img src="../../assets/sc.png" alt="" class="navbar-logo dark-content">
     </a>
     <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Simon P. Couch</span>
@@ -218,13 +228,13 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 <p>Surely, then, {stacks}’ inputs are Big.</p>
 <p><em>{stacks}’ objects and computations</em>: In much the same way as the packages generating its inputs, the operations that {stacks} carries out are computationally intensive and generate large data objects.</p>
 <p>In contrast to the earlier section, with the necessary input objects generated, the code in the following sections demonstrating {stacks}’ functionality can be summarized in only a few lines of code.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>st <span class="ot">&lt;-</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>st <span class="ot">&lt;-</span> </span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stacks</span>() <span class="sc">%&gt;%</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_candidates</span>(knn_res) <span class="sc">%&gt;%</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_candidates</span>(lin_reg_res) <span class="sc">%&gt;%</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_candidates</span>(svm_res) <span class="sc">%&gt;%</span></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">blend_predictions</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit_members</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit_members</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>On the same machine mentioned earlier, the code to execute the {stacks} pipeline in full takes about half of the time required to generate its inputs. Thus, one start to finish example, assuming {stacks} doesn’t supply intermediate objects to reduce runtime, requires around a minute of compute time. Note that this runtime, taking up a tenth of the total allotted package check time on a machine that outperforms CRAN’s check farms, provides one minimal example demonstrating functionality in one help-file.</p>
 <p>Further, the <code>st</code> object specified above takes up 15.2MB in memory, over three times the amount of storage typically allotted to the entirety of a CRAN-published R package.</p>
 <p>Big things abound! Wiggliness follows.</p>
@@ -239,7 +249,7 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 <h3 class="anchored" data-anchor-id="example-input-objects">Example input objects</h3>
 <p>An approach taken by several R packages in the {tidymodels} ecosystem to reduce package check time is to supply R data objects with an R package for use in examples and unit tests. As noted above, the inputs to {stacks}’ <code>add_candidates</code> are the culmination of a significant amount of runtime. Rather than regenerating these objects each time some functionality is to be demonstrated, the package can supply a set of R data objects with the package that can simply be loaded and passed to {stacks} functions as needed. In this way, the runtime of an example or unit test is limited only to the time required by {stacks} to carry out its functionality, eliminating the need to take up package check time carrying out operations implemented in other packages.</p>
 <p>To this end, the {stacks} package provides a collection of R data objects for use in examples and unit tests. The objects are based on <code>tree_frogs</code>, a subset of an experimental data set from a study of tree frog embryo hatching <a href="https://jeb.biologists.org/content/223/24/jeb236141">(Jung, 2020)</a>.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>tree_frogs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>tree_frogs</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <pre><code>## # A tibble: 1,212 x 7
 ##    clutch treatment  reflex    age t_o_d     hatched latency
 ##    &lt;fct&gt;  &lt;chr&gt;      &lt;fct&gt;   &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;     &lt;dbl&gt;
@@ -270,8 +280,8 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 </blockquote>
 <p>The linked <code>?example_data</code> help-file (aliased by the names of each of the example objects) also includes the excerpt, and is suffixed with the source code used to generate the objects; an R Markdown document is appended to the documentation entry via the <a href="http://roxygen2.r-lib.org/">{roxygen2}</a> <code>@includeRmd</code> tag, providing the source code to regenerate the exported example objects or generate intermediate un-exported objects in the workflow. Only the raw data source and final <code>tune_results</code> data objects—suitable for input to {stacks} functions—are included in the bundled package, to minimize bundled package size.</p>
 <p>Then, in each example section throughout the package where the example objects are used, the following excerpt prefixes the section:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># see the "Example Data" section above for</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># clarification on the objects used in these examples!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># see the "Example Data" section above for</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># clarification on the objects used in these examples!</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This approach ensures that the source of the example objects is clear to the user. Further, including a fully worked example of appropriate usage of requisite model specification with other functionality from {tidymodels} clarifies specificities of using the ecosystem to generate {stacks}’ inputs.</p>
 <p>There are a few notable drawbacks to the approach of supplying example data objects with the package that are the result of {stacks}’ dependencies.</p>
 <p>Principally, these data objects are not automatically generated, and will not automatically update when a {stacks} dependency is updated. Thus, if a {tidymodels} package makes a breaking change for {stacks}, but {stacks} only checks its examples and unit tests relative to the stored data object, then the breaking change will be undetected until the example object is updated manually. This drawback is somewhat remedied by <a href="https://github.com/tidymodels/extratests"><em>extratests</em></a>, a repository running a more exhaustive set of checks on a regular schedule, developed and maintained by the {tidymodels} team in reaction to exactly this issue. Further, {tidymodels} developers work in close collaboration to ensure that functionality is tightly integrated across packages and thus likely anticipate which changes will break functionality in {stacks}. However, for breaking changes arising from outside of the {tidymodels} ecosystem, the package is unprotected.</p>
@@ -294,7 +304,7 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 <p>{stacks} uses an approach that is inspired by these conditional skipping functions. In the spirit of the approach noted in the example objects section, the source of {stacks} supplies a <code>helper_data</code> data object including a number of compiled objects for use in unit testing. The <code>helper_data</code> serves two purposes. For one, it reduces package check time by storing the output of functions required to generate input to {stacks} functions. Additionally, the data object supplies reference objects to which objects generated on-the-fly during unit testing can be compared. If these reference objects, generated with the exact same code as the objects generated on-the-fly, differ from the objects generated during unit testing, then a unit test fails. If the structure of a {stacks} output is truly intended to change, the <code>helper_data</code> object is simply regenerated with the associated script in <code>man-roxygen/example_models.Rda</code>. Note that a small subset of the <code>helper_data</code> objects are actually exported as example data objects with the package, as discussed in the example objects section.</p>
 <p>However, the <code>helper_data</code> data object is large. At the time of writing, this object is 22 Mb, over four times the total allowed package size. Thus, the data object is not actually included in the bundled package, and unit tests running from the bundled version of the package do not have access to the <code>helper_data</code>. Wiggliness ensues.</p>
 <p>A suite of helper functions are defined preceding the execution of package unit tests. Rather than taking arguments, these functions are sensitive to the environment they’re executed in.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>get_current_branch <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>get_current_branch <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  gh_ref <span class="ot">&lt;-</span> <span class="fu">Sys.getenv</span>(<span class="st">"GITHUB_REF"</span>)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">identical</span>(gh_ref, <span class="st">""</span>)) {</span>
@@ -310,7 +320,7 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 <span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>on_cran <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
 <span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  <span class="sc">!</span><span class="fu">identical</span>(<span class="fu">Sys.getenv</span>(<span class="st">"NOT_CRAN"</span>), <span class="st">"true"</span>)</span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>These helpers help to construct an idiom that determines the following rules for running package unit tests:</p>
 <ul>
 <li>When running locally via <code>R CMD check</code> or interactively, utilize the local <code>helper_data</code> object in running the entire suite of unit tests.</li>
@@ -318,7 +328,7 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 <li>When running on CRAN, only run unit tests that don’t require the <code>helper_data</code> object. This is a very small number of unit tests relative to the full suite included in the non-bundled version of the package, but serves to raise errors and warnings in light of breaking changes in {stacks}’ dependencies.</li>
 </ul>
 <p>The following code implements this idiom:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> ((<span class="sc">!</span><span class="fu">on_cran</span>()) <span class="sc">||</span> <span class="fu">interactive</span>()) {</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> ((<span class="sc">!</span><span class="fu">on_cran</span>()) <span class="sc">||</span> <span class="fu">interactive</span>()) {</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">on_github</span>()) {</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">load</span>(</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">paste0</span>(</span>
@@ -329,7 +339,7 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 <span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
 <span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">load</span>(<span class="st">"/tests/testthat/helper_data.Rda"</span>)</span>
 <span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Tests requiring the <code>helper_data</code> are prefixed with a <code>skip_on_cran</code> call.</p>
 <p>This approach to conditionally running examples and unit tests allows {stacks} to fulfill CRAN’s check time requirements in the published version of the package while also exhaustively unit testing the developmental version of {stacks} via continuous integration on the package repository as well as the {tidymodels} team’s <em>extratests</em> repository.</p>
 </section>
@@ -398,13 +408,14 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy

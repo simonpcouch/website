@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.8.27">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="dcterms.date" content="2025-08-26">
 <title>I was wrong about tidymodels and LLMs | Simon P. Couch – Simon P. Couch</title>
@@ -62,17 +62,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../assets/cabin.png" rel="icon" type="image/png">
+<link href="../../assets/sc.png" rel="icon" type="image/png">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-c1032820e43c09d93aab91433483bf4f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-3b752abc8aa7891907126f0ff35813fe.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script src="../../site_libs/quarto-contrib/videojs/video.min.js"></script>
 <link href="../../site_libs/quarto-contrib/videojs/video-js.css" rel="stylesheet"><script id="quarto-search-options" type="application/json">{
   "location": "navbar",
@@ -107,6 +108,18 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 </script>
+<meta property="og:title" content="I was wrong about tidymodels and LLMs | Simon P. Couch">
+<meta property="og:description" content="Today’s frontier LLMs know much more about tidymodels than I thought.">
+<meta property="og:image" content="https://simonpcouch.com/blog/2025-08-26-predictive/featured.png">
+<meta property="og:site_name" content="Simon P. Couch">
+<meta property="og:image:height" content="1122">
+<meta property="og:image:width" content="1128">
+<meta name="twitter:title" content="I was wrong about tidymodels and LLMs | Simon P. Couch">
+<meta name="twitter:description" content="Today’s frontier LLMs know much more about tidymodels than I thought.">
+<meta name="twitter:image" content="https://simonpcouch.com/blog/2025-08-26-predictive/featured.png">
+<meta name="twitter:image-height" content="1122">
+<meta name="twitter:image-width" content="1128">
+<meta name="twitter:card" content="summary_large_image">
 </head>
 <body class="nav-fixed fullcontent quarto-light">
 
@@ -114,7 +127,7 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
   <header id="quarto-header" class="headroom fixed-top quarto-banner"><nav class="navbar navbar-expand-lg " data-bs-theme="dark"><div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="../../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../../assets/cabin.png" alt="" class="navbar-logo"></a>
+    <img src="../../assets/sc.png" alt="" class="navbar-logo light-content"><img src="../../assets/sc.png" alt="" class="navbar-logo dark-content"></a>
     <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Simon P. Couch</span>
     </a>
@@ -188,16 +201,16 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 <p>At its most minimal, I needed to provide high-level context on using tidymodels: what are <a href="https://parsnip.tidymodels.org/reference/model_spec.html">model specifications</a>? <a href="https://recipes.tidymodels.org/reference/recipe.html">Recipes</a>? <a href="https://workflows.tidymodels.org/articles/extras/getting-started.html">Workflows</a>? I wrote these bits of context myself. <a href="https://github.com/simonpcouch/predictive/blob/8cff83a1639cd40a7abc4704587cef3d3c488ec7/inst/prompts/model.md">For example</a>, on model specifications:</p>
 <blockquote class="blockquote">
 <p>R code that returns a parsnip model specification. For example, to specify a linear regression:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">linear_reg</span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">linear_reg</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Or, to use a different engine and set some arguments:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">linear_reg</span><span class="op">(</span>penalty <span class="op">=</span> <span class="fl">.1</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span><span class="fu">set_engine</span><span class="op">(</span><span class="st">"glmnet"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">linear_reg</span><span class="op">(</span>penalty <span class="op">=</span> <span class="fl">.1</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span><span class="fu">set_engine</span><span class="op">(</span><span class="st">"glmnet"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>To tune argument values, set their value to <code>tune()</code>:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">linear_reg</span><span class="op">(</span>penalty <span class="op">=</span> <span class="fu">tune</span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span><span class="fu">set_engine</span><span class="op">(</span><span class="st">"glmnet"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">linear_reg</span><span class="op">(</span>penalty <span class="op">=</span> <span class="fu">tune</span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span><span class="fu">set_engine</span><span class="op">(</span><span class="st">"glmnet"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>When using a model type with an ambiguous mode, be sure to set it explicitly:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">decision_tree</span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span><span class="fu">set_mode</span><span class="op">(</span><span class="st">"regression"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">decision_tree</span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span><span class="fu">set_mode</span><span class="op">(</span><span class="st">"regression"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>In all of the above cases, the triple backticks are for example only and should not be included in the argument specification.</p>
 </blockquote>
 <p>Then, I wanted to provide context to prevent the most common failure modes, like hallucinating possible modeling engines for a given model type, misspelling an argument name, or thinking that a modeling engine supports a modeling mode that it doesn’t. To do so, for each model type, I <a href="https://github.com/simonpcouch/predictive/blob/8cff83a1639cd40a7abc4704587cef3d3c488ec7/inst/sandbox/write_model_documentation.R">concatenated all of the documentation for that model type together and then presented it to an LLM</a>, asking for a specific, information-dense output format. So, for example, the documentation for the modeling function <code>linear_reg()</code> looked <a href="https://github.com/simonpcouch/predictive/blob/8cff83a1639cd40a7abc4704587cef3d3c488ec7/inst/context/models/linear_reg.md">like this</a>:</p>
@@ -344,13 +357,14 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy

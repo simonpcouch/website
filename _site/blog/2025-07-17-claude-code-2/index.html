@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.8.27">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="dcterms.date" content="2025-07-17">
 <title>How I’m using Claude Code to write R code | Simon P. Couch – Simon P. Couch</title>
@@ -62,17 +62,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../assets/cabin.png" rel="icon" type="image/png">
+<link href="../../assets/sc.png" rel="icon" type="image/png">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-c1032820e43c09d93aab91433483bf4f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+<link href="../../site_libs/bootstrap/bootstrap-3b752abc8aa7891907126f0ff35813fe.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
   "collapse-after": 3,
@@ -105,6 +106,18 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 </script>
+<meta property="og:title" content="How I’m using Claude Code to write R code | Simon P. Couch">
+<meta property="og:description" content="Giving Claude Code the ability to peruse R package documentation via MCP is so, so helpful.">
+<meta property="og:image" content="https://simonpcouch.com/blog/2025-07-17-claude-code-2/featured.png">
+<meta property="og:site_name" content="Simon P. Couch">
+<meta property="og:image:height" content="507">
+<meta property="og:image:width" content="500">
+<meta name="twitter:title" content="How I’m using Claude Code to write R code | Simon P. Couch">
+<meta name="twitter:description" content="Giving Claude Code the ability to peruse R package documentation via MCP is so, so helpful.">
+<meta name="twitter:image" content="https://simonpcouch.com/blog/2025-07-17-claude-code-2/featured.png">
+<meta name="twitter:image-height" content="507">
+<meta name="twitter:image-width" content="500">
+<meta name="twitter:card" content="summary_large_image">
 </head>
 <body class="nav-fixed fullcontent quarto-light">
 
@@ -112,7 +125,7 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
   <header id="quarto-header" class="headroom fixed-top quarto-banner"><nav class="navbar navbar-expand-lg " data-bs-theme="dark"><div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="../../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../../assets/cabin.png" alt="" class="navbar-logo"></a>
+    <img src="../../assets/sc.png" alt="" class="navbar-logo light-content"><img src="../../assets/sc.png" alt="" class="navbar-logo dark-content"></a>
     <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Simon P. Couch</span>
     </a>
@@ -208,7 +221,7 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 <p>Regardless of which project I’m working on, there are some style elements of code that Claude Code writes that I always want to change. The context on these project-agnostic preferences live in a CLAUDE.md file in the directory where I keep all of my R projects. I’ll refrain from leaving the full prompt here (your preferences are different than mine!), but here’s one example of the kind of guidance I have in there:</p>
 <blockquote class="blockquote">
 <p>In general, place user-facing functions at the top of files, and then helpers below them. For helpers used inside of helpers, place them even further down. Generally, do not define functions inside of functions unless they are very brief, anonymous functions. For example:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># good</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># good</span></span>
 <span><span class="va">main_function</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="op">{</span></span>
 <span> <span class="va">processed</span> <span class="op">&lt;-</span> <span class="fu">helper_function</span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span>
 <span> <span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">arrange</span><span class="op">(</span><span class="va">processed</span>, <span class="va">scaled</span><span class="op">)</span></span>
@@ -245,7 +258,7 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 <span> <span class="va">processed</span> <span class="op">&lt;-</span> <span class="fu">helper_function</span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span>
 <span> <span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">arrange</span><span class="op">(</span><span class="va">processed</span>, <span class="va">scaled</span><span class="op">)</span></span>
 <span> <span class="va">res</span></span>
-<span><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </blockquote>
 <p>In addition to code style preferences, there’s also a bunch of guidance on testing based on the <a href="https://github.com/simonpcouch/ensure/blob/main/inst/system_prompt.md">system prompt</a> of a tool I experimented with earlier in the year and some incantations to try and reduce sycophancy.</p>
 <p>As I mentioned in my last post, Claude Code loves to add code comments saying <em>what</em> it’s doing rather than <em>why</em>. I don’t see much value in these comments, but it’s also still remarkably difficult to get it to not add them. One trick I saw somewhere on the internet that works (sometimes😶) is to have the model repeat back to you what it read, affirming that it won’t add those comments:</p>
@@ -389,13 +402,14 @@ Note
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy

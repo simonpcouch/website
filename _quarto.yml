@@ -23,7 +23,7 @@ website:
   description: "Building tools for data scientists at Posit (née RStudio)."
   open-graph: true
   twitter-card: true
-  favicon: assets/cabin.png
+  favicon: assets/sc.png
   page-navigation: true
   back-to-top-navigation: true
   google-analytics: "G-DDB8R0B1ZW"
@@ -32,7 +32,7 @@ website:
       repo: "simonpcouch/website"
       theme: "github-light"
   navbar:
-    logo: assets/cabin.png
+    logo: assets/sc.png
     tools:
     - icon: github
       href: https://www.github.com/simonpcouch/website

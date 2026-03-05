@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.8.27">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="dcterms.date" content="2024-10-16">
 <title>Postprocessing is coming to tidymodels | Simon P. Couch – Simon P. Couch</title>
@@ -62,17 +62,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../assets/cabin.png" rel="icon" type="image/png">
+<link href="../../assets/sc.png" rel="icon" type="image/png">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-edbd123714173c2d5d98bd1252cecc27.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+<link href="../../site_libs/bootstrap/bootstrap-3b752abc8aa7891907126f0ff35813fe.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
   "collapse-after": 3,
@@ -115,7 +116,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -130,6 +131,18 @@ window.Quarto = {
   typesetMath
 };
 </script>
+<meta property="og:title" content="Postprocessing is coming to tidymodels | Simon P. Couch">
+<meta property="og:description" content="The tidymodels team has been hard at work on postprocessing, a set of features to adjust model predictions. The functionality includes a new package as well as changes across the framework.">
+<meta property="og:image" content="https://simonpcouch.com/blog/2024-10-16-postprocessing/featured.png">
+<meta property="og:site_name" content="Simon P. Couch">
+<meta property="og:image:height" content="453">
+<meta property="og:image:width" content="500">
+<meta name="twitter:title" content="Postprocessing is coming to tidymodels | Simon P. Couch">
+<meta name="twitter:description" content="The tidymodels team has been hard at work on postprocessing, a set of features to adjust model predictions. The functionality includes a new package as well as changes across the framework.">
+<meta name="twitter:image" content="https://simonpcouch.com/blog/2024-10-16-postprocessing/featured.png">
+<meta name="twitter:image-height" content="453">
+<meta name="twitter:image-width" content="500">
+<meta name="twitter:card" content="summary_large_image">
 </head>
 <body class="nav-fixed fullcontent quarto-light">
 
@@ -137,7 +150,7 @@ window.Quarto = {
   <header id="quarto-header" class="headroom fixed-top quarto-banner"><nav class="navbar navbar-expand-lg " data-bs-theme="dark"><div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="../../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../../assets/cabin.png" alt="" class="navbar-logo"></a>
+    <img src="../../assets/sc.png" alt="" class="navbar-logo light-content"><img src="../../assets/sc.png" alt="" class="navbar-logo dark-content"></a>
     <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Simon P. Couch</span>
     </a>
@@ -209,18 +222,18 @@ Note
 <p>We’re bristling with elation to share about a set of upcoming features for postprocessing with tidymodels. Postprocessors refine predictions outputted from machine learning models to improve predictive performance or better satisfy distributional limitations. The developmental versions of many tidymodels core packages include changes to support postprocessors, and we’re ready to share about our work and hear the community’s thoughts on our progress so far.</p>
 <p>Postprocessing support with tidymodels hasn’t yet made it to CRAN, but you can install the needed versions of tidymodels packages with the following code.</p>
 <div class="cell">
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html">pak</a></span><span class="op">(</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html">pak</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span></span>
 <span>    <span class="st">"tidymodels/"</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"tune"</span>, <span class="st">"workflows"</span>, <span class="st">"rsample"</span>, <span class="st">"tailor"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
-<span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Now, we load packages with those developmental versions installed.</p>
 <div class="cell">
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidymodels.tidymodels.org">tidymodels</a></span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidymodels.tidymodels.org">tidymodels</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/tidymodels/probably">probably</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/tidymodels/tailor">tailor</a></span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/tidymodels/tailor">tailor</a></span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Existing tidymodels users might have spotted something funky already; who is this tailor character?</p>
 <section id="meet-tailor" class="level2"><h2 class="anchored" data-anchor-id="meet-tailor">Meet tailor👋</h2>
@@ -265,43 +278,43 @@ Note
 </table>
 <p>First, users can initialize a tailor object with <code><a href="https://tailor.tidymodels.org/reference/tailor.html">tailor()</a></code>.</p>
 <div class="cell">
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://tailor.tidymodels.org/reference/tailor.html">tailor</a></span><span class="op">(</span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://tailor.tidymodels.org/reference/tailor.html">tailor</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## ── tailor ──────────────────────────────────────────────────────────────────────</span></span>
-<span><span class="co">## A postprocessor with 0 adjustments.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">## A postprocessor with 0 adjustments.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Tailors compose “adjustments,” analogous to steps from the recipes package.</p>
 <div class="cell">
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://tailor.tidymodels.org/reference/tailor.html">tailor</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://tailor.tidymodels.org/reference/tailor.html">tailor</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://tailor.tidymodels.org/reference/adjust_probability_threshold.html">adjust_probability_threshold</a></span><span class="op">(</span>threshold <span class="op">=</span> <span class="fl">.7</span><span class="op">)</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## ── tailor ──────────────────────────────────────────────────────────────────────</span></span>
 <span><span class="co">## A binary postprocessor with 1 adjustment:</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## • Adjust probability threshold to 0.7.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">## • Adjust probability threshold to 0.7.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>As an example, we’ll apply this tailor to the <code>two_class_example</code> data made available after loading tidymodels.</p>
 <div class="cell">
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">two_class_example</span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">two_class_example</span><span class="op">)</span></span>
 <span><span class="co">##    truth      Class1       Class2 predicted</span></span>
 <span><span class="co">## 1 Class2 0.003589243 0.9964107574    Class2</span></span>
 <span><span class="co">## 2 Class1 0.678621054 0.3213789460    Class1</span></span>
 <span><span class="co">## 3 Class2 0.110893522 0.8891064779    Class2</span></span>
 <span><span class="co">## 4 Class1 0.735161703 0.2648382969    Class1</span></span>
 <span><span class="co">## 5 Class2 0.016239960 0.9837600397    Class2</span></span>
-<span><span class="co">## 6 Class1 0.999275071 0.0007249286    Class1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">## 6 Class1 0.999275071 0.0007249286    Class1</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>This data gives the true value of an outcome variable <code>truth</code> as well as predicted probabilities (<code>Class1</code> and <code>Class2</code>). The hard class predictions, in <code>predicted</code>, are <code>"Class1"</code> if the probability assigned to <code>"Class1"</code> is above .5, and <code>"Class2"</code> otherwise.</p>
 <p>The model predicts <code>"Class1"</code> more often than it does <code>"Class2"</code>.</p>
 <div class="cell">
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">two_class_example</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu">count</span><span class="op">(</span><span class="va">predicted</span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">two_class_example</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu">count</span><span class="op">(</span><span class="va">predicted</span><span class="op">)</span></span>
 <span><span class="co">##   predicted   n</span></span>
 <span><span class="co">## 1    Class1 277</span></span>
-<span><span class="co">## 2    Class2 223</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">## 2    Class2 223</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>If we wanted the model to predict <code>"Class2"</code> more often, we could increase the probability threshold assigned to <code>"Class1"</code> above which the hard class prediction will be <code>"Class1"</code>. In the tailor package, this adjustment is implemented in <code><a href="https://tailor.tidymodels.org/reference/adjust_probability_threshold.html">adjust_probability_threshold()</a></code>, which can be situated in a tailor object.</p>
 <div class="cell">
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">tlr</span> <span class="op">&lt;-</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">tlr</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="https://tailor.tidymodels.org/reference/tailor.html">tailor</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://tailor.tidymodels.org/reference/adjust_probability_threshold.html">adjust_probability_threshold</a></span><span class="op">(</span>threshold <span class="op">=</span> <span class="fl">.7</span><span class="op">)</span></span>
 <span></span>
@@ -310,12 +323,12 @@ Note
 <span><span class="co">## ── tailor ──────────────────────────────────────────────────────────────────────</span></span>
 <span><span class="co">## A binary postprocessor with 1 adjustment:</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## • Adjust probability threshold to 0.7.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">## • Adjust probability threshold to 0.7.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>tailors must be fitted before they can predict on new data. For adjustments like <code><a href="https://tailor.tidymodels.org/reference/adjust_probability_threshold.html">adjust_probability_threshold()</a></code>, there’s no training that actually happens at the <code><a href="https://generics.r-lib.org/reference/fit.html">fit()</a></code> step besides recording the name and type of relevant variables. For other adjustments, like numeric calibration with <code><a href="https://tailor.tidymodels.org/reference/adjust_numeric_calibration.html">adjust_numeric_calibration()</a></code>, parameters are actually estimated at the <code><a href="https://generics.r-lib.org/reference/fit.html">fit()</a></code> stage and separate data should be used to train the postprocessor and evaluate its performance. More on this in <a href="#tailors-in-context">Tailors in context</a>.</p>
 <p>In this case, though, we can <code><a href="https://generics.r-lib.org/reference/fit.html">fit()</a></code> on the whole dataset. The resulting object is still a tailor, but is now flagged as trained.</p>
 <div class="cell">
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">tlr_trained</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/fit.html">fit</a></span><span class="op">(</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">tlr_trained</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/fit.html">fit</a></span><span class="op">(</span></span>
 <span>  <span class="va">tlr</span>,</span>
 <span>  <span class="va">two_class_example</span>,</span>
 <span>  outcome <span class="op">=</span> <span class="va">truth</span>,</span>
@@ -328,17 +341,17 @@ Note
 <span><span class="co">## ── tailor ──────────────────────────────────────────────────────────────────────</span></span>
 <span><span class="co">## A binary postprocessor with 1 adjustment:</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## • Adjust probability threshold to 0.7. [trained]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">## • Adjust probability threshold to 0.7. [trained]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>When used with a model <a href="https://workflows.tidymodels.org">workflow</a> via <a href="https://workflows.tidymodels.org/dev/reference/add_tailor.html"><code>add_tailor()</code></a>, the arguments to <code><a href="https://generics.r-lib.org/reference/fit.html">fit()</a></code> a tailor will be set automatically. Generally, as in recipes, we recommend that users add tailors to model workflows for training and prediction rather than using them standalone for greater ease of use and to prevent data leakage, but tailors are totally functional by themselves, too.</p>
 <p>Now, when passed new data, the trained tailor will determine the outputted class based on whether the probability assigned to the level <code>"Class1"</code> is above <code>.7</code>, resulting in more predictions of <code>"Class2"</code> than before.</p>
 <div class="cell">
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">tlr_trained</span>, <span class="va">two_class_example</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu">count</span><span class="op">(</span><span class="va">predicted</span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">tlr_trained</span>, <span class="va">two_class_example</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu">count</span><span class="op">(</span><span class="va">predicted</span><span class="op">)</span></span>
 <span><span class="co">## # A tibble: 2 × 2</span></span>
 <span><span class="co">##   predicted     n</span></span>
 <span><span class="co">##   &lt;fct&gt;     &lt;int&gt;</span></span>
 <span><span class="co">## 1 Class1      236</span></span>
-<span><span class="co">## 2 Class2      264</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">## 2 Class2      264</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Changing the probability threshold is one of many possible adjustments available in tailor.</p>
 <ul>
@@ -353,7 +366,7 @@ Note
 </section><section id="tailors-in-context" class="level2"><h2 class="anchored" data-anchor-id="tailors-in-context">Tailors in context</h2>
 <p>As an example, let’s model a study of food delivery times in minutes (i.e., the time from the initial order to receiving the food) for a single restaurant. The <code>deliveries</code> data is available upon loading the tidymodels meta-package.</p>
 <div class="cell">
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">deliveries</span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">deliveries</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># split into training and testing sets</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
@@ -385,38 +398,38 @@ Note
 <span><span class="co">## #   item_09 &lt;int&gt;, item_10 &lt;int&gt;, item_11 &lt;int&gt;, item_12 &lt;int&gt;, item_13 &lt;int&gt;,</span></span>
 <span><span class="co">## #   item_14 &lt;int&gt;, item_15 &lt;int&gt;, item_16 &lt;int&gt;, item_17 &lt;int&gt;, item_18 &lt;int&gt;,</span></span>
 <span><span class="co">## #   item_19 &lt;int&gt;, item_20 &lt;int&gt;, item_21 &lt;int&gt;, item_22 &lt;int&gt;, item_23 &lt;int&gt;,</span></span>
-<span><span class="co">## #   item_24 &lt;int&gt;, item_25 &lt;int&gt;, item_26 &lt;int&gt;, item_27 &lt;int&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">## #   item_24 &lt;int&gt;, item_25 &lt;int&gt;, item_26 &lt;int&gt;, item_27 &lt;int&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Let’s deliberately define a regression model that has poor predicted values: a boosted tree with only three ensemble members.</p>
 <div class="cell">
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">delivery_wflow</span> <span class="op">&lt;-</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">delivery_wflow</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu">workflow</span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">add_formula</span><span class="op">(</span><span class="va">time_to_delivery</span> <span class="op">~</span> <span class="va">.</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="fu">add_model</span><span class="op">(</span><span class="fu">boost_tree</span><span class="op">(</span>mode <span class="op">=</span> <span class="st">"regression"</span>, trees <span class="op">=</span> <span class="fl">3</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>  <span class="fu">add_model</span><span class="op">(</span><span class="fu">boost_tree</span><span class="op">(</span>mode <span class="op">=</span> <span class="st">"regression"</span>, trees <span class="op">=</span> <span class="fl">3</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Evaluating against resamples:</p>
 <div class="cell">
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">delivery_res</span> <span class="op">&lt;-</span> </span>
 <span>  <span class="fu">fit_resamples</span><span class="op">(</span></span>
 <span>    <span class="va">delivery_wflow</span>, </span>
 <span>    <span class="va">delivery_folds</span>, </span>
 <span>    control <span class="op">=</span> <span class="fu">control_resamples</span><span class="op">(</span>save_pred <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span>  <span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>  <span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The <span class="math inline">\(R^2\)</span> looks quite strong!</p>
 <div class="cell">
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">collect_metrics</span><span class="op">(</span><span class="va">delivery_res</span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">collect_metrics</span><span class="op">(</span><span class="va">delivery_res</span><span class="op">)</span></span>
 <span><span class="co">## # A tibble: 2 × 6</span></span>
 <span><span class="co">##   .metric .estimator  mean     n std_err .config             </span></span>
 <span><span class="co">##   &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;               </span></span>
 <span><span class="co">## 1 rmse    standard   9.52     10 0.0533  Preprocessor1_Model1</span></span>
-<span><span class="co">## 2 rsq     standard   0.853    10 0.00357 Preprocessor1_Model1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">## 2 rsq     standard   0.853    10 0.00357 Preprocessor1_Model1</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Let’s take a closer look at the predictions, though. How well are they calibrated? We can use the <code>cal_plot_regression()</code> helper from the probably package to put together a quick diagnostic plot.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">collect_predictions</span><span class="op">(</span><span class="va">delivery_res</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="fu">cal_plot_regression</span><span class="op">(</span>truth <span class="op">=</span> <span class="va">time_to_delivery</span>, estimate <span class="op">=</span> <span class="va">.pred</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">collect_predictions</span><span class="op">(</span><span class="va">delivery_res</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">cal_plot_regression</span><span class="op">(</span>truth <span class="op">=</span> <span class="va">time_to_delivery</span>, estimate <span class="op">=</span> <span class="va">.pred</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure"><p><img src="index_files/figure-html/predictions-bad-boost-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="480"></p>
@@ -427,24 +440,24 @@ Note
 <p>Ooof.</p>
 <p>In comes tailor! Numeric calibration can help address the correlated errors here. We can add a tailor to our existing workflow to “bump up” predictions towards their true value.</p>
 <div class="cell">
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">delivery_wflow_improved</span> <span class="op">&lt;-</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">delivery_wflow_improved</span> <span class="op">&lt;-</span></span>
 <span>  <span class="va">delivery_wflow</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="fu">add_tailor</span><span class="op">(</span><span class="fu"><a href="https://tailor.tidymodels.org/reference/tailor.html">tailor</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://tailor.tidymodels.org/reference/adjust_numeric_calibration.html">adjust_numeric_calibration</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>  <span class="fu">add_tailor</span><span class="op">(</span><span class="fu"><a href="https://tailor.tidymodels.org/reference/tailor.html">tailor</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://tailor.tidymodels.org/reference/adjust_numeric_calibration.html">adjust_numeric_calibration</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The resampling code looks the same from here.</p>
 <div class="cell">
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">delivery_res_improved</span> <span class="op">&lt;-</span> </span>
 <span>  <span class="fu">fit_resamples</span><span class="op">(</span></span>
 <span>    <span class="va">delivery_wflow_improved</span>, </span>
 <span>    <span class="va">delivery_folds</span>, </span>
 <span>    control <span class="op">=</span> <span class="fu">control_resamples</span><span class="op">(</span>save_pred <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span>  <span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>  <span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Checking out the same plot reveals a much better fit!</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">collect_predictions</span><span class="op">(</span><span class="va">delivery_res_improved</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="fu">cal_plot_regression</span><span class="op">(</span>truth <span class="op">=</span> <span class="va">time_to_delivery</span>, estimate <span class="op">=</span> <span class="va">.pred</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">collect_predictions</span><span class="op">(</span><span class="va">delivery_res_improved</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">cal_plot_regression</span><span class="op">(</span>truth <span class="op">=</span> <span class="va">time_to_delivery</span>, estimate <span class="op">=</span> <span class="va">.pred</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure"><p><img src="index_files/figure-html/predictions-better-boost-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="480"></p>
@@ -511,13 +524,14 @@ Note
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy

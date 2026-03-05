@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.8.27">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -66,17 +66,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../assets/cabin.png" rel="icon" type="image/png">
+<link href="../../assets/sc.png" rel="icon" type="image/png">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-edbd123714173c2d5d98bd1252cecc27.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-3b752abc8aa7891907126f0ff35813fe.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -115,6 +116,14 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 </script>
 
 
+<meta property="og:title" content="Redirecting from sub-domains with Netlify | Simon P. Couch">
+<meta property="og:description" content="After merging two websites that deployed from different branches, I had to figure out how to redirect my old blog posts to their new home.">
+<meta property="og:image" content="https://simonpcouch.com/blog/2022-07-20-netlify-subdomain-redirect/featured.jpg">
+<meta property="og:site_name" content="Simon P. Couch">
+<meta name="twitter:title" content="Redirecting from sub-domains with Netlify | Simon P. Couch">
+<meta name="twitter:description" content="After merging two websites that deployed from different branches, I had to figure out how to redirect my old blog posts to their new home.">
+<meta name="twitter:image" content="https://simonpcouch.com/blog/2022-07-20-netlify-subdomain-redirect/featured.jpg">
+<meta name="twitter:card" content="summary_large_image">
 </head>
 
 <body class="nav-fixed fullcontent quarto-light">
@@ -125,7 +134,8 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="../../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../../assets/cabin.png" alt="" class="navbar-logo">
+    <img src="../../assets/sc.png" alt="" class="navbar-logo light-content">
+    <img src="../../assets/sc.png" alt="" class="navbar-logo dark-content">
     </a>
     <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Simon P. Couch</span>
@@ -204,9 +214,9 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 <section id="the-problem" class="level2">
 <h2 class="anchored" data-anchor-id="the-problem">The problem</h2>
 <p>The content that used to live at:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>blog.simonpcouch.com<span class="sc">/</span>blog<span class="sc">/</span>blog<span class="sc">-</span>post<span class="sc">-</span>slug</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>blog.simonpcouch.com<span class="sc">/</span>blog<span class="sc">/</span>blog<span class="sc">-</span>post<span class="sc">-</span>slug</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>…now <em>also</em> lives at:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>simonpcouch.com<span class="sc">/</span>blog<span class="sc">/</span>blog<span class="sc">-</span>post<span class="sc">-</span>slug</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>simonpcouch.com<span class="sc">/</span>blog<span class="sc">/</span>blog<span class="sc">-</span>post<span class="sc">-</span>slug</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>I’d rather that those old blog posts only live in one place, and preferably on my new website. So, it’d be great if, when someone heads to that first URL, the website will automatically send them to the same post on my new one.</p>
 <p>Netlify’s <a href="https://docs.netlify.com/routing/redirects/redirect-options/">docs about redirects</a> seem pretty clear for the problem of redirecting <em>within</em> a domain, but I had trouble wrapping my head around how to solve this problem <em>between</em> domains. So, here’s the I-don’t-know-anything-about-web-dev version.</p>
 </section>
@@ -215,10 +225,10 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 <p>Let’s say your Branch Deploy deploys from the <code>blog</code> branch to <code>blog.yoursite.com</code>.</p>
 <p>You’ll first need to find your <a href="https://docs.netlify.com/configure-builds/overview/#definitions">publish directory</a> of your branch-deployed site. That’s the folder where your deploy-ready website lives.</p>
 <p>If you use the <code>netlify.toml</code> config file, that’s the <code>publish</code> entry in your <code>context.branch-deploy</code> config. Mine looked like this:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>[context.branch<span class="sc">-</span>deploy]</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>[context.branch<span class="sc">-</span>deploy]</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>command <span class="ot">=</span> <span class="st">"hugo --gc --minify -b $DEPLOY_PRIME_URL"</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>publish <span class="ot">=</span> <span class="st">"public"</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>HUGO_VERSION <span class="ot">=</span> <span class="st">"0.68.3"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>HUGO_VERSION <span class="ot">=</span> <span class="st">"0.68.3"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>If you’ve set up your site build settings on the Netlify site, that entry lives in <code>Site &gt; Site Settings &gt; Build &amp; Deploy &gt; Build settings &gt; Publish directory</code>.</p>
 <p>For Hugo sites, that publish directory is <code>public</code>.</p>
 <p>Navigate to that publish directory <em>on the branch that you’d like to redirect <strong>from</strong></em>. That is, I wanted to redirect from <code>blog.simonpcouch.com</code> to <code>simonpcouch.com</code>, so I went to <code>public</code> folder in the <code>blog</code> branch.</p>
@@ -228,7 +238,7 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 <section id="configuring-_redirects" class="level2">
 <h2 class="anchored" data-anchor-id="configuring-_redirects">Configuring <code>_redirects</code></h2>
 <p>Depending on your setup, this file might only be a couple lines. Generally, the format is like so:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>https<span class="sc">:</span><span class="er">//</span>blog.yoursite.com<span class="sc">/</span><span class="er">*</span> https<span class="sc">:</span><span class="er">//</span>www.yoursite.com<span class="sc">/</span>blog<span class="sc">/</span><span class="er">:</span>splat <span class="dv">301</span><span class="sc">!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>https<span class="sc">:</span><span class="er">//</span>blog.yoursite.com<span class="sc">/</span><span class="er">*</span> https<span class="sc">:</span><span class="er">//</span>www.yoursite.com<span class="sc">/</span>blog<span class="sc">/</span><span class="er">:</span>splat <span class="dv">301</span><span class="sc">!</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The LHS side entry matches URLs on the branch site, and RHS side entry matches URLs on the new site. Some things worth pointing out:</p>
 <ul>
 <li>The <code>*</code> at the end of the LHS URL means “anything can go here.” Anything that starts with <code>blog.yoursite.com/</code> will be matched.</li>
@@ -236,11 +246,11 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 <li>The <code>!</code> at the end of the RHS URL is weird. I’m just pattern matching. See <a href="https://docs.netlify.com/routing/redirects/rewrites-proxies/#shadowing">these docs from Netlify</a> for more on what’s happening there.</li>
 </ul>
 <p>Once you have this entry set up as you like, it seems like it’s also worth making sure you do the same thing to URLs that are prefixed with <code>http://</code> rather than <code>https://</code>. You’ll still want to send them to <code>https://</code> on the RHS, though. For example, if you were using the rule above, pair it with:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>http<span class="sc">:</span><span class="er">//</span>blog.yoursite.com<span class="sc">/</span><span class="er">*</span> https<span class="sc">:</span><span class="er">//</span>www.yoursite.com<span class="sc">/</span>blog<span class="sc">/</span><span class="er">:</span>splat <span class="dv">301</span><span class="sc">!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>http<span class="sc">:</span><span class="er">//</span>blog.yoursite.com<span class="sc">/</span><span class="er">*</span> https<span class="sc">:</span><span class="er">//</span>www.yoursite.com<span class="sc">/</span>blog<span class="sc">/</span><span class="er">:</span>splat <span class="dv">301</span><span class="sc">!</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>…on a new line.</p>
 <p>For an example, you can check out my redirect rules <a href="https://github.com/simonpcouch/website/blob/c531e8d/public/_redirects">here</a>:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>http<span class="sc">:</span><span class="er">//</span>blog.simonpcouch.com<span class="sc">/</span><span class="er">*</span> https<span class="sc">:</span><span class="er">//</span>www.simonpcouch.com<span class="sc">/</span><span class="er">:</span>splat <span class="dv">301</span><span class="sc">!</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>https<span class="sc">:</span><span class="er">//</span>blog.simonpcouch.com<span class="sc">/</span><span class="er">*</span> https<span class="sc">:</span><span class="er">//</span>www.simonpcouch.com<span class="sc">/</span><span class="er">:</span>splat <span class="dv">301</span><span class="sc">!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>http<span class="sc">:</span><span class="er">//</span>blog.simonpcouch.com<span class="sc">/</span><span class="er">*</span> https<span class="sc">:</span><span class="er">//</span>www.simonpcouch.com<span class="sc">/</span><span class="er">:</span>splat <span class="dv">301</span><span class="sc">!</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>https<span class="sc">:</span><span class="er">//</span>blog.simonpcouch.com<span class="sc">/</span><span class="er">*</span> https<span class="sc">:</span><span class="er">//</span>www.simonpcouch.com<span class="sc">/</span><span class="er">:</span>splat <span class="dv">301</span><span class="sc">!</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>All of the URLs for blog posts on my old website just have that first <code>blog.</code> bit taken away. Slick. 🦆</p>
 <hr>
 <p>I’m not sure how niche this problem is and how obvious this solution may be to others. I guess I could set up analytics on this website and see how many people view this post, but that would require <em>more</em> messing around with web stuff. 🤪</p>
@@ -301,13 +311,14 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy

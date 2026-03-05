@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.8.27">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="dcterms.date" content="2024-04-08">
 <title>Measuring elapsed time to fit with tidymodels | Simon P. Couch – Simon P. Couch</title>
@@ -62,17 +62,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../assets/cabin.png" rel="icon" type="image/png">
+<link href="../../assets/sc.png" rel="icon" type="image/png">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-edbd123714173c2d5d98bd1252cecc27.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+<link href="../../site_libs/bootstrap/bootstrap-3b752abc8aa7891907126f0ff35813fe.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
   "collapse-after": 3,
@@ -105,6 +106,18 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 </script>
+<meta property="og:title" content="Measuring elapsed time to fit with tidymodels | Simon P. Couch">
+<meta property="og:description" content="The development versions of tidymodels packages now include tools to benchmark training time.">
+<meta property="og:image" content="https://simonpcouch.com/blog/2024-04-08-fit-time/featured.png">
+<meta property="og:site_name" content="Simon P. Couch">
+<meta property="og:image:height" content="500">
+<meta property="og:image:width" content="500">
+<meta name="twitter:title" content="Measuring elapsed time to fit with tidymodels | Simon P. Couch">
+<meta name="twitter:description" content="The development versions of tidymodels packages now include tools to benchmark training time.">
+<meta name="twitter:image" content="https://simonpcouch.com/blog/2024-04-08-fit-time/featured.png">
+<meta name="twitter:image-height" content="500">
+<meta name="twitter:image-width" content="500">
+<meta name="twitter:card" content="summary_large_image">
 </head>
 <body class="nav-fixed fullcontent quarto-light">
 
@@ -112,7 +125,7 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
   <header id="quarto-header" class="headroom fixed-top quarto-banner"><nav class="navbar navbar-expand-lg " data-bs-theme="dark"><div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="../../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../../assets/cabin.png" alt="" class="navbar-logo"></a>
+    <img src="../../assets/sc.png" alt="" class="navbar-logo light-content"><img src="../../assets/sc.png" alt="" class="navbar-logo dark-content"></a>
     <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Simon P. Couch</span>
     </a>
@@ -174,21 +187,21 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 <p>A year ago, <a href="https://emilhvitfeldt.com/">Emil</a> put together <a href="https://github.com/tidymodels/workflows/pull/191">a</a> <a href="https://github.com/tidymodels/recipes/pull/1071">proof</a> <a href="https://github.com/tidymodels/parsnip/pull/853">of</a> <a href="https://github.com/tidymodels/hardhat/pull/218">concept</a> for a function that would return measurements of how long it took for different tidymodels objects to fit. This had been a longstanding feature request across many of our repositories. Then, we got pretty busy implementing <a href="https://tidyverse.org/blog/2024/04/tidymodels-survival-analysis/">survival analysis</a> and <a href="https://www.tidyverse.org/blog/2024/03/tidymodels-fairness/">fairness metrics</a> and only recently picked these changes back up to polish off the rough edges. We just merged them into the main developmental versions of the packages and are interested in hearing what folks think before they head off to CRAN!</p>
 <p>To install the packages with these changes, use the following code:</p>
 <div class="cell">
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html">pak</a></span><span class="op">(</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html">pak</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span></span>
 <span>    <span class="st">"tidymodels/"</span>, </span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"workflows"</span>, <span class="st">"recipes"</span>, <span class="st">"parsnip"</span>, <span class="st">"hardhat"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
-<span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Now, loading the tidymodels packages:</p>
 <div class="cell">
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidymodels.tidymodels.org">tidymodels</a></span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidymodels.tidymodels.org">tidymodels</a></span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <section id="getting-started" class="level2"><h2 class="anchored" data-anchor-id="getting-started">Getting started</h2>
 <p>For a simpler example, let’s start off with just fitting a parsnip model. We’ll use the <code>taxi</code> data from modeldata as an example, predicting whether a trip will result in a <code>tip</code> or not:</p>
 <div class="cell">
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">taxi</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">taxi</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 10,000 × 7
    tip   distance company                      local dow   month  hour
@@ -208,11 +221,11 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 </div>
 <p>The following code fits an XGBoost boosted tree with parsnip:</p>
 <div class="cell">
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">taxi_fit</span> <span class="op">&lt;-</span> <span class="fu">fit</span><span class="op">(</span><span class="fu">boost_tree</span><span class="op">(</span>mode <span class="op">=</span> <span class="st">"classification"</span><span class="op">)</span>, <span class="va">tip</span> <span class="op">~</span> <span class="va">.</span>, <span class="va">taxi</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">taxi_fit</span> <span class="op">&lt;-</span> <span class="fu">fit</span><span class="op">(</span><span class="fu">boost_tree</span><span class="op">(</span>mode <span class="op">=</span> <span class="st">"classification"</span><span class="op">)</span>, <span class="va">tip</span> <span class="op">~</span> <span class="va">.</span>, <span class="va">taxi</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>With these new package versions, we now have access to a function called <code>extract_fit_time()</code> that will return the elapsed time to fit the model:</p>
 <div class="cell">
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">extract_fit_time</span><span class="op">(</span><span class="va">taxi_fit</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">extract_fit_time</span><span class="op">(</span><span class="va">taxi_fit</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 2
   stage_id   elapsed
@@ -233,18 +246,18 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 </div>
 <p>When viewed through the lens of elapsed time, the portion of the diagram in orange, labeled <strong>Step 2)</strong>, is what is measured by <code>extract_fit_time()</code>. The portions of the elapsed time shown in green, labeled <strong>Steps 1)</strong> and <strong>3)</strong>, are tidymodels’ “overhead.” That could be measured as the difference between <code><a href="https://rdrr.io/r/base/system.time.html">system.time()</a></code> and <code>extract_fit_time()</code>. Let’s calculate that difference exactly:</p>
 <div class="cell">
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">taxi_elapsed</span> <span class="op">&lt;-</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">taxi_elapsed</span> <span class="op">&lt;-</span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="op">{</span></span>
 <span>    <span class="va">taxi_fit</span> <span class="op">&lt;-</span> <span class="fu">fit</span><span class="op">(</span><span class="fu">boost_tree</span><span class="op">(</span>mode <span class="op">=</span> <span class="st">"classification"</span><span class="op">)</span>, <span class="va">tip</span> <span class="op">~</span> <span class="va">.</span>, <span class="va">taxi</span><span class="op">)</span></span>
-<span>  <span class="op">}</span><span class="op">)</span><span class="op">[[</span><span class="st">"elapsed"</span><span class="op">]</span><span class="op">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>  <span class="op">}</span><span class="op">)</span><span class="op">[[</span><span class="st">"elapsed"</span><span class="op">]</span><span class="op">]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Juxtaposing those two values:</p>
 <div class="cell">
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">taxi_elapsed</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">taxi_elapsed</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.119</code></pre>
 </div>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">extract_fit_time</span><span class="op">(</span><span class="va">taxi_fit</span><span class="op">)</span><span class="op">$</span><span class="va">elapsed</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">extract_fit_time</span><span class="op">(</span><span class="va">taxi_fit</span><span class="op">)</span><span class="op">$</span><span class="va">elapsed</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.113</code></pre>
 </div>
@@ -267,34 +280,34 @@ Note
 </section><section id="resampling-a-model" class="level2"><h2 class="anchored" data-anchor-id="resampling-a-model">Resampling a model</h2>
 <p>As an example, let’s tune this XGBoost model using cross-validation. First, we’ll split the taxi data up into training and testing sets, resampling the training set:</p>
 <div class="cell">
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
 <span><span class="va">taxi_split</span> <span class="op">&lt;-</span> <span class="fu">initial_split</span><span class="op">(</span><span class="va">taxi</span>, prop <span class="op">=</span> <span class="fl">0.8</span>, strata <span class="op">=</span> <span class="va">tip</span><span class="op">)</span></span>
 <span><span class="va">taxi_train</span> <span class="op">&lt;-</span> <span class="fu">training</span><span class="op">(</span><span class="va">taxi_split</span><span class="op">)</span></span>
 <span><span class="va">taxi_test</span> <span class="op">&lt;-</span> <span class="fu">testing</span><span class="op">(</span><span class="va">taxi_split</span><span class="op">)</span></span>
-<span><span class="va">taxi_folds</span> <span class="op">&lt;-</span> <span class="fu">vfold_cv</span><span class="op">(</span><span class="va">taxi_train</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="va">taxi_folds</span> <span class="op">&lt;-</span> <span class="fu">vfold_cv</span><span class="op">(</span><span class="va">taxi_train</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Then, defining a boosted tree model that tunes <code>learn_rate</code> and <code>trees</code>; boosted tree ensembles with higher <code>learn_rate</code>s might not perform as effectively, but they require fewer <code>trees</code> in the ensemble and thus train faster. We’d like to find the “sweet spot” of combinations of these parameters.</p>
 <div class="cell">
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">bt</span> <span class="op">&lt;-</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">bt</span> <span class="op">&lt;-</span> </span>
 <span>  <span class="fu">boost_tree</span><span class="op">(</span></span>
 <span>    mode <span class="op">=</span> <span class="st">"classification"</span>, </span>
 <span>    learn_rate <span class="op">=</span> <span class="fu">tune</span><span class="op">(</span><span class="op">)</span>, </span>
 <span>    trees <span class="op">=</span> <span class="fu">tune</span><span class="op">(</span><span class="op">)</span></span>
-<span>  <span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>  <span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Now, we’ll conduct a grid search for the best values of <code>learn_rate</code> and <code>trees</code>, passing the new <code>extract_fit_time()</code> function to the <a href="https://tune.tidymodels.org/reference/control_grid.html">control function <code>control_grid()</code></a>. Every time we fit a model when resampling (<code>nrow(taxi_folds) * grid = 10 * 10 = 100</code> times!), we’ll extract how long it took the engine to fit.</p>
 <div class="cell" data-hash="index_cache/html/bt_res_6a1a2ffcc08f16634532e53fb7e53eca">
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">bt_res</span> <span class="op">&lt;-</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">bt_res</span> <span class="op">&lt;-</span> </span>
 <span>  <span class="fu">tune_grid</span><span class="op">(</span></span>
 <span>    <span class="va">bt</span>, </span>
 <span>    <span class="va">tip</span> <span class="op">~</span> <span class="va">.</span>, </span>
 <span>    <span class="va">taxi_folds</span>, </span>
 <span>    control <span class="op">=</span> <span class="fu">control_grid</span><span class="op">(</span>extract <span class="op">=</span> <span class="va">extract_fit_time</span><span class="op">)</span></span>
-<span>  <span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>  <span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>This is what the <code>bt_res</code> object looks like:</p>
 <div class="cell">
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">bt_res</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">bt_res</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># Tuning results
 # 10-fold cross-validation 
@@ -316,9 +329,9 @@ Note
 </section><section id="understanding-fit-time-and-performance" class="level2"><h2 class="anchored" data-anchor-id="understanding-fit-time-and-performance">Understanding fit time and performance</h2>
 <p>Every column in a tuning result that’s prefixed with a <code>.</code> has a <code>collect_*()</code> function associated with it that helps to summarize that column. We’ll use <code>collect_extracts()</code> to collect information on the extracts which are, in this case, elapsed fit times:</p>
 <div class="cell">
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">bt_extracts</span> <span class="op">&lt;-</span> <span class="fu">collect_extracts</span><span class="op">(</span><span class="va">bt_res</span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">bt_extracts</span> <span class="op">&lt;-</span> <span class="fu">collect_extracts</span><span class="op">(</span><span class="va">bt_res</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">bt_extracts</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="va">bt_extracts</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 100 × 5
    id     trees learn_rate .extracts        .config              
@@ -338,9 +351,9 @@ Note
 </div>
 <p>Unnesting on <code>.extracts</code> so we can see some of those timings:</p>
 <div class="cell">
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">bt_extracts_unnested</span> <span class="op">&lt;-</span> <span class="va">bt_extracts</span> <span class="op">%&gt;%</span> <span class="fu">unnest</span><span class="op">(</span>cols <span class="op">=</span> <span class="st">".extracts"</span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">bt_extracts_unnested</span> <span class="op">&lt;-</span> <span class="va">bt_extracts</span> <span class="op">%&gt;%</span> <span class="fu">unnest</span><span class="op">(</span>cols <span class="op">=</span> <span class="st">".extracts"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">bt_extracts_unnested</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="va">bt_extracts_unnested</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 100 × 7
    id     trees learn_rate stage    process_id elapsed .config              
@@ -360,13 +373,13 @@ Note
 </div>
 <p>The times to fit vary quite a bit between workflows, to say the least:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="va">bt_extracts_unnested</span><span class="op">)</span> <span class="op">+</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="va">bt_extracts_unnested</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">elapsed</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">geom_histogram</span><span class="op">(</span>binwidth <span class="op">=</span> <span class="fl">1</span>, boundary <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">scale_x_continuous</span><span class="op">(</span></span>
 <span>    breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">bt_extracts_unnested</span><span class="op">$</span><span class="va">elapsed</span><span class="op">)</span> <span class="op">+</span> <span class="fl">1</span>, <span class="fl">1L</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">labs</span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Elapsed fit time"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>  <span class="fu">labs</span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Elapsed fit time"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure"><p><img src="index_files/figure-html/plot-un-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="A ggplot histogram showing elapsed fit times varying from almost 0 to around 10. The distribution is uniform; each bin contains nearly the same count of values." width="672"></p>
@@ -376,10 +389,10 @@ Note
 </div>
 <p>Almost all of this variation in elapsed time is explained by the value of <code>trees</code>:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="va">bt_extracts_unnested</span><span class="op">)</span> <span class="op">+</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="va">bt_extracts_unnested</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">elapsed</span>, y <span class="op">=</span> <span class="va">trees</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">geom_jitter</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">labs</span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Elapsed fit time"</span>, y <span class="op">=</span> <span class="st">"# of trees"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>  <span class="fu">labs</span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Elapsed fit time"</span>, y <span class="op">=</span> <span class="st">"# of trees"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure"><p><img src="index_files/figure-html/plot-bi-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="A ggplot dotplot showing a very strong, linear, positive correlation between elapsed fit time and number of trees." width="672"></p>
@@ -390,9 +403,9 @@ Note
 <p>The “clumps” of points are the 10 different unique combinations of <code>trees</code> and <code>learn_rate</code>s that are fitted on 10 different resamples; identical hyperparameters lead to very similar fit times, in this case.</p>
 <p>In use cases where we will go on to resample/train this model many times (such as in iterative search or continuous training) it may be advantageous for us to pick a model that fits as quickly as possible as long as it has comparable performance with the overall most performant model. We can integrate the information from <code>collect_metrics()</code> with <code>collect_extracts()</code> to see if there any quick-fitting models with comparable performance. First, collecting metrics:</p>
 <div class="cell">
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">bt_metrics</span> <span class="op">&lt;-</span> <span class="fu">collect_metrics</span><span class="op">(</span><span class="va">bt_res</span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">bt_metrics</span> <span class="op">&lt;-</span> <span class="fu">collect_metrics</span><span class="op">(</span><span class="va">bt_res</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">bt_metrics</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="va">bt_metrics</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 30 × 8
    trees learn_rate .metric     .estimator   mean     n  std_err .config        
@@ -412,7 +425,7 @@ Note
 </div>
 <p>Joining this output:</p>
 <div class="cell">
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">bt_metrics_extracts</span> <span class="op">&lt;-</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">bt_metrics_extracts</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu">left_join</span><span class="op">(</span></span>
 <span>    <span class="co"># metrics, summarized across resamples</span></span>
 <span>    <span class="va">bt_metrics</span>,</span>
@@ -426,7 +439,7 @@ Note
 <span>  <span class="op">)</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu">relocate</span><span class="op">(</span><span class="va">elapsed</span>, .before <span class="op">=</span> <span class="fu">everything</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">bt_metrics_extracts</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="va">bt_metrics_extracts</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 30 × 9
    elapsed trees learn_rate .metric     .estimator   mean     n  std_err .config
@@ -446,11 +459,11 @@ Note
 </div>
 <p>Now, plotting:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="va">bt_metrics_extracts</span><span class="op">)</span> <span class="op">+</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="va">bt_metrics_extracts</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">elapsed</span>, y <span class="op">=</span> <span class="va">mean</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">facet_wrap</span><span class="op">(</span><span class="op">~</span><span class="va">.metric</span>, scales <span class="op">=</span> <span class="st">"free"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">labs</span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Elapsed fit time"</span>, y <span class="op">=</span> <span class="st">"Metric value"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>  <span class="fu">labs</span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Elapsed fit time"</span>, y <span class="op">=</span> <span class="st">"Metric value"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure"><p><img src="index_files/figure-html/plot-perf-vs-time-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Three faceted ggplot dotplots, with different performance metrics in each plot, show that metric values don't correlate well with elapsed time to fit in this case." width="672"></p>
@@ -475,9 +488,9 @@ Note
 </section><section id="model-selection" class="level2"><h2 class="anchored" data-anchor-id="model-selection">Model selection</h2>
 <p>We can use the <code>select_best()</code> function from tune to pick the most performant model, without regard for elapsed fit time:</p>
 <div class="cell">
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">bt_most_performant</span> <span class="op">&lt;-</span> <span class="fu">select_best</span><span class="op">(</span><span class="va">bt_res</span>, metric <span class="op">=</span> <span class="st">"roc_auc"</span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">bt_most_performant</span> <span class="op">&lt;-</span> <span class="fu">select_best</span><span class="op">(</span><span class="va">bt_res</span>, metric <span class="op">=</span> <span class="st">"roc_auc"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">bt_most_performant</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="va">bt_most_performant</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 3
   trees learn_rate .config              
@@ -488,7 +501,7 @@ Note
 <p>Using <code>roc_auc()</code>, ignoring fit time, we’d choose the model configuration Preprocessor1_Model01, corresponding to an <code>roc_auc()</code> of 0.639.</p>
 <p>Instead, we could choose the quickest-fitting model with a performance value within one standard error of the most performant model.</p>
 <div class="cell">
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">best_fit</span> <span class="op">&lt;-</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">best_fit</span> <span class="op">&lt;-</span></span>
 <span>  <span class="va">bt_metrics_extracts</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">.metric</span> <span class="op">==</span> <span class="st">"roc_auc"</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu">arrange</span><span class="op">(</span><span class="fu">desc</span><span class="op">(</span><span class="va">mean</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
@@ -501,7 +514,7 @@ Note
 <span>  <span class="fu">arrange</span><span class="op">(</span><span class="va">elapsed</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu">slice</span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">best_speedy_fit</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="va">best_speedy_fit</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 9
   elapsed trees learn_rate .metric .estimator  mean     n std_err .config       
@@ -578,13 +591,14 @@ Note
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
