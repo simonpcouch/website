@@ -10,7 +10,15 @@
 <atom:link href="https://simonpcouch.com/blog/index.xml" rel="self" type="application/rss+xml"/>
 <description>A data science blog</description>
 <generator>quarto-1.8.27</generator>
-<lastBuildDate>Thu, 05 Mar 2026 06:00:00 GMT</lastBuildDate>
+<lastBuildDate>Fri, 06 Mar 2026 06:00:00 GMT</lastBuildDate>
+<item>
+  <title>How Posit AI’s Next Edit Suggestions work</title>
+  <link>https://simonpcouch.com/blog/2026-03-06-nes/</link>
+  <description><![CDATA[ I just loaded some data from the <a href="https://simonpcouch.github.io/forested/">forested package</a> into my R environment. It has a bunch of measurements of forest attributes across Washington State: ]]></description>
+  <guid>https://simonpcouch.com/blog/2026-03-06-nes/</guid>
+  <pubDate>Fri, 06 Mar 2026 06:00:00 GMT</pubDate>
+  <media:content url="https://simonpcouch.com/blog/2026-03-06-nes/featured.png" medium="image" type="image/png" height="144" width="144"/>
+</item>
 <item>
   <title>Introducing Posit AI</title>
   <link>https://simonpcouch.com/blog/2026-03-05-posit-ai/</link>
@@ -162,14 +170,6 @@
   <guid>https://simonpcouch.com/blog/2025-04-01-gemini-2-5-pro/</guid>
   <pubDate>Wed, 02 Apr 2025 05:00:00 GMT</pubDate>
   <media:content url="https://simonpcouch.com/blog/2025-04-01-gemini-2-5-pro/featured.png" medium="image" type="image/png" height="147" width="144"/>
-</item>
-<item>
-  <title>How I’m Using Claude Code to Develop R Packages</title>
-  <link>https://simonpcouch.com/blog/2025-03-26-claude-code/</link>
-  <description><![CDATA[ Since the release of <a href="https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/overview">Claude Code</a> a few weeks ago, I’ve been experimenting with using the tool to develop R packages. I’ve come to really appreciate it as part of my LLM toolkit, but it’s definitely taken a bit of getting used to. ]]></description>
-  <guid>https://simonpcouch.com/blog/2025-03-26-claude-code/</guid>
-  <pubDate>Wed, 26 Mar 2025 05:00:00 GMT</pubDate>
-  <media:content url="https://simonpcouch.com/blog/2025-03-26-claude-code/featured.png" medium="image" type="image/png" height="143" width="144"/>
 </item>
 </channel>
 </rss>
