@@ -117,12 +117,12 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 <meta property="og:description" content="Our supercomplete feature is powered by Qwen3-8B and some plain-old prompt engineering.">
 <meta property="og:image" content="https://simonpcouch.com/blog/2026-03-06-nes/featured.png">
 <meta property="og:site_name" content="Simon P. Couch">
-<meta property="og:image:height" content="501">
+<meta property="og:image:height" content="491">
 <meta property="og:image:width" content="500">
 <meta name="twitter:title" content="How Posit AI’s Next Edit Suggestions work – Simon P. Couch">
 <meta name="twitter:description" content="Our supercomplete feature is powered by Qwen3-8B and some plain-old prompt engineering.">
 <meta name="twitter:image" content="https://simonpcouch.com/blog/2026-03-06-nes/featured.png">
-<meta name="twitter:image-height" content="501">
+<meta name="twitter:image-height" content="491">
 <meta name="twitter:image-width" content="500">
 <meta name="twitter:card" content="summary_large_image">
 </head>
@@ -191,8 +191,8 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 <main class="content quarto-banner-title-block column-page" id="quarto-document-content"><!-- user-provided yaml closeread style options --><style>
         :root {
           --cr-section-background-color: #F3F3EE;
---cr-narrative-sidebar-width: minmax(350px, 1fr);
 --cr-poem-font-family: “Fira Code”, “SF Mono”, “Menlo”, monospace;
+--cr-narrative-sidebar-width: minmax(350px, 1fr);
         }
       </style>
 <style>
@@ -246,7 +246,7 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 <p>The first thing you might reach for is the fastest model on a frontier lab’s API. Claude Haiku 4.5, Gemini 3.1 Flash-Lite, GPT-4.1 Nano, and GPT-5 Nano all score reasonably well—but their latency is far too high for real-time suggestions.</p>
 </div>
 </div>
-<div class="trigger new-trigger" data-highlight="1" data-focus-on="cr-plot-frontier">
+<div class="trigger new-trigger" data-focus-on="cr-plot-frontier" data-highlight="1">
 <div class="narrative">
 <p>Even Gemini 3.1 Flash-Lite, the fastest of them, takes over a second per suggestion.</p>
 </div>
@@ -367,7 +367,7 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 <p>The system prompt is pretty minimal.</p>
 </div>
 </div>
-<div class="trigger new-trigger" data-highlight="8-10" data-focus-on="cr-system-intro">
+<div class="trigger new-trigger" data-focus-on="cr-system-intro" data-highlight="8-10">
 <div class="narrative">
 <p>The “default” behavior of these models is to omit portions of the code that they’re not editing.</p>
 </div>
@@ -410,17 +410,17 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 <p>The file context provides a long excerpt from the file that the user is editing.</p>
 </div>
 </div>
-<div class="trigger new-trigger" data-highlight="5" data-focus-on="cr-file-context">
+<div class="trigger new-trigger" data-focus-on="cr-file-context" data-highlight="5">
 <div class="narrative">
 <p>We always use 5 backticks as code fences so that we can include triple backticks from Quarto / RMarkdown / Markdown documents without issue.</p>
 </div>
 </div>
-<div class="trigger new-trigger" data-highlight="5" data-focus-on="cr-file-context">
+<div class="trigger new-trigger" data-focus-on="cr-file-context" data-highlight="5">
 <div class="narrative">
 <p>We use 5 backticks rather than some other delineator as a way of “swimming downstream” with LLMs’ default behavior. Models usually want to start code cells with triple backticks; with other dilineators, if the model accidentially started with triple backticks, the response had to be thrown away.</p>
 </div>
 </div>
-<div class="trigger new-trigger" data-highlight="15" data-focus-on="cr-file-context">
+<div class="trigger new-trigger" data-focus-on="cr-file-context" data-highlight="15">
 <div class="narrative">
 <p>The user’s cursor is marked with a <code>&lt;cursor&gt;</code> tag.</p>
 </div>
@@ -430,27 +430,27 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 <p>The next piece of the user prompt is the edit history.</p>
 </div>
 </div>
-<div class="trigger new-trigger" data-highlight="11-17" data-focus-on="cr-edit-history">
+<div class="trigger new-trigger" data-focus-on="cr-edit-history" data-highlight="11-17">
 <div class="narrative">
 <p>Our initial reflex was that the most intuitive way to show edits would be diffs. e.g., inside of an excerpt, a code cell with + on the lines added and - on the lines deleted.</p>
 </div>
 </div>
-<div class="trigger new-trigger" data-highlight="11-17" data-focus-on="cr-edit-history">
+<div class="trigger new-trigger" data-focus-on="cr-edit-history" data-highlight="11-17">
 <div class="narrative">
 <p>In evals, I found that this was not actually the case. I call this edit history format a “narrative” format, where we post-process the edits to situate them in natural language. Models seem to “see” the changes much better this way.</p>
 </div>
 </div>
-<div class="trigger new-trigger" data-highlight="11-17" data-focus-on="cr-edit-history">
+<div class="trigger new-trigger" data-focus-on="cr-edit-history" data-highlight="11-17">
 <div class="narrative">
 <p>We only include one line of file context around the changes on either side.</p>
 </div>
 </div>
-<div class="trigger new-trigger" data-highlight="19-26" data-focus-on="cr-edit-history">
+<div class="trigger new-trigger" data-focus-on="cr-edit-history" data-highlight="19-26">
 <div class="narrative">
 <p>I don’t know why it works, but one hypothesis is that it says what happened—the important part—twice: first in the narrative, second in the resulting code cell.</p>
 </div>
 </div>
-<div class="trigger new-trigger" data-highlight="19-26" data-focus-on="cr-edit-history">
+<div class="trigger new-trigger" data-focus-on="cr-edit-history" data-highlight="19-26">
 <div class="narrative">
 <p>The “real” version of this edit history includes many more edits–up to 10.</p>
 </div>
@@ -460,22 +460,22 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 <p>The prompt also includes metadata on the variables present in the user’s R or Python environment.</p>
 </div>
 </div>
-<div class="trigger new-trigger" data-highlight="5-23" data-focus-on="cr-variables">
+<div class="trigger new-trigger" data-focus-on="cr-variables" data-highlight="5-23">
 <div class="narrative">
 <p>Here, the model can see every column name and type in the <code>forested</code> data frame.</p>
 </div>
 </div>
-<div class="trigger new-trigger" data-highlight="5-23" data-focus-on="cr-variables">
+<div class="trigger new-trigger" data-focus-on="cr-variables" data-highlight="5-23">
 <div class="narrative">
 <p>This is just enough information to write code to work the data and nothing more. Notably, we don’t include the <em>values</em> of columns or other variables in the session.</p>
 </div>
 </div>
-<div class="trigger new-trigger" data-highlight="5-23" data-focus-on="cr-variables">
+<div class="trigger new-trigger" data-focus-on="cr-variables" data-highlight="5-23">
 <div class="narrative">
 <p>We use a few heuristics to determine which variables to show in this part of the prompt, but broadly, if it’s in the file excerpt, metadata on it will appear here.</p>
 </div>
 </div>
-<div class="trigger new-trigger" data-highlight="17-19" data-focus-on="cr-variables">
+<div class="trigger new-trigger" data-focus-on="cr-variables" data-highlight="17-19">
 <div class="narrative">
 <p>This is how the model knows to suggest <code>canopy_cover</code>. Without this information, it would have to make a column name up; other NES systems do this regularly with data science code.</p>
 </div>
@@ -485,17 +485,17 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 <p>Finally, the prompt specifies exactly which lines the model should rewrite.</p>
 </div>
 </div>
-<div class="trigger new-trigger" data-highlight="6-10" data-focus-on="cr-region">
+<div class="trigger new-trigger" data-focus-on="cr-region" data-highlight="6-10">
 <div class="narrative">
 <p>Note that this is a much smaller excerpt than 5 lines above and below the cursor. Since we’re in a Quarto document here, we use a different heuristic.</p>
 </div>
 </div>
-<div class="trigger new-trigger" data-highlight="6-10" data-focus-on="cr-region">
+<div class="trigger new-trigger" data-focus-on="cr-region" data-highlight="6-10">
 <div class="narrative">
 <p>Even frontier models like Claude Opus 4.6 have trouble outputting code with mismatched backticks. It’s possible that, if we had just taken some fixed number of lines above and below the cursor, there’d be code fences without a “match” in the region. If the model mistakenly adds or removes them, that’d be processed as a proposed edit and, if accepted, botch the Quarto formatting.</p>
 </div>
 </div>
-<div class="trigger new-trigger" data-highlight="7-9" data-focus-on="cr-region">
+<div class="trigger new-trigger" data-focus-on="cr-region" data-highlight="7-9">
 <div class="narrative">
 <p>Instead, we start at the cursor and “walk” in either direction. If we hit code fences, we stop.</p>
 </div>
@@ -599,7 +599,7 @@ gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
 <p><br><br><br></p>
 <div class="cr-section cr-column-screen sidebar-left">
 <div class="narrative-col">
-<div class="trigger new-trigger" data-highlight="3" data-focus-on="cr-assistant">
+<div class="trigger new-trigger" data-focus-on="cr-assistant" data-highlight="3">
 <div class="narrative">
 <p>The model suggests <code>color = canopy_cover</code>.</p>
 </div>

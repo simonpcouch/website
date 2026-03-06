@@ -17,7 +17,7 @@
   <description><![CDATA[ I just loaded some data from the <a href="https://simonpcouch.github.io/forested/">forested package</a> into my R environment. It has a bunch of measurements of forest attributes across Washington State: ]]></description>
   <guid>https://simonpcouch.com/blog/2026-03-06-nes/</guid>
   <pubDate>Fri, 06 Mar 2026 06:00:00 GMT</pubDate>
-  <media:content url="https://simonpcouch.com/blog/2026-03-06-nes/featured.png" medium="image" type="image/png" height="144" width="144"/>
+  <media:content url="https://simonpcouch.com/blog/2026-03-06-nes/featured.png" medium="image" type="image/png" height="141" width="144"/>
 </item>
 <item>
   <title>Introducing Posit AI</title>
