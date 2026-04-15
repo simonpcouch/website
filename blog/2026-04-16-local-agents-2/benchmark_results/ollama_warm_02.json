@@ -1,0 +1,8 @@
+{
+  "prompt_tokens": 4683,
+  "input_throughput": 238609.5043,
+  "ttft": 0.0196,
+  "output_tokens": 225,
+  "output_toks": 53.4873,
+  "wall_time": 4.421
+}
