@@ -1,0 +1,234 @@
+---
+title: "LLMs running on my laptop can drive coding agents now"
+date: '2026-04-15'
+tags:
+  - ai
+subtitle: "Qwen 3.5 and Gemma 4 are a step change for local coding agents."
+image: featured.png
+summary: ''
+---
+
+```{r}
+#| label: ffmpeg-note
+#| echo: false
+# Video compressed with the following:
+# 
+#> ffmpeg -i blog/2026-04-15-local-agents-2/gemma4-real-time.mov \
+#>   -c:v libx264 -crf 28 -preset slow \
+#>   -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" \
+#>   -r 24 -an \
+#>   blog/2026-04-15-local-agents-2/gemma4-real-time.mp4
+#
+# 3.7MB → 411KB — about a 9x reduction.
+```
+
+```{r}
+#| label: setup
+#| include: false
+options(ellmer_timeout_s = 1000)
+
+options(width = 70)
+
+knitr::opts_chunk$set(
+  fig.width = 6, 
+  fig.asp = 0.618, 
+  out.width = "100%", 
+  message = FALSE, 
+  warning = FALSE
+)
+
+source("../common.R")
+
+theme_update(
+  plot.subtitle = element_text(face = "italic"),
+  text = element_text(size = 10)
+)
+
+cat <- function(x, width = 0.9 * getOption("width")) {
+  lines <- unlist(strsplit(x, "\n"))
+  wrapped <- unlist(lapply(lines, strwrap, width = width))
+  base::cat(wrapped, sep = "\n")
+}
+
+# use this to resize the thumbnail image for the blog post
+optimize_image <- function(
+	image_path, 
+	target_width = 500, 
+	target_quality = 85, 
+	output_format = "png"
+  ) {
+  img <- magick::image_read(image_path)
+  
+  dims <- magick::image_info(img)
+  
+  if (dims$width > target_width) {
+    img <- magick::image_resize(img, paste0(target_width, "x"))
+  }
+  
+  img <- magick::image_write(
+	img, image_path, format = output_format, quality = target_quality
+  )
+  
+  invisible(img)
+}
+
+library(tidyverse)
+```
+
+```{=html}
+<style>
+.no-shadow img {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+.page-full:has(.cr-section) > :not(.cr-section):not(.page-full) {
+  grid-column: page-start / page-end !important;
+}
+</style>
+```
+
+In December, I wrote a post called "[Local models are not there (yet)](https://www.simonpcouch.com/blog/2025-12-04-local-agents/)." It concluded like so:
+
+> In the medium run (1-2 years?), I'd love for it to be the case that you can run a Claude Sonnet 4-ish model on a base Macbook Pro, and I think that's a plausible future. For now, though, if you'd like to get value out of coding agents, you'll need to opt for the most capable models out there.
+
+With the release of [Qwen 3.5](https://qwen.ai/blog?id=qwen3.5) and [Gemma 4](https://blog.google/innovation-and-ai/technology/developers-tools/gemma-4/) in the last few weeks, we feel *much* closer to that reality.
+
+## helperbench
+
+In that post, I introduced an LLM evaluation called [helperbench](https://github.com/simonpcouch/helperbench) that I used to help make the argument. helperbench situates a Claude Code ripoff-ish coding agent in a directory and asks it to make a simple refactor. To complete the refactor, the model must find where the referenced lines are in the directory, extract the lines out of a function into a helper function (in R), and then remove the old code and call the new helper function instead. The altered source code is then run against a suite of unit tests.
+
+It's like the most lame SWE-Bench you could imagine. There's literally one sample, and the proportion of successes across 10 runs determines the score. Despite how simple the eval is, it does show substantive separation between frontier models and models small enough to run on my laptop:
+
+```{r}
+#| label: plot-accuracy-old
+#| echo: false
+#| fig.alt: "Performance of various AI models across three categories: Frontier (closed-source commercial models), Budget (smaller commercial models), and Local (open-source models that can run locally). In the Frontier category, Claude Sonnet 4.5 achieves the highest accuracy at approximately 95%, followed by Gemini Pro 2.5 at around 85% and GPT-4.1 at roughly 82%. The Budget and Local categories show significantly lower performance, with Claude Haiku 4.5 leading Budget models at about 95% accuracy, while the local open-source models (Qwen Coder, Mistral, and GPT OSS) all score near 0% correct."
+knitr::include_graphics("https://www.simonpcouch.com/blog/2025-12-04-local-agents/index_files/figure-html/plot-accuracy-1.png")
+```
+
+I describe the eval more at length in my [previous post](https://www.simonpcouch.com/blog/2025-12-04-local-agents).
+
+## New models
+
+A month or so ago, the Qwen team released [Qwen 3.5](https://qwen.ai/blog?id=qwen3.5), including a qwen-3.5-35b-a3b variant. Then, a couple weeks ago, Deepmind released [Gemma 4](https://blog.google/innovation-and-ai/technology/developers-tools/gemma-4/). The gemma4-26b-a4b variant particularly caught my eye. I'll say "Qwen 3.5" and "Gemma 4" from here on in the post in reference to qwen-3.5-35b-a3b and gemma4-26b-a4b, respectively.
+
+The results for these two new releases show how far we've come in a matter of 4 months[^1]:
+
+[^1]: Thanks to Garrick Aden-Buie for [running helperbench against Qwen 3.5](https://github.com/simonpcouch/helperbench/pull/2) a couple weeks ago.
+
+```{r}
+#| label: plot-accuracy
+#| fig.alt: "Horizontal bar chart comparing agentic coding reliability across three groups. Frontier models (Claude Sonnet 4.5, Gemini Pro 3.1, GPT 4.1) score 80-100% correct. Four-months-ago's local models (Qwen 3 14B, GPT OSS 20B, Mistral 3.1 24B) all score 0%. Today's local models (Gemma 4 26B-A4B, Qwen 3.5 35B-A3B) both åscore 90%."
+#| fig-align: center
+#| echo: false
+library(helperbench)
+
+helper_results |>
+  mutate(
+    correct = score == "C",
+    class = case_when(
+      model %in% c("Claude Sonnet 4.5", "GPT-4.1", "Gemini Pro 3.1") ~ "Frontier",
+      model %in% c("Qwen 3 14B", "GPT OSS 20B", "Mistral 3.1 24B") ~ "4-months-ago's local models",
+      model %in% c("Gemma 4 26B-A4B", "Qwen 3.5 35B-A3B") ~ "Today's local models",
+      TRUE ~ "Other"
+    ),
+    class = factor(class, levels = c("Frontier", "4-months-ago's local models", "Today's local models"))
+  ) |>
+  filter(class != "Other") |>
+  group_by(model, class) |>
+  summarise(pct_correct = mean(correct) * 100, .groups = "drop") |>
+  mutate(pct_correct = pmax(pct_correct, .5)) |>
+  arrange(class, pct_correct) |>
+  mutate(model = fct_inorder(model)) |>
+  ggplot(aes(x = model, y = pct_correct)) +
+  geom_col() +
+  scale_y_continuous(n.breaks = 10, minor_breaks = NULL) +
+  facet_wrap(~class, nrow = 3, dir = "v", scales = "free_y") +
+  coord_flip() +
+  labs(
+    y = "Percent Correct",
+    x = NULL,
+    title = "   Agentic Coding Reliability",
+    subtitle = "   Recent local models are a step change over their (very recent) predecessors."
+  ) +
+  theme(
+    legend.position = "none",
+    plot.title.position = "plot",
+    axis.text.y = element_text(angle = 25, hjust = 1)
+  )
+```
+
+A few months ago, no model that I could comfortably run on my laptop could complete a single successful pass on the eval. Gemma 4 and Qwen 3.5 got it right all but one time.[^3]
+
+[^3]: Feels worth noting that Gemma 4 (26B total, 4B active) and Qwen 3.5 (35B total, 3B active) have more _total_ parameters than the local models from the previous post (14-24B dense). However, both are mixture-of-experts models that only activate 3-4B parameters per token. All experts must be stored in memory, so a 26-35B MoE model takes roughly the same RAM as a dense model of similar total size. The difference is inference speed: because only a fraction of parameters are active per token, MoE models run much faster (comparable to a 3-4B dense model). This is what makes them viable as coding agents on a laptop; a 30B dense model (like Qwen 3 Coder 30B, which got 7/10 when I ran it as part of the last post) would technically fit in memory but would be far too slow for interactive use.
+
+::: callout-note
+Noting that "frontier" section includes GPT 4.1, which is quite out of date compared to the entries from the other frontier labs. GPT 5.4 got a 5/10 on this eval with thinking set to "Minimal", and I don't think "GPT 5.4 is bad" is a fair point to try and make using this eval.
+:::
+
+Now, is Gemma 4 as good as Sonnet 4? Eh.[^2] Is it broadly coherent? Yes. Can it make use of a coding agent harness it hasn't seen before? Yes. Is it usable as a coding agent in the way that 10-months-ago Claude Code was with Sonnet 4? I would say yes.
+
+[^2]: Though I do think it's worth noting that Sonnet 4 was likely not as good as you're remembering. Sonnet 4 was released in May 2025. With this model, the version of Claude Code available at the time was relatively usable, but it did stupid shit all the time and constantly needed to be interrupted and steered. Gemma 4 also does stupid shit all the time and has to be interrupted and steered.
+
+## Latency
+
+The big question that helperbench can't address is latency. In order to be usable as a coding agent, a model running on my laptop must be able to chew through 5,000 tokens of context and tool descriptions relatively quickly, be able to output tokens in a ballpark of the rate that cloud models can, and leave enough room in my laptop's memory to store (at least) the 5,000 tokens of context and tool descriptions in the KV cache so that, after the first response, the model can reply more quickly to me.
+
+My laptop is a 2024 M4 Pro with 48GB memory. It is a nice laptop.
+
+```{r}
+#| label: load-benchmark
+#| echo: false
+library(jsonlite)
+
+load_results <- function(pattern) {
+  files <- sort(list.files("benchmark_results", pattern = pattern, full.names = TRUE))
+  lapply(files, \(f) fromJSON(readLines(f, warn = FALSE)))
+}
+
+median_of <- function(lst, field) {
+  vals <- sapply(lst, \(x) x[[field]] %||% NA)
+  median(vals, na.rm = TRUE)
+}
+
+ollama_cold <- load_results("^ollama_cold")
+ollama_warm <- load_results("^ollama_warm")
+
+cold_ttft <- round(median_of(ollama_cold, "ttft"))
+cold_throughput <- round(median_of(ollama_cold, "input_throughput") / 10) * 10
+warm_ttft <- round(median_of(ollama_warm, "ttft") * 1000)
+output_toks <- round(median_of(ollama_cold, "output_toks"))
+```
+
+To measure the latency, I sent Gemma 4 a \~5,000 token system prompt (the one used by [side::kick()](https://github.com/simonpcouch/side)) via ollama and measured the response timings. On a cold start---where the model has to process the full prompt from scratch---it takes about `r cold_ttft` seconds before the first token arrives, processing at roughly `r cold_throughput` tokens per second. Once the KV cache is warm (i.e. the system prompt prefix is already cached from a previous turn), that drops to around `r warm_ttft` milliseconds. Output generation runs at about `r output_toks` tokens per second. For comparison, [Artificial Analysis](https://artificialanalysis.ai/models/claude-sonnet-4-6) benchmarks Claude Sonnet 4.6 via Anthropic's API at \~44 output tokens per second and a \~1.4 second time to first token, though this isn't quite apples-to-apples. The output speed is surprisingly close to Gemma 4 running on my laptop.
+
+```{r}
+#| label: benchmark-source
+#| echo: true
+#| eval: false
+#| code-fold: true
+#| code-summary: "Benchmark source code"
+#| file: benchmark.R
+```
+
+Here's what Gemma 4 feels like real-time running on my laptop with [Posit Assistant](https://posit.co/products/ai), a coding agent with a \~10,000 token system prompt:
+
+{{< video gemma4-real-time.mp4 >}}
+
+There's a ~15-second hang while the model crunches my prompt the first time, and then the latency is totally normal---snappy, even---from then on.
+
+## Are we there yet?
+
+The question of whether these models are actually good enough to offset usage of other models likely depends on:
+
+- **Your ability to pay for frontier models' tokens.** It is not difficult to spend three figures in a day on tokens when coding with Opus 4.6 and GPT 5.4.
+- **The hardware you have available to you.** My laptop is a nice laptop, much nicer than a median consumer laptop. If my laptop were not able to run a 26b-a4b-ish model comfortably, I don't know that there are very viable options below that (for running coding agents specifically).
+- **Your use cases.** Gemma 4 is not even close to a broadly competent coding partner in the way that Opus 4.6 is. However, it's certainly good enough to keep me broadly unblocked on a couple-hour flight and take care of annoying little boilerplate and terminal-fu.
+
+At least for folks in my situation---working on a nice laptop with some sense of thrift and an appreciation for (dependence on?) being able to offload small tasks---we might be there.
+
+Revisiting that prediction from a few months ago:
+
+> In the medium run (1-2 years?), I'd love for it to be the case that you can run a Claude Sonnet 4-ish model on a base Macbook Pro, and I think that's a plausible future. For now, though, if you'd like to get value out of coding agents, you'll need to opt for the most capable models out there.
+
+My Macbook Pro is not a base model laptop and Gemma 4 isn't quite Sonnet 4, but it's been *four months*. A Sonnet 4-ish model on a base Macbook Pro in a year feels totally possible, and that's pretty wild.

@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.36">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta name="dcterms.date" content="2026-04-15">
+<title>LLMs running on my laptop can drive coding agents now | Simon P. Couch – Simon P. Couch</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../assets/sc.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-fa3e09c544edff079741188409af3890.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-contrib/videojs/video.min.js"></script>
+<link href="../../site_libs/quarto-contrib/videojs/video-js.css" rel="stylesheet"><script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script><script async="" src="https://www.googletagmanager.com/gtag/js?id=G-DDB8R0B1ZW"></script><script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
+</script>
+<meta property="og:title" content="LLMs running on my laptop can drive coding agents now | Simon P. Couch">
+<meta property="og:description" content="Qwen 3.5 and Gemma 4 are a step change for local coding agents.">
+<meta property="og:image" content="https://simonpcouch.com/blog/2026-04-16-local-agents-2/featured.png">
+<meta property="og:site_name" content="Simon P. Couch">
+<meta property="og:image:height" content="501">
+<meta property="og:image:width" content="500">
+<meta name="twitter:title" content="LLMs running on my laptop can drive coding agents now | Simon P. Couch">
+<meta name="twitter:description" content="Qwen 3.5 and Gemma 4 are a step change for local coding agents.">
+<meta name="twitter:image" content="https://simonpcouch.com/blog/2026-04-16-local-agents-2/featured.png">
+<meta name="twitter:image-height" content="501">
+<meta name="twitter:image-width" content="500">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner"><nav class="navbar navbar-expand-lg " data-bs-theme="dark"><div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../assets/sc.png" alt="" class="navbar-logo light-content"><img src="../../assets/sc.png" alt="" class="navbar-logo dark-content"></a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Simon P. Couch</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+<li class="nav-item">
+    <a class="nav-link" href="../../about/index.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog/index.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../software.html"> 
+<span class="menu-text">Software</span></a>
+  </li>  
+</ul>
+</div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+    <a href="https://www.github.com/simonpcouch/website" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav></header><!-- content --><header id="title-block-header" class="quarto-title-block default page-columns page-full"><div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">LLMs running on my laptop can drive coding agents now</h1>
+            <p class="subtitle lead">Qwen 3.5 and Gemma 4 are a step change for local coding agents.</p>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">April 15, 2026</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content"><style>
+.no-shadow img {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+.page-full:has(.cr-section) > :not(.cr-section):not(.page-full) {
+  grid-column: page-start / page-end !important;
+}
+</style>
+<p>In December, I wrote a post called “<a href="https://www.simonpcouch.com/blog/2025-12-04-local-agents/">Local models are not there (yet)</a>.” It concluded like so:</p>
+<blockquote class="blockquote">
+<p>In the medium run (1-2 years?), I’d love for it to be the case that you can run a Claude Sonnet 4-ish model on a base Macbook Pro, and I think that’s a plausible future. For now, though, if you’d like to get value out of coding agents, you’ll need to opt for the most capable models out there.</p>
+</blockquote>
+<p>With the release of <a href="https://qwen.ai/blog?id=qwen3.5">Qwen 3.5</a> and <a href="https://blog.google/innovation-and-ai/technology/developers-tools/gemma-4/">Gemma 4</a> in the last few weeks, we feel <em>much</em> closer to that reality.</p>
+<section id="helperbench" class="level2"><h2 class="anchored" data-anchor-id="helperbench">helperbench</h2>
+<p>In that post, I introduced an LLM evaluation called <a href="https://github.com/simonpcouch/helperbench">helperbench</a> that I used to help make the argument. helperbench situates a Claude Code ripoff-ish coding agent in a directory and asks it to make a simple refactor. To complete the refactor, the model must find where the referenced lines are in the directory, extract the lines out of a function into a helper function (in R), and then remove the old code and call the new helper function instead. The altered source code is then run against a suite of unit tests.</p>
+<p>It’s like the most lame SWE-Bench you could imagine. There’s literally one sample, and the proportion of successes across 10 runs determines the score. Despite how simple the eval is, it does show substantive separation between frontier models and models small enough to run on my laptop:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="https://www.simonpcouch.com/blog/2025-12-04-local-agents/index_files/figure-html/plot-accuracy-1.png" class="img-fluid figure-img" style="width:100.0%" alt="Performance of various AI models across three categories: Frontier (closed-source commercial models), Budget (smaller commercial models), and Local (open-source models that can run locally). In the Frontier category, Claude Sonnet 4.5 achieves the highest accuracy at approximately 95%, followed by Gemini Pro 2.5 at around 85% and GPT-4.1 at roughly 82%. The Budget and Local categories show significantly lower performance, with Claude Haiku 4.5 leading Budget models at about 95% accuracy, while the local open-source models (Qwen Coder, Mistral, and GPT OSS) all score near 0% correct."></p>
+</figure>
+</div>
+</div>
+</div>
+<p>I describe the eval more at length in my <a href="https://www.simonpcouch.com/blog/2025-12-04-local-agents">previous post</a>.</p>
+</section><section id="new-models" class="level2"><h2 class="anchored" data-anchor-id="new-models">New models</h2>
+<p>A month or so ago, the Qwen team released <a href="https://qwen.ai/blog?id=qwen3.5">Qwen 3.5</a>, including a qwen-3.5-35b-a3b variant. Then, a couple weeks ago, Deepmind released <a href="https://blog.google/innovation-and-ai/technology/developers-tools/gemma-4/">Gemma 4</a>. The gemma4-26b-a4b variant particularly caught my eye. I’ll say “Qwen 3.5” and “Gemma 4” from here on in the post in reference to qwen-3.5-35b-a3b and gemma4-26b-a4b, respectively.</p>
+<p>The results for these two new releases show how far we’ve come in a matter of 4 months<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="index_files/figure-html/plot-accuracy-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" alt="Horizontal bar chart comparing agentic coding reliability across three groups. Frontier models (Claude Sonnet 4.5, Gemini Pro 3.1, GPT 4.1) score 80-100% correct. Four-months-ago's local models (Qwen 3 14B, GPT OSS 20B, Mistral 3.1 24B) all score 0%. Today's local models (Gemma 4 26B-A4B, Qwen 3.5 35B-A3B) both åscore 90%."></p>
+</figure>
+</div>
+</div>
+</div>
+<p>A few months ago, no model that I could comfortably run on my laptop could complete a single successful pass on the eval. Gemma 4 and Qwen 3.5 got it right all but one time.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Noting that “frontier” section includes GPT 4.1, which is quite out of date compared to the entries from the other frontier labs. GPT 5.4 got a 5/10 on this eval with thinking set to “Minimal”, and I don’t think “GPT 5.4 is bad” is a fair point to try and make using this eval.</p>
+</div>
+</div>
+<p>Now, is Gemma 4 as good as Sonnet 4? Eh.<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> Is it broadly coherent? Yes. Can it make use of a coding agent harness it hasn’t seen before? Yes. Is it usable as a coding agent in the way that 10-months-ago Claude Code was with Sonnet 4? I would say yes.</p>
+</section><section id="latency" class="level2"><h2 class="anchored" data-anchor-id="latency">Latency</h2>
+<p>The big question that helperbench can’t address is latency. In order to be usable as a coding agent, a model running on my laptop must be able to chew through 5,000 tokens of context and tool descriptions relatively quickly, be able to output tokens in a ballpark of the rate that cloud models can, and leave enough room in my laptop’s memory to store (at least) the 5,000 tokens of context and tool descriptions in the KV cache so that, after the first response, the model can reply more quickly to me.</p>
+<p>My laptop is a 2024 M4 Pro with 48GB memory. It is a nice laptop.</p>
+<p>To measure the latency, I sent Gemma 4 a ~5,000 token system prompt (the one used by <a href="https://github.com/simonpcouch/side">side::kick()</a>) via ollama and measured the response timings. On a cold start—where the model has to process the full prompt from scratch—it takes about 7 seconds before the first token arrives, processing at roughly 690 tokens per second. Once the KV cache is warm (i.e.&nbsp;the system prompt prefix is already cached from a previous turn), that drops to around 20 milliseconds. Output generation runs at about 53 tokens per second. For comparison, <a href="https://artificialanalysis.ai/models/claude-sonnet-4-6">Artificial Analysis</a> benchmarks Claude Sonnet 4.6 via Anthropic’s API at ~44 output tokens per second and a ~1.4 second time to first token, though this isn’t quite apples-to-apples. The output speed is surprisingly close to Gemma 4 running on my laptop.</p>
+<div class="cell">
+<details class="code-fold"><summary>Benchmark source code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://httr2.r-lib.org">httr2</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://jeroen.r-universe.dev/jsonlite">jsonlite</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># -- config ------------------------------------------------------------------</span></span>
+<span><span class="va">ollama_model</span> <span class="op">&lt;-</span> <span class="st">"gemma4:26b"</span></span>
+<span><span class="va">n_runs</span> <span class="op">&lt;-</span> <span class="fl">5</span></span>
+<span></span>
+<span><span class="co"># -- system prompt ------------------------------------------------------------</span></span>
+<span><span class="co"># Use side::kick()'s real system prompt for realistic context size.</span></span>
+<span><span class="co"># Download once if not cached locally.</span></span>
+<span><span class="va">prompt_path</span> <span class="op">&lt;-</span> <span class="st">"system_prompt.md"</span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/files.html">file.exists</a></span><span class="op">(</span><span class="va">prompt_path</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/utils/download.file.html">download.file</a></span><span class="op">(</span></span>
+<span>    <span class="st">"https://raw.githubusercontent.com/simonpcouch/side/main/inst/agents/main.md"</span>,</span>
+<span>    <span class="va">prompt_path</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span><span class="va">system_prompt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/readLines.html">readLines</a></span><span class="op">(</span><span class="va">prompt_path</span><span class="op">)</span>, collapse <span class="op">=</span> <span class="st">"\n"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Minimal tool definitions — just enough to be realistic about token count.</span></span>
+<span><span class="co"># These mirror the shape of side::kick()'s tools.</span></span>
+<span><span class="va">tools</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span></span>
+<span>    name <span class="op">=</span> <span class="st">"read_text_file"</span>,</span>
+<span>    description <span class="op">=</span> <span class="st">"Read the contents of a text file at the given path."</span>,</span>
+<span>    input_schema <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span></span>
+<span>      type <span class="op">=</span> <span class="st">"object"</span>,</span>
+<span>      properties <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span></span>
+<span>        path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"string"</span>, description <span class="op">=</span> <span class="st">"Absolute path to the file"</span><span class="op">)</span>,</span>
+<span>        start_line <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"integer"</span>, description <span class="op">=</span> <span class="st">"First line to read (1-indexed)"</span><span class="op">)</span>,</span>
+<span>        end_line <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"integer"</span>, description <span class="op">=</span> <span class="st">"Last line to read (1-indexed)"</span><span class="op">)</span></span>
+<span>      <span class="op">)</span>,</span>
+<span>      required <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"path"</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span></span>
+<span>    name <span class="op">=</span> <span class="st">"write_text_file"</span>,</span>
+<span>    description <span class="op">=</span> <span class="st">"Write content to a text file, creating it if needed."</span>,</span>
+<span>    input_schema <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span></span>
+<span>      type <span class="op">=</span> <span class="st">"object"</span>,</span>
+<span>      properties <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span></span>
+<span>        path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"string"</span>, description <span class="op">=</span> <span class="st">"Absolute path to the file"</span><span class="op">)</span>,</span>
+<span>        content <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"string"</span>, description <span class="op">=</span> <span class="st">"Content to write"</span><span class="op">)</span>,</span>
+<span>        create_directories <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"boolean"</span>, description <span class="op">=</span> <span class="st">"Create parent dirs if needed"</span><span class="op">)</span></span>
+<span>      <span class="op">)</span>,</span>
+<span>      required <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"path"</span>, <span class="st">"content"</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span></span>
+<span>    name <span class="op">=</span> <span class="st">"shell"</span>,</span>
+<span>    description <span class="op">=</span> <span class="st">"Execute a shell command and return stdout/stderr."</span>,</span>
+<span>    input_schema <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span></span>
+<span>      type <span class="op">=</span> <span class="st">"object"</span>,</span>
+<span>      properties <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span></span>
+<span>        command <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"string"</span>, description <span class="op">=</span> <span class="st">"The shell command to run"</span><span class="op">)</span>,</span>
+<span>        timeout <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"integer"</span>, description <span class="op">=</span> <span class="st">"Timeout in seconds"</span><span class="op">)</span></span>
+<span>      <span class="op">)</span>,</span>
+<span>      required <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"command"</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span></span>
+<span>    name <span class="op">=</span> <span class="st">"run_r_code"</span>,</span>
+<span>    description <span class="op">=</span> <span class="st">"Run R code in the current session and return the result."</span>,</span>
+<span>    input_schema <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span></span>
+<span>      type <span class="op">=</span> <span class="st">"object"</span>,</span>
+<span>      properties <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span></span>
+<span>        code <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"string"</span>, description <span class="op">=</span> <span class="st">"R code to evaluate"</span><span class="op">)</span></span>
+<span>      <span class="op">)</span>,</span>
+<span>      required <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"code"</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span></span>
+<span>    name <span class="op">=</span> <span class="st">"list_files"</span>,</span>
+<span>    description <span class="op">=</span> <span class="st">"List files in a directory, optionally filtered by glob pattern."</span>,</span>
+<span>    input_schema <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span></span>
+<span>      type <span class="op">=</span> <span class="st">"object"</span>,</span>
+<span>      properties <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span></span>
+<span>        path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"string"</span>, description <span class="op">=</span> <span class="st">"Directory path"</span><span class="op">)</span>,</span>
+<span>        pattern <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"string"</span>, description <span class="op">=</span> <span class="st">"Glob pattern to filter files"</span><span class="op">)</span>,</span>
+<span>        recursive <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"boolean"</span>, description <span class="op">=</span> <span class="st">"Whether to list recursively"</span><span class="op">)</span></span>
+<span>      <span class="op">)</span>,</span>
+<span>      required <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"path"</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span></span>
+<span>    name <span class="op">=</span> <span class="st">"code_search"</span>,</span>
+<span>    description <span class="op">=</span> <span class="st">"Search for a pattern across files in the project."</span>,</span>
+<span>    input_schema <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span></span>
+<span>      type <span class="op">=</span> <span class="st">"object"</span>,</span>
+<span>      properties <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span></span>
+<span>        pattern <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"string"</span>, description <span class="op">=</span> <span class="st">"Regex pattern to search for"</span><span class="op">)</span>,</span>
+<span>        path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"string"</span>, description <span class="op">=</span> <span class="st">"Directory to search in"</span><span class="op">)</span>,</span>
+<span>        file_pattern <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"string"</span>, description <span class="op">=</span> <span class="st">"Glob to filter files"</span><span class="op">)</span></span>
+<span>      <span class="op">)</span>,</span>
+<span>      required <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"pattern"</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">user_message</span> <span class="op">&lt;-</span> <span class="st">"Please extract the input validation logic from the `fit()` method in R/model.R into a helper function called `check_fit_inputs()`. The validation is on lines 42-68."</span></span>
+<span></span>
+<span><span class="co"># -- ollama benchmarking ------------------------------------------------------</span></span>
+<span><span class="co"># Ollama returns timing metadata in the final streamed chunk:</span></span>
+<span><span class="co">#   prompt_eval_count, prompt_eval_duration (ns),</span></span>
+<span><span class="co">#   eval_count, eval_duration (ns)</span></span>
+<span></span>
+<span><span class="co"># Convert tools to ollama format (slightly different schema shape)</span></span>
+<span><span class="va">ollama_tools</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">tools</span>, <span class="kw">function</span><span class="op">(</span><span class="va">tool</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span></span>
+<span>    type <span class="op">=</span> <span class="st">"function"</span>,</span>
+<span>    `function` <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span></span>
+<span>      name <span class="op">=</span> <span class="va">tool</span><span class="op">$</span><span class="va">name</span>,</span>
+<span>      description <span class="op">=</span> <span class="va">tool</span><span class="op">$</span><span class="va">description</span>,</span>
+<span>      parameters <span class="op">=</span> <span class="va">tool</span><span class="op">$</span><span class="va">input_schema</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">bench_ollama</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">model</span>, <span class="va">system</span>, <span class="va">user_msg</span>, <span class="va">tools</span>, <span class="va">warm</span> <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="va">warm</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="co"># Overwrite the KV cache with a short unrelated message so the benchmark</span></span>
+<span>    <span class="co"># request won't hit the cached prefix. The model stays loaded in memory.</span></span>
+<span>    <span class="kw"><a href="https://rdrr.io/r/base/try.html">try</a></span><span class="op">(</span></span>
+<span>      <span class="fu"><a href="https://httr2.r-lib.org/reference/request.html">request</a></span><span class="op">(</span><span class="st">"http://localhost:11434/api/chat"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>        <span class="fu"><a href="https://httr2.r-lib.org/reference/req_body.html">req_body_json</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span></span>
+<span>          model <span class="op">=</span> <span class="va">model</span>,</span>
+<span>          messages <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>role <span class="op">=</span> <span class="st">"user"</span>, content <span class="op">=</span> <span class="st">"Say hi."</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>          stream <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>        <span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>        <span class="fu"><a href="https://httr2.r-lib.org/reference/req_timeout.html">req_timeout</a></span><span class="op">(</span><span class="fl">120</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>        <span class="fu"><a href="https://httr2.r-lib.org/reference/req_perform.html">req_perform</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>      silent <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
+<span></span>
+<span>  <span class="va">body</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span></span>
+<span>    model <span class="op">=</span> <span class="va">model</span>,</span>
+<span>    messages <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>role <span class="op">=</span> <span class="st">"system"</span>, content <span class="op">=</span> <span class="va">system</span><span class="op">)</span>,</span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>role <span class="op">=</span> <span class="st">"user"</span>, content <span class="op">=</span> <span class="va">user_msg</span><span class="op">)</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    tools <span class="op">=</span> <span class="va">tools</span>,</span>
+<span>    stream <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span>  <span class="va">start</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/proc.time.html">proc.time</a></span><span class="op">(</span><span class="op">)</span><span class="op">[</span><span class="st">"elapsed"</span><span class="op">]</span></span>
+<span>  <span class="va">resp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://httr2.r-lib.org/reference/request.html">request</a></span><span class="op">(</span><span class="st">"http://localhost:11434/api/chat"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu"><a href="https://httr2.r-lib.org/reference/req_body.html">req_body_json</a></span><span class="op">(</span><span class="va">body</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu"><a href="https://httr2.r-lib.org/reference/req_timeout.html">req_timeout</a></span><span class="op">(</span><span class="fl">300</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu"><a href="https://httr2.r-lib.org/reference/req_perform.html">req_perform</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="va">wall_time</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/proc.time.html">proc.time</a></span><span class="op">(</span><span class="op">)</span><span class="op">[</span><span class="st">"elapsed"</span><span class="op">]</span> <span class="op">-</span> <span class="va">start</span></span>
+<span></span>
+<span>  <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://httr2.r-lib.org/reference/resp_body_raw.html">resp_body_json</a></span><span class="op">(</span><span class="va">resp</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="va">prompt_tokens</span> <span class="op">&lt;-</span> <span class="va">data</span><span class="op">$</span><span class="va">prompt_eval_count</span> <span class="op"><a href="https://rdrr.io/r/base/Control.html">%||%</a></span> <span class="cn">NA</span></span>
+<span>  <span class="va">prompt_ns</span> <span class="op">&lt;-</span> <span class="va">data</span><span class="op">$</span><span class="va">prompt_eval_duration</span> <span class="op"><a href="https://rdrr.io/r/base/Control.html">%||%</a></span> <span class="cn">NA</span></span>
+<span>  <span class="va">eval_tokens</span> <span class="op">&lt;-</span> <span class="va">data</span><span class="op">$</span><span class="va">eval_count</span> <span class="op"><a href="https://rdrr.io/r/base/Control.html">%||%</a></span> <span class="cn">NA</span></span>
+<span>  <span class="va">eval_ns</span> <span class="op">&lt;-</span> <span class="va">data</span><span class="op">$</span><span class="va">eval_duration</span> <span class="op"><a href="https://rdrr.io/r/base/Control.html">%||%</a></span> <span class="cn">NA</span></span>
+<span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span></span>
+<span>    prompt_tokens <span class="op">=</span> <span class="va">prompt_tokens</span>,</span>
+<span>    input_throughput <span class="op">=</span> <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">prompt_tokens</span><span class="op">)</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">prompt_ns</span><span class="op">)</span> <span class="op">&amp;&amp;</span> <span class="va">prompt_ns</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span>      <span class="va">prompt_tokens</span> <span class="op">/</span> <span class="op">(</span><span class="va">prompt_ns</span> <span class="op">/</span> <span class="fl">1e9</span><span class="op">)</span></span>
+<span>    <span class="op">}</span> <span class="kw">else</span> <span class="cn">NA</span>,</span>
+<span>    ttft <span class="op">=</span> <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">prompt_ns</span><span class="op">)</span><span class="op">)</span> <span class="va">prompt_ns</span> <span class="op">/</span> <span class="fl">1e9</span> <span class="kw">else</span> <span class="cn">NA</span>,</span>
+<span>    output_tokens <span class="op">=</span> <span class="va">eval_tokens</span>,</span>
+<span>    output_toks <span class="op">=</span> <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">eval_tokens</span><span class="op">)</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">eval_ns</span><span class="op">)</span> <span class="op">&amp;&amp;</span> <span class="va">eval_ns</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span>      <span class="va">eval_tokens</span> <span class="op">/</span> <span class="op">(</span><span class="va">eval_ns</span> <span class="op">/</span> <span class="fl">1e9</span><span class="op">)</span></span>
+<span>    <span class="op">}</span> <span class="kw">else</span> <span class="cn">NA</span>,</span>
+<span>    wall_time <span class="op">=</span> <span class="va">wall_time</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="co"># -- persistence --------------------------------------------------------------</span></span>
+<span><span class="va">results_dir</span> <span class="op">&lt;-</span> <span class="st">"benchmark_results"</span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/files2.html">dir.exists</a></span><span class="op">(</span><span class="va">results_dir</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/files2.html">dir.create</a></span><span class="op">(</span><span class="va">results_dir</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">save_result</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">scenario</span>, <span class="va">i</span>, <span class="va">result</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">results_dir</span>, <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span><span class="op">(</span><span class="st">"%s_%02d.json"</span>, <span class="va">scenario</span>, <span class="va">i</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/writeLines.html">writeLines</a></span><span class="op">(</span><span class="fu"><a href="https://jeroen.r-universe.dev/jsonlite/reference/fromJSON.html">toJSON</a></span><span class="op">(</span><span class="va">result</span>, auto_unbox <span class="op">=</span> <span class="cn">TRUE</span>, pretty <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, <span class="va">path</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"    -&gt; saved to"</span>, <span class="va">path</span>, <span class="st">"\n"</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="co"># -- run benchmarks -----------------------------------------------------------</span></span>
+<span><span class="va">run_benchmarks</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"=== Ollama:"</span>, <span class="va">ollama_model</span>, <span class="st">"===\n"</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"\n-- Cold (no KV cache) --\n"</span><span class="op">)</span></span>
+<span>  <span class="va">ollama_cold</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq_len</a></span><span class="op">(</span><span class="va">n_runs</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"  Run"</span>, <span class="va">i</span>, <span class="st">"of"</span>, <span class="va">n_runs</span>, <span class="st">"\n"</span><span class="op">)</span></span>
+<span>    <span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">bench_ollama</span><span class="op">(</span><span class="va">ollama_model</span>, <span class="va">system_prompt</span>, <span class="va">user_message</span>, <span class="va">ollama_tools</span>, warm <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span>    <span class="fu">save_result</span><span class="op">(</span><span class="st">"ollama_cold"</span>, <span class="va">i</span>, <span class="va">res</span><span class="op">)</span></span>
+<span>    <span class="va">res</span></span>
+<span>  <span class="op">}</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"\n-- Warm (KV cache) --\n"</span><span class="op">)</span></span>
+<span>  <span class="co"># First request primes the cache</span></span>
+<span>  <span class="fu">bench_ollama</span><span class="op">(</span><span class="va">ollama_model</span>, <span class="va">system_prompt</span>, <span class="va">user_message</span>, <span class="va">ollama_tools</span>, warm <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span>  <span class="va">ollama_warm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq_len</a></span><span class="op">(</span><span class="va">n_runs</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"  Run"</span>, <span class="va">i</span>, <span class="st">"of"</span>, <span class="va">n_runs</span>, <span class="st">"\n"</span><span class="op">)</span></span>
+<span>    <span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">bench_ollama</span><span class="op">(</span><span class="va">ollama_model</span>, <span class="va">system_prompt</span>, <span class="va">user_message</span>, <span class="va">ollama_tools</span>, warm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>    <span class="fu">save_result</span><span class="op">(</span><span class="st">"ollama_warm"</span>, <span class="va">i</span>, <span class="va">res</span><span class="op">)</span></span>
+<span>    <span class="va">res</span></span>
+<span>  <span class="op">}</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="co"># -- summarize ----------------------------------------------------------------</span></span>
+<span>  <span class="va">median_of</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">lst</span>, <span class="va">field</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html">median</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html">sapply</a></span><span class="op">(</span><span class="va">lst</span>, <span class="va">`[[`</span>, <span class="va">field</span><span class="op">)</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"\n\n=== Results (medians over"</span>, <span class="va">n_runs</span>, <span class="st">"runs) ===\n\n"</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span><span class="op">(</span><span class="st">"%-30s %15s\n"</span>, <span class="st">""</span>, <span class="va">ollama_model</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/strrep.html">strrep</a></span><span class="op">(</span><span class="st">"-"</span>, <span class="fl">46</span><span class="op">)</span>, <span class="st">"\n"</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span><span class="op">(</span><span class="st">"%-30s %14.1f\n"</span>, <span class="st">"Input throughput (tok/s)"</span>, <span class="fu">median_of</span><span class="op">(</span><span class="va">ollama_cold</span>, <span class="st">"input_throughput"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span><span class="op">(</span><span class="st">"%-30s %13.2fs\n"</span>, <span class="st">"TTFT (cold)"</span>, <span class="fu">median_of</span><span class="op">(</span><span class="va">ollama_cold</span>, <span class="st">"ttft"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span><span class="op">(</span><span class="st">"%-30s %13.2fs\n"</span>, <span class="st">"TTFT (warm)"</span>, <span class="fu">median_of</span><span class="op">(</span><span class="va">ollama_warm</span>, <span class="st">"ttft"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span><span class="op">(</span><span class="st">"%-30s %14.1f\n"</span>, <span class="st">"Output (tok/s)"</span>, <span class="fu">median_of</span><span class="op">(</span><span class="va">ollama_cold</span>, <span class="st">"output_toks"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="fu">run_benchmarks</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<p>Here’s what Gemma 4 feels like real-time running on my laptop with <a href="https://posit.co/products/ai">Posit Assistant</a>, a coding agent with a ~10,000 token system prompt:</p>
+<div class="quarto-video"><video id="video_shortcode_videojs_video1" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="gemma4-real-time.mp4"></video></div>
+<p>There’s a ~15-second hang while the model crunches my prompt the first time, and then the latency is totally normal—snappy, even—from then on.</p>
+</section><section id="are-we-there-yet" class="level2"><h2 class="anchored" data-anchor-id="are-we-there-yet">Are we there yet?</h2>
+<p>The question of whether these models are actually good enough to offset usage of other models likely depends on:</p>
+<ul>
+<li>
+<strong>Your ability to pay for frontier models’ tokens.</strong> It is not difficult to spend three figures in a day on tokens when coding with Opus 4.6 and GPT 5.4.</li>
+<li>
+<strong>The hardware you have available to you.</strong> My laptop is a nice laptop, much nicer than a median consumer laptop. If my laptop were not able to run a 26b-a4b-ish model comfortably, I don’t know that there are very viable options below that (for running coding agents specifically).</li>
+<li>
+<strong>Your use cases.</strong> Gemma 4 is not even close to a broadly competent coding partner in the way that Opus 4.6 is. However, it’s certainly good enough to keep me broadly unblocked on a couple-hour flight and take care of annoying little boilerplate and terminal-fu.</li>
+</ul>
+<p>At least for folks in my situation—working on a nice laptop with some sense of thrift and an appreciation for (dependence on?) being able to offload small tasks—we might be there.</p>
+<p>Revisiting that prediction from a few months ago:</p>
+<blockquote class="blockquote">
+<p>In the medium run (1-2 years?), I’d love for it to be the case that you can run a Claude Sonnet 4-ish model on a base Macbook Pro, and I think that’s a plausible future. For now, though, if you’d like to get value out of coding agents, you’ll need to opt for the most capable models out there.</p>
+</blockquote>
+<p>My Macbook Pro is not a base model laptop and Gemma 4 isn’t quite Sonnet 4, but it’s been <em>four months</em>. A Sonnet 4-ish model on a base Macbook Pro in a year feels totally possible, and that’s pretty wild.</p>
+
+
+</section><a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a><div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+<ol>
+<li id="fn1"><p>Thanks to Garrick Aden-Buie for <a href="https://github.com/simonpcouch/helperbench/pull/2">running helperbench against Qwen 3.5</a> a couple weeks ago.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Feels worth noting that Gemma 4 (26B total, 4B active) and Qwen 3.5 (35B total, 3B active) have more <em>total</em> parameters than the local models from the previous post (14-24B dense). However, both are mixture-of-experts models that only activate 3-4B parameters per token. All experts must be stored in memory, so a 26-35B MoE model takes roughly the same RAM as a dense model of similar total size. The difference is inference speed: because only a fraction of parameters are active per token, MoE models run much faster (comparable to a 3-4B dense model). This is what makes them viable as coding agents on a laptop; a 30B dense model (like Qwen 3 Coder 30B, which got 7/10 when I ran it as part of the last post) would technically fit in memory but would be far too slow for interactive use.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>Though I do think it’s worth noting that Sonnet 4 was likely not as good as you’re remembering. Sonnet 4 was released in May 2025. With this model, the version of Claude Code available at the time was relatively usable, but it did stupid shit all the time and constantly needed to be interrupted and steered. Gemma 4 also does stupid shit all the time and has to be interrupted and steered.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol></section><section class="quarto-appendix-contents" id="quarto-reuse"><h2 class="anchored quarto-appendix-heading">Reuse</h2><div class="quarto-appendix-contents"><div><a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a></div></div></section></div></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/simonpcouch\.com");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script><script src="https://utteranc.es/client.js" repo="simonpcouch/website" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script>
+</div> <!-- /content -->
+<footer class="footer"><div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© 2024 Simon P. Couch ∙ Made with <a href="https://quarto.org">Quarto</a></p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer><script>videojs(video_shortcode_videojs_video1);</script>
+
+
+</body></html>

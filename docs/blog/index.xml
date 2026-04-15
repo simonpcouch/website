@@ -9,8 +9,16 @@
 <link>https://simonpcouch.com/blog/</link>
 <atom:link href="https://simonpcouch.com/blog/index.xml" rel="self" type="application/rss+xml"/>
 <description>A data science blog</description>
-<generator>quarto-1.8.27</generator>
-<lastBuildDate>Fri, 06 Mar 2026 06:00:00 GMT</lastBuildDate>
+<generator>quarto-1.9.36</generator>
+<lastBuildDate>Wed, 15 Apr 2026 05:00:00 GMT</lastBuildDate>
+<item>
+  <title>LLMs running on my laptop can drive coding agents now</title>
+  <link>https://simonpcouch.com/blog/2026-04-16-local-agents-2/</link>
+  <description><![CDATA[ In December, I wrote a post called “<a href="https://www.simonpcouch.com/blog/2025-12-04-local-agents/">Local models are not there (yet)</a>.” It concluded like so: ]]></description>
+  <guid>https://simonpcouch.com/blog/2026-04-16-local-agents-2/</guid>
+  <pubDate>Wed, 15 Apr 2026 05:00:00 GMT</pubDate>
+  <media:content url="https://simonpcouch.com/blog/2026-04-16-local-agents-2/featured.png" medium="image" type="image/png" height="144" width="144"/>
+</item>
 <item>
   <title>How Posit AI’s Next Edit Suggestions work</title>
   <link>https://simonpcouch.com/blog/2026-03-06-nes/</link>
@@ -162,14 +170,6 @@
   <guid>https://simonpcouch.com/blog/2025-04-11-chores/</guid>
   <pubDate>Fri, 11 Apr 2025 05:00:00 GMT</pubDate>
   <media:content url="https://simonpcouch.com/blog/2025-04-11-chores/featured.png" medium="image" type="image/png" height="144" width="144"/>
-</item>
-<item>
-  <title>How Good Is Gemini 2.5 Pro at Writing R Code?</title>
-  <link>https://simonpcouch.com/blog/2025-04-01-gemini-2-5-pro/</link>
-  <description><![CDATA[ Since Gemini 2.5 Pro Experimental’s <a href="https://blog.google/technology/google-deepmind/gemini-model-thinking-updates-march-2025/">release</a> last week, I’ve been seeing a <a href="https://thezvi.substack.com/p/gemini-25-is-the-new-sota?utm_source=post-email-title&amp;publication_id=573100&amp;post_id=160014258&amp;utm_campaign=email-post-title&amp;isFreemail=true&amp;r=21np6y&amp;triedRedirect=true&amp;utm_medium=email">lot</a> <a href="https://simonwillison.net/2025/Mar/25/gemini/">of</a> <a href="https://www.youtube.com/watch?v=A0V4km88tFc&amp;t=700s">hype</a> claiming that the model is the new state of the art. I’ve been wondering—how good is this model at writing R code? ]]></description>
-  <guid>https://simonpcouch.com/blog/2025-04-01-gemini-2-5-pro/</guid>
-  <pubDate>Wed, 02 Apr 2025 05:00:00 GMT</pubDate>
-  <media:content url="https://simonpcouch.com/blog/2025-04-01-gemini-2-5-pro/featured.png" medium="image" type="image/png" height="147" width="144"/>
 </item>
 </channel>
 </rss>
