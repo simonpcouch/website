@@ -1,6 +1,6 @@
 ---
 title: "LLMs running on my laptop can drive coding agents now"
-date: '2026-04-15'
+date: '2026-04-16'
 tags:
   - ai
 subtitle: "Qwen 3.5 and Gemma 4 are a step change for local coding agents."

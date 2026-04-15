@@ -10,13 +10,13 @@
 <atom:link href="https://simonpcouch.com/blog/index.xml" rel="self" type="application/rss+xml"/>
 <description>A data science blog</description>
 <generator>quarto-1.9.36</generator>
-<lastBuildDate>Wed, 15 Apr 2026 05:00:00 GMT</lastBuildDate>
+<lastBuildDate>Thu, 16 Apr 2026 05:00:00 GMT</lastBuildDate>
 <item>
   <title>LLMs running on my laptop can drive coding agents now</title>
   <link>https://simonpcouch.com/blog/2026-04-16-local-agents-2/</link>
   <description><![CDATA[ In December, I wrote a post called “<a href="https://www.simonpcouch.com/blog/2025-12-04-local-agents/">Local models are not there (yet)</a>.” It concluded like so: ]]></description>
   <guid>https://simonpcouch.com/blog/2026-04-16-local-agents-2/</guid>
-  <pubDate>Wed, 15 Apr 2026 05:00:00 GMT</pubDate>
+  <pubDate>Thu, 16 Apr 2026 05:00:00 GMT</pubDate>
   <media:content url="https://simonpcouch.com/blog/2026-04-16-local-agents-2/featured.png" medium="image" type="image/png" height="144" width="144"/>
 </item>
 <item>
