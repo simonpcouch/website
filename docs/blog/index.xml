@@ -9,8 +9,16 @@
 <link>https://simonpcouch.com/blog/</link>
 <atom:link href="https://simonpcouch.com/blog/index.xml" rel="self" type="application/rss+xml"/>
 <description>A data science blog</description>
-<generator>quarto-1.9.36</generator>
-<lastBuildDate>Thu, 16 Apr 2026 05:00:00 GMT</lastBuildDate>
+<generator>quarto-1.9.38</generator>
+<lastBuildDate>Fri, 19 Jun 2026 05:00:00 GMT</lastBuildDate>
+<item>
+  <title>LLMs are getting much better at interpreting counterintuitive plots</title>
+  <link>https://simonpcouch.com/blog/2026-06-19-bluffbench-saturation/</link>
+  <description><![CDATA[ <em>This post is a cross-post of a <a href="https://opensource.posit.co/blog/2026-06-19_ai-newsletter/">post</a> on the Posit Open Source Blog, co-written with Sara Altman.</em> ]]></description>
+  <guid>https://simonpcouch.com/blog/2026-06-19-bluffbench-saturation/</guid>
+  <pubDate>Fri, 19 Jun 2026 05:00:00 GMT</pubDate>
+  <media:content url="https://simonpcouch.com/assets/blank.png" medium="image" type="image/png" height="1" width="1"/>
+</item>
 <item>
   <title>LLMs running on my laptop can drive coding agents now</title>
   <link>https://simonpcouch.com/blog/2026-04-16-local-agents-2/</link>
@@ -162,14 +170,6 @@
   <guid>https://simonpcouch.com/blog/2025-04-15-gpt-4-1/</guid>
   <pubDate>Tue, 15 Apr 2025 05:00:00 GMT</pubDate>
   <media:content url="https://simonpcouch.com/blog/2025-04-15-gpt-4-1/featured.png" medium="image" type="image/png" height="142" width="144"/>
-</item>
-<item>
-  <title>Introducing chores</title>
-  <link>https://simonpcouch.com/blog/2025-04-11-chores/</link>
-  <description><![CDATA[ The following is a cross-post of a post I put together for the Posit Blog; you can read that post <a href="https://posit.co/blog/introducing-chores/">here</a>. ]]></description>
-  <guid>https://simonpcouch.com/blog/2025-04-11-chores/</guid>
-  <pubDate>Fri, 11 Apr 2025 05:00:00 GMT</pubDate>
-  <media:content url="https://simonpcouch.com/blog/2025-04-11-chores/featured.png" medium="image" type="image/png" height="144" width="144"/>
 </item>
 </channel>
 </rss>
