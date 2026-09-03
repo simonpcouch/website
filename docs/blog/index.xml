@@ -9,8 +9,16 @@
 <link>https://simonpcouch.com/blog/</link>
 <atom:link href="https://simonpcouch.com/blog/index.xml" rel="self" type="application/rss+xml"/>
 <description>A data science blog</description>
-<generator>quarto-1.9.38</generator>
-<lastBuildDate>Fri, 19 Jun 2026 05:00:00 GMT</lastBuildDate>
+<generator>quarto-1.10.18</generator>
+<lastBuildDate>Wed, 02 Sep 2026 05:00:00 GMT</lastBuildDate>
+<item>
+  <title>8B LLMs can almost do basic agentic coding</title>
+  <link>https://simonpcouch.com/blog/2026-09-02-local-agents-3/</link>
+  <description><![CDATA[ At the <a href="https://simonpcouch.com/blog/2025-12-04-local-agents/">end of last year</a>, I authored an LLM evaluation that measured a model’s ability to do a simple agentic coding task. The model is placed inside of a typical coding agent harness and asked to carry out a basic refactor that requires the model to make a few tool calls to navigate a repository and make the change. ]]></description>
+  <guid>https://simonpcouch.com/blog/2026-09-02-local-agents-3/</guid>
+  <pubDate>Wed, 02 Sep 2026 05:00:00 GMT</pubDate>
+  <media:content url="https://simonpcouch.com/assets/blank.png" medium="image" type="image/png" height="1" width="1"/>
+</item>
 <item>
   <title>LLMs are getting much better at interpreting counterintuitive plots</title>
   <link>https://simonpcouch.com/blog/2026-06-19-bluffbench-saturation/</link>
@@ -162,14 +170,6 @@
   <guid>https://simonpcouch.com/blog/2025-04-18-o3-o4-mini/</guid>
   <pubDate>Fri, 18 Apr 2025 05:00:00 GMT</pubDate>
   <media:content url="https://simonpcouch.com/blog/2025-04-18-o3-o4-mini/featured.png" medium="image" type="image/png" height="144" width="144"/>
-</item>
-<item>
-  <title>How good are the GPT 4.1 models at writing R code?</title>
-  <link>https://simonpcouch.com/blog/2025-04-15-gpt-4-1/</link>
-  <description><![CDATA[ Yesterday, OpenAI dropped <a href="https://openai.com/index/gpt-4-1/">a new series of models</a> called GPT 4.1, 4.1 mini, and GPT 4.1 nano. This line from their release post, specifically, caught my eye: ]]></description>
-  <guid>https://simonpcouch.com/blog/2025-04-15-gpt-4-1/</guid>
-  <pubDate>Tue, 15 Apr 2025 05:00:00 GMT</pubDate>
-  <media:content url="https://simonpcouch.com/blog/2025-04-15-gpt-4-1/featured.png" medium="image" type="image/png" height="142" width="144"/>
 </item>
 </channel>
 </rss>
