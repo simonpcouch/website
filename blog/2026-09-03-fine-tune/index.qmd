@@ -5,7 +5,7 @@ tags:
   - ai
 subtitle: "You're probably better off doing plain old prompt engineering."
 summary: ''
-image: ../../assets/blank.png
+image: featured.png
 ---
 
 I've seen a line of reasoning quite a bit recently online and in calls with users that goes something like this:
