@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta name="dcterms.date" content="2026-09-03">
+<title>You probably don’t want to fine-tune | Simon P. Couch – Simon P. Couch</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../assets/sc.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-efe3b629959c5d9e4c0ac2d48e7fc722.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script><script async="" src="https://www.googletagmanager.com/gtag/js?id=G-DDB8R0B1ZW"></script><script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-DDB8R0B1ZW', { 'anonymize_ip': true});
+</script>
+<meta property="og:title" content="You probably don’t want to fine-tune | Simon P. Couch">
+<meta property="og:description" content="You’re probably better off doing plain old prompt engineering.">
+<meta property="og:image" content="https://simonpcouch.com/assets/blank.png">
+<meta property="og:site_name" content="Simon P. Couch">
+<meta property="og:image:height" content="1">
+<meta property="og:image:width" content="1">
+<meta name="twitter:title" content="You probably don’t want to fine-tune | Simon P. Couch">
+<meta name="twitter:description" content="You’re probably better off doing plain old prompt engineering.">
+<meta name="twitter:image" content="https://simonpcouch.com/assets/blank.png">
+<meta name="twitter:image-height" content="1">
+<meta name="twitter:image-width" content="1">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner"><nav class="navbar navbar-expand-lg " data-bs-theme="dark"><div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../assets/sc.png" alt="" class="navbar-logo light-content"><img src="../../assets/sc.png" alt="" class="navbar-logo dark-content"></a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Simon P. Couch</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+<li class="nav-item">
+    <a class="nav-link" href="../../about/index.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog/index.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../software.html"> 
+<span class="menu-text">Software</span></a>
+  </li>  
+</ul>
+</div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+    <a href="https://www.github.com/simonpcouch/website" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav></header><!-- content --><header id="title-block-header" class="quarto-title-block default page-columns page-full"><div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">You probably don’t want to fine-tune</h1>
+            <p class="subtitle lead">You’re probably better off doing plain old prompt engineering.</p>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">September 3, 2026</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content"><p>I’ve seen a line of reasoning quite a bit recently online and in calls with users that goes something like this:</p>
+<ul>
+<li>There’s some task that needs to be done regularly.</li>
+<li>Today’s frontier models can do it quite reliably, but the bill is starting to rack up.</li>
+<li>Cheaper models can’t quite do so reliably, but a fine-tuned variant of a small, open-weights model (which is just as cheap as the model it seems comparable to) might be able to.</li>
+<li>You should fine-tune models for tasks that your organization does.</li>
+</ul>
+<p>I’ve seen <a href="https://seldo.com/posts/2026-is-the-year-of-fine-tuned-small-models/">a</a> <a href="https://fermisense.com/when-machines-take-the-wheel/">number</a> <a href="https://neon.com/blog/how-castform-neon-beats-frontier-models-on-price-and-efficiency">of</a> <a href="https://shopify.engineering/sidekicks-continual-learning-loop">blog</a> <a href="https://turbopuffer.com/blog/reinforcement-learning-sid-ai">posts</a> cited in support of this idea.</p>
+<p>I understand the appeal here; AI is getting expensive, many players in the space cannot make the privacy guarantees we’d hope, and proprietary models that we rely on go away when newer releases come out. That said, my reaction is that this approach seems more engineering-intensive and, likely, more expensive than alternative approaches. I’ll try to make that case here.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>When I say you <em>probably</em> don’t want to fine-tune, I mean that I totally understand there are some valid use cases here. Some of the linked blog posts are themselves valid cases. I can see fine tuning making sense for some <em>very</em> high-volume workloads and/or for asynchronous workloads (where it doesn’t matter if a response comes back in a second or a day).</p>
+</div>
+</div>
+<section id="what-is-fine-tuning" class="level2"><h2 class="anchored" data-anchor-id="what-is-fine-tuning">What is fine tuning?</h2>
+<p>Before we go further, it’s probably worth quickly outlining what I mean by fine tuning.</p>
+<p>Large language models are huge arrays of numbers. Input, usually in the form of text, is turned into arrays of numbers, and then those arrays get multiplied a bunch of times to form the output, also usually in the form of text. Those multiplications are quite computationally intensive, and the big array of numbers itself is quite large. For example, the smallest models that are <a href="https://simonpcouch.com/blog/2026-09-02-local-agents-3/">beginning to be able to</a> reliably complete basic agentic work contain 8 billion numbers (in short, “8B”). Loosely, you can think of the number of billions of parameters as the number of gigabytes of memory you’d need to run the model.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> So, a laptop with 16GB of RAM could comfortably run a 8B model as-is. In order to run the 8B model, you’d need to download that model from a repository like Hugging Face.</p>
+<p>Fine tuning is a process by which one can alter the behavior of the matrices, either by changing the numbers themselves or by injecting intermediate calculations. The goal of fine-tuning is, broadly, to increase the performance of a model on a given task while minimizing the impact on the model’s ability to do other tasks. Fine tuning approaches that change the numbers themselves, or “full fine-tunes,” mean that the whole model is altered. If you’d like to use a full fine-tune of a 4B model, you’re downloading a whole, fresh version of the model. Full fine-tunes are more computationally intensive to train and can learn harder tasks, but the unrestricted weight updates make them more prone to losing general capabilities. (Note that, broadly, the utility of LLMs is that they are remarkably general. For example, let’s say you want your fine-tune to classify insurance claims based on free text data. In order to do that, the model needs to demonstrate a vast array of capabilities that you might not think to explicitly train for. For example, the model should be able to notice when various accounts of some event seem to conflict on timeline. When models appear to gain some ability while losing too much of its broad intelligence, this is called overfitting, catastrophic forgetting specifically in the context of LLMs, or, more colloquially, overcooking the model.) This is in contrast to fine tuning approaches that only inject intermediate calculations, usually referring to low-rank adaptations (or LoRA fine-tunes). LoRA is probably the most common way to fine-tune a model. It’s less computationally expensive to train a LoRA, though a LoRA cannot alter behavior as broadly (bad for learning new capabilities, good for preventing overfitting). For example, a fine-tune of a 8B model could be on the order of tens of megabytes. If you have the ~8GB weights of that 8B model on your laptop already, you could feasibly download just those additional 20MB and be on your way.</p>
+</section><section id="fine-tuning-is-hard" class="level2"><h2 class="anchored" data-anchor-id="fine-tuning-is-hard">Fine tuning is hard</h2>
+<p>The process to fine-tune a model is roughly similar to the process of training the model in the first place. You have some intermediate draft of a model, and you throw a bunch of data at it. As the model sees more and more data, the weights get nudged in one direction or another that results in lower “loss.” Lower loss means better performance.</p>
+<p>It is very, very difficult to successfully fine-tune a model. I don’t claim that it’s impossible, but it is a substantial engineering effort, requiring the careful attention of dedicated scientists with access to today’s frontier models across several weeks, just for the first edition of the model. To show why, let’s revisit each step of that process.</p>
+<p><strong>What model should you start with?</strong> In short, you want the smallest possible model that has the ability to learn to do the task reliably while retaining sufficient general intelligence. It is very hard to predict when or how capabilities will emerge during fine tuning without first fine tuning, meaning that the choice will need to be revisited several times once you’ve made a first go at the remaining steps.</p>
+<p><strong>What data gets used for training?</strong> Once you’ve chosen a model, you need to find some training data to fine-tune it with. What should you use? Ideally, you would use the real thing. What inputs does the human or the frontier model actually see when they do the task IRL? What conclusions do they come to? This approach is usually not suitable from a privacy perspective; in order to train on that data, you’d need consent to train on it, and you likely don’t have it. In the cases that you do have consent and choose to train on that data, you now have a mandate not to overfit; in other words, if the model you’re fine tuning internalizes the data you’re training on and is able to (even hazily) recollect it, you’ve now exposed that data to any users of the model.</p>
+<p>The other approach, then, is synthetic data. In short, you could have a model that is able to do the task generate a bunch of scenarios that resemble the real inputs and then demonstrate how to carry out the task on those inputs. The issue with this is that this synthetic data is ‘collapsed’: in other words, the distribution of weird things happening in those synthetic inputs will be much narrower than what we actually see in real life. An example that demonstrates this really well is the <a href="https://www.404media.co/elias-thorne-chatbots-llms-chatgpt-lighthouse-keeper-story/">Elias in the Lighthouse</a> effect. A wide variety of models will, when asked to write a story, write about a lighthouse keeper named Elias Thorne. On its own, the story of Elias Thorne might be compelling. However, 1,000 stories about a lighthouse keeper Elias Thorne are not. In the same way, when asked to create 1,000 synthetic inputs to some task, that distribution of inputs created by a frontier model will have its own set of tics that are unrepresentative of real-world data. This means that a model fine-tuned on those 1,000 synthetic inputs might learn how to carry out the task when it looks like how the frontier model simulates it, but not actually reliably do the real thing.</p>
+<p><strong>How do you nudge the weights?</strong> Assuming that you have a diverse set of training data to work with, you’ll now need to decide, mechanistically, how to change the behavior of the model. Do you need a full fine-tune or will a LoRA be sufficient? In either case, there are 5 or 10 important parameters that you’ll need to choose the values of. Without deep expertise in training LLMs, you’ll probably be quite far off in your first guess on those numbers (though a careful exchange with a frontier LLM can help). Notably, they are hyperparameters, meaning that there is no generally good “magic number” for those parameters, and instead you’ll need to try a bunch and see what works. You’d make some guess, see what happens, then generate some hypotheses on what a given change to those parameters might do, then try out a different number and see if it has the desired effect. Every time you’re figuring out what to try next, you’ll be reading a <em>ton</em> of test cases and trying to observe general failure modes exhibited in this intermediate draft of your fine-tuned model. That might change the initial choice of model you’re fine-tuning, and it might change which subsets of the training data you’re exposing to the training process.</p>
+<p><strong>How do you define loss?</strong> I said above that you’d be reading a bunch of these example cases. In reality, though, you want some number that can be computed deterministically (or with the help of a frontier LLM) that well-describes what your reaction will be when you read the output. What’s a good output? What’s a bad output? In supervised fine tuning runs, the thing that actually determines how the weights get nudged is a simple, token-by-token comparison of the words that the model you’re training chose vs.&nbsp;some desired target. For output types that are free text, this is especially tricky to get right, because two outputs that mean the same thing can look quite different syntactically. Because of this, you’ll probably want an LLM-as-a-judge system, which can compare an output against a target and grade it according to some rubric you’ve defined in plain language. LLM-as-a-judge systems are themselves quite hard to design correctly, and you’ll be reading a bunch of that judge’s grading transcripts, too.</p>
+<p>Regarding loss and evals, as well, it feels worth mentioning that <strong>getting your fine-tuned model to score well on your own benchmark is not the hard part</strong>. Many of these fine-tuning writeups include a plot along these lines:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="index_files/figure-html/plot-finetune-benchmark-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" alt="A scatter plot of evaluation performance against cost per million tokens (log scale). Unlabeled grey synthetic points loosely follow a rising trend. Labeled model points include Fable 5.1, GPT 5.6 Sol, Sonnet 5, Gemma 4 26B, Llama 4 8B, and Phi 5 mini. A red point labeled 'Our fine-tune' sits in the upper left, cheap yet scoring above the frontier models."></p>
+</figure>
+</div>
+</div>
+</div>
+<p>When I see that a single-digit-billion-parameter fine-tuned model scores better than Fable 5.1 or GPT 5.6 Sol on an evaluation, I interpret that as evidence that the evaluation is not meaningful. In my own experience, it is not (comparatively) hard to get a small model to score very well on any given benchmark. What’s much more difficult is preserving the broad intelligence of a model while driving the evaluation score up. A meaningful evaluation can do both at once, measuring task performance under a realistic, broad distribution of possible task configurations. It is very hard to author meaningful evaluations, especially for models as capable as those that exist today.</p>
+<p>Suppose, though, that you end up finding a good model to start from and a good set of parameters and a diverse set of training data that you’ve obtained consent to train on and have found a way to measure your progress that meaningfully speaks to the broad distribution of situations that your model will see in the wild. Now, it’s time to put it in production.</p>
+</section><section id="fine-tuning-is-expensive" class="level2"><h2 class="anchored" data-anchor-id="fine-tuning-is-expensive">Fine tuning is expensive</h2>
+<p>It only costs a few dollars to run one fine tuning run of a relatively low-rank LoRA of a, say, 8B model on 1,000 samples. Even a larger-rank fine-tune of a model in the tens of billions of parameters on a bunch of task-specific data is a few hundred dollars. (Various technical details might mean this is an order of magnitude or two off. Regardless, the larger point stands that a single fine tuning run is not the expensive part of deploying a fine-tuned model.)</p>
+<p>It is likely much more expensive to get such a model deployed, doing the task you trained it to do.</p>
+<section id="because-hosting-is-expensive" class="level3"><h3 class="anchored" data-anchor-id="because-hosting-is-expensive">…because hosting is expensive</h3>
+<p>Hosting a model yourself is expensive compared to using a similarly capable model hosted by someone else unless you have extraordinary volume. (Unlike a general hosted model, you cannot submit requests to your custom weights and pay only per token.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>)</p>
+<p>This data isn’t actually public, but it’s widely believed that Anthropic and OpenAI make margins on the <a href="https://newsletter.semianalysis.com/p/ai-value-capture-the-shift-to-model">order of tens of percent</a> for the models that they serve. They serve extraordinarily large volumes; their compute is near max capacity almost always. Further, extraordinarily smart people are working very hard to serve these models as efficiently as possible. (If you don’t believe me, read <a href="https://arxiv.org/abs/2606.19348">this DeepSeek paper</a> or <a href="https://arxiv.org/abs/2512.02556">this one</a>.) In short, the organizations that are serving frontier models are very good at doing so and are thus doing so very efficiently. And they are making margins on the order of tens of percent. So, in order to be competitive on price compared to buying the tokens from someone else, let’s say you’d need to be at worst half as good at the frontier labs at serving your own workload. It is very hard to serve similarly-valuable tokens this cheaply.</p>
+<p>Just as an example, let’s say I host 8-bit Gemma 4 26B A4B on a single H100. I can rent a high-availability <a href="https://lambda.ai/instances">H100</a> <a href="https://fireworks.ai/pricing">GPU</a> <a href="https://www.baseten.co/pricing/">instance</a> at $0.0833 a minute, or $44,000 a year. Further, let’s say that the workload is a coding agent like Claude Code; 90% of tokens are cached input, 9% of tokens are uncached input, and 1% of tokens are output.</p>
+<p><a href="https://platform.claude.com/docs/en/about-claude/pricing#:~:text=%2475%20/%20MTok-,Claude%20Sonnet%205,%2410%20/%20MTok,-Claude%20Sonnet%204.6">Sonnet 5</a> is $2 per million tokens input, a tenth of that for cached input tokens, and $10 per million output tokens. At that cost, I could buy ~96 billion tokens.</p>
+<p>So, <strong>for the cost to be equivalent to 1) self-host this 26B A4B fine-tune and 2) just route all of the requests to Sonnet instead—a <em>much</em> more capable model and likely much larger by number of parameters—we’d need to serve 182,000 tokens per minute 24/7 through the year.</strong></p>
+<p>It is quite easy<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> to serve that mixture of 182,000 tokens in a minute with open source libraries. However, assuming this model is fine-tuned to do a specific task, there must be sufficient demand for that task specifically to actually rack up that many tokens. Further, the demand needs to be relatively smooth. One could easily serve 10 times as many tokens in a minute at peak. If you’ve rented that H100 24/7, though, you’re paying for the idle moments, too. The average would need to meet that threshold over time, and the peaks also can’t be too intense, or else you’ll need to rent a <em>second</em> H100 (or accept that users will experience downtime at peak hours).</p>
+<p>You could make the argument that some tasks only require the fine-tuned model to be live for 10 minutes a day or something and then the math gets easier. I’d argue that very few real-world tasks actually fit this paradigm.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>I’m not arguing against self-hosting in general. Self-hosting (either literally on your organization’s own hardware or by renting hardware and serving open-weights models on it with open source software) can be quite cost-effective at sufficient scale. If you know that a <em>lot</em> of traffic will go through that endpoint, do the napkin math like that above and see if you can save some money. What I’m particularly arguing against is that it’s a good idea to self-host a model <em>that can only do one thing</em>. Unless you serve an extraordinary amount of traffic that does that task specifically, the payoff is not there.</p>
+</div>
+</div>
+<p>It’s also worth saying that a model that can serve a bunch of traffic behind a single H100 is a very small model. Composer 2.5 is a <a href="https://cursor.com/blog/composer-2-5">Kimi 2.5 checkpoint</a>, so 1T A32B. The GPU cluster required to serve that model is more than an order of magnitude more expensive to rent (and the Cursor team is only able to do so because they serve a <em>very</em> large user base).</p>
+</section><section id="and-you-must-host" class="level3"><h3 class="anchored" data-anchor-id="and-you-must-host">…and you must host</h3>
+<p>The other suggestion here is that, if the model is small enough, users who need to do the task can just download the weights and run it on their laptop or a dedicated workstation.</p>
+<p>The effectiveness of this argument depends on the kind of task to be done. However, it’s worth considering the potential for this to be a very unpleasant user experience compared to just using a model that someone else hosts. For example, let’s say my colleague does some task for an hour every week and there’s some model small enough to run on my laptop that’s capable of doing the task. In order to use the model for that task, my colleague would need to download the 4GB or 8GB or 100GB or whatever of weights. That user would also need to be capable of (and willing to) configure the serving of the model, and they’d need to make that happen every time they started the task. If that model was accessed through a tool that the user was using regularly anyway—Claude Code pointed at a local ollama model, for instance—they’d need to remember to switch the model over in the application’s settings. If that model was accessed through a different interface, the user would need to use a different interface than they normally use LLMs with for that task specifically. Neither of these are good UX.</p>
+<p>Even if the software for locally serving models got <em>much</em> more pleasant than it currently is, it’s hard to compete with the experience of pay-as-you-go for the Everything Tool that wraps the Everything Model.</p>
+</section></section><section id="your-fine-tune-will-quickly-fall-behind" class="level2"><h2 class="anchored" data-anchor-id="your-fine-tune-will-quickly-fall-behind">Your fine-tune will quickly fall behind</h2>
+<p>Let’s say you successfully fine-tune a model based on some fictional model Kuen 3. Then, the following week, Kuen 3.5 is released. 3 of the 100 most capable LLM scientists on this planet worked on it. It’s almost as good as your fine-tune on that specific task, and it’s also broadly capable at a very broad array of tasks.</p>
+<p>Fine tuning is not a boat that is lifted by the rising tide of broader AI progress—in order to take advantage of the Kuen 3.5 release with your fine-tune, you’d need to restart that process of choosing parameters and observing fine tuning runs. The underlying architecture of the model may have changed, and thus the approaches that you used to fine-tune Kuen 3 might not work for Kuen 3.5 on your first try.</p>
+</section><section id="what-you-should-do-instead" class="level2"><h2 class="anchored" data-anchor-id="what-you-should-do-instead">What you should do instead</h2>
+<p>The boat that is lifted by a rising tide in this context is plain old prompt engineering. (POPE, as <a href="https://github.com/jcheng5">Joe Cheng</a> calls it.) Choose a model that’s available to you, that fits your price point, and seems broadly capable across a wide variety of public benchmarks. (Extra points if the vibes on the model from people you trust are good, and extra points if someone else is serving it.) Put together a short prompt telling the model how to do the task, perhaps inside of some coding agent harness like Claude Code (or, hey, <a href="https://assistant.posit.co/">Posit Assistant</a>), and see what it does. Adjust the prompt to tell it how to do things correctly that it tends to trip up on, and iterate from there. If you’ve already put together an evaluation as part of your fine tuning process, you could even reuse that to measure the effects of changes in your prompt! My colleague Sara and I have written about prompt engineering in the past if you’re interested in learning more, once about the more specific task of POPE for <a href="https://posit.co/blog/custom-chat-app">teaching LLMs about R packages</a> but in relatively generalizable ways, and once focused on <a href="https://opensource.posit.co/blog/2026-07-03_ai-newsletter/">deciding between the popular ways to deliver context to coding agents</a>.</p>
+<p>This might seem in contradiction with my earlier characterization:</p>
+<blockquote class="blockquote">
+<p>Cheaper models can’t quite do so reliably, but a fine-tuned variant of a small, open-weights model (which is just as cheap as the model it seems comparable to) might be able to.</p>
+</blockquote>
+<p>I said that cheaper models couldn’t do so reliably already. How could prompting alone make that change? Two thoughts here:</p>
+<ul>
+<li>Consider the amount of time and money you spend iterating on a prompt and model selection in comparison to the time it takes to fine-tune a model. You could spend days iterating on the prompt and still have saved time and money.</li>
+<li>LLMs are advancing remarkably quickly. Notably, the intelligence per parameter is progressing quickly, meaning that you can fit comparatively more intelligence in a smaller model. In April, I wrote about how, 4 months prior, no model smaller than 35B could complete a simple agentic coding task a single time out of ten. Then, in April, Qwen 3.5 35B A3B and Gemma 4 26B A4B both completed the task successfully nine times out of ten. Yesterday, I shared that <a href="https://simonpcouch.com/blog/2026-09-02-local-agents-3/">an 8B model completed the task</a> successfully 8 times out of ten. In short, one ought not to hold on to their beliefs about model capabilities too long. If you haven’t checked out model releases from the last month, try to prompt engineer with them for a bit and see if the rising tide has made your use case possible.</li>
+</ul>
+
+
+</section><a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a><div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+<ol>
+<li id="fn1"><p>This is the case if the model is quantized to 8-bit. 16-bit is a common higher-precision setting, 4-bit and even smaller are common.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Per-token fine-tune hosting has been tried and largely abandoned: Together AI&nbsp;<a href="https://x.com/togethercompute/status/1869465912459604272">announced serverless multi-LoRA serving</a>&nbsp;in 2024 only to&nbsp;<a href="https://docs.together.ai/docs/lora-inference">discontinue it</a>&nbsp;later, and Fireworks has&nbsp;<a href="https://docs.fireworks.ai/fine-tuning/deploying-loras">never supported serverless LoRA deployments</a>.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>Sorry for saying “easy” here. By easy, I mean easy <em>relative to other tasks</em> that need to get done.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol></section><section class="quarto-appendix-contents" id="quarto-reuse"><h2 class="anchored quarto-appendix-heading">Reuse</h2><div class="quarto-appendix-contents"><div><a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a></div></div></section></div></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/simonpcouch\.com");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script><script src="https://utteranc.es/client.js" repo="simonpcouch/website" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script>
+</div> <!-- /content -->
+<footer class="footer"><div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© 2024 Simon P. Couch ∙ Made with <a href="https://quarto.org">Quarto</a></p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+</body></html>
