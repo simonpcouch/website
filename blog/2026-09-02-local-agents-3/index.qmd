@@ -3,7 +3,7 @@ title: "8B LLMs can almost do basic agentic coding"
 date: '2026-09-02'
 tags:
   - ai
-subtitle: "Granite 4.2 8B succesffully carried out a simpler refactor 8 times out of 10."
+subtitle: "Granite 4.2 8B successfully carried out a simpler refactor 8 times out of 10."
 summary: ''
 image: featured.png
 ---
