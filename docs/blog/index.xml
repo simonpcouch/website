@@ -17,7 +17,7 @@
   <description><![CDATA[ At the <a href="https://simonpcouch.com/blog/2025-12-04-local-agents/">end of last year</a>, I authored an LLM evaluation that measured a model’s ability to do a simple agentic coding task. The model is placed inside of a typical coding agent harness and asked to carry out a basic refactor that requires the model to make a few tool calls to navigate a repository and make the change. ]]></description>
   <guid>https://simonpcouch.com/blog/2026-09-02-local-agents-3/</guid>
   <pubDate>Wed, 02 Sep 2026 05:00:00 GMT</pubDate>
-  <media:content url="https://simonpcouch.com/assets/blank.png" medium="image" type="image/png" height="1" width="1"/>
+  <media:content url="https://simonpcouch.com/blog/2026-09-02-local-agents-3/featured.png" medium="image" type="image/png" height="139" width="144"/>
 </item>
 <item>
   <title>LLMs are getting much better at interpreting counterintuitive plots</title>

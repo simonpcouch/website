@@ -5,7 +5,7 @@ tags:
   - ai
 subtitle: "Granite 4.2 8B succesffully carried out a simpler refactor 8 times out of 10."
 summary: ''
-image: ../../assets/blank.png
+image: featured.png
 ---
 
 ```{r}
