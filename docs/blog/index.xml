@@ -10,7 +10,15 @@
 <atom:link href="https://simonpcouch.com/blog/index.xml" rel="self" type="application/rss+xml"/>
 <description>A data science blog</description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Thu, 03 Sep 2026 05:00:00 GMT</lastBuildDate>
+<lastBuildDate>Mon, 05 Oct 2026 05:00:00 GMT</lastBuildDate>
+<item>
+  <title>Software is so cool</title>
+  <link>https://simonpcouch.com/blog/2026-10-05-software/</link>
+  <description><![CDATA[ I recently visited my alma mater. I was walking into the sports center to see the new gym when a professor was walking out. “Simon!”, he said, “We were just using that R package that you wrote us in my class last week.” ]]></description>
+  <guid>https://simonpcouch.com/blog/2026-10-05-software/</guid>
+  <pubDate>Mon, 05 Oct 2026 05:00:00 GMT</pubDate>
+  <media:content url="https://simonpcouch.com/blog/2026-10-05-software/featured.png" medium="image" type="image/png" height="138" width="144"/>
+</item>
 <item>
   <title>You probably don’t want to fine-tune</title>
   <link>https://simonpcouch.com/blog/2026-09-03-fine-tune/</link>
@@ -162,14 +170,6 @@
   <guid>https://simonpcouch.com/blog/2025-05-21-gemini-2-5-flash/</guid>
   <pubDate>Wed, 21 May 2025 05:00:00 GMT</pubDate>
   <media:content url="https://simonpcouch.com/blog/2025-05-21-gemini-2-5-flash/featured.png" medium="image" type="image/png" height="144" width="144"/>
-</item>
-<item>
-  <title>Evaluating the new Gemini 2.5 Pro update on R coding</title>
-  <link>https://simonpcouch.com/blog/2025-05-07-gemini-2-5-pro-new/</link>
-  <description><![CDATA[ The title line of <a href="https://developers.googleblog.com/en/gemini-2-5-pro-io-improved-coding-performance/">Google’s release post</a> on the newest Gemini 2.5 Pro release is “even better coding performance.” Reading this, I was curious whether we’d see a notable increase in performance compared to the last generation on R coding tasks; in <a href="https://www.simonpcouch.com/blog/2025-04-01-gemini-2-5-pro/">an earlier post</a>, I saw that the March release of Gemini 2.5 Pro was a contender with Claude 3.7 Sonnet on <em>An R Eval</em>, a dataset of challenging R coding problems. ]]></description>
-  <guid>https://simonpcouch.com/blog/2025-05-07-gemini-2-5-pro-new/</guid>
-  <pubDate>Wed, 07 May 2025 05:00:00 GMT</pubDate>
-  <media:content url="https://simonpcouch.com/blog/2025-05-07-gemini-2-5-pro-new/featured.png" medium="image" type="image/png" height="140" width="144"/>
 </item>
 </channel>
 </rss>

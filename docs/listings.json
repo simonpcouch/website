@@ -2,6 +2,7 @@
   {
     "listing": "/blog/index.html",
     "items": [
+      "/blog/2026-10-05-software/index.html",
       "/blog/2026-09-03-fine-tune/index.html",
       "/blog/2026-09-02-local-agents-3/index.html",
       "/blog/2026-06-19-bluffbench-saturation/index.html",

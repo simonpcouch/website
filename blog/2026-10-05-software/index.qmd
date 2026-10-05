@@ -1,0 +1,23 @@
+---
+title: "Software is so cool"
+date: '2026-10-05'
+tags:
+  - personal
+subtitle: "Reflecting on one of my earlier software projects."
+summary: ''
+image: featured.png
+---
+
+I recently visited my alma mater. I was walking into the sports center to see the new gym when a professor was walking out. "Simon!", he said, "We were just using that R package that you wrote us in my class last week."
+
+---
+
+As a student, I had worked at our ed tech center as an "mLabbie," helping students and faculty with data analysis projects. One of those projects was in collaboration with this professor, Sam. There was some algorithm from the 90s that predicted algal blooms in lakes using plankton dynamics. The original implementation, that Sam somehow had his hands on, was in Pascal. Sam wondered if we could reimplement the algorithm in R, so that students could easily install it alongside other software they were learning to use in the class. I pored over the code for weeks, porting line by line.
+
+To check my work, I remember we had a couple sample inputs and resulting curves. If the R port worked, I'd get the same curve out.^[I guess I could have just figured out how to _run_ the Pascal, but...] After the initial go at an implementation, I discovered that my port had some sort of issue that resulted in the plankton population skyrocketing regardless of the inputs, so something clearly wasn't working. I thought that I wouldn't have had to really understand scoping or object inheritance or whatever in Pascal in order to do the port, but scoping bugs ended up being what bit me again and again. Eventually, there was a working implementation.
+
+I mostly forgot about it from then on until Sam mentioned it a few weeks ago. He seemed so appreciative.
+
+In that moment—and now—I feel so appreciative for the opportunity to work on software for a living. In working on that project, I got to spend time with Sam and get to know this incredibly kind, considerate person. I only got to work on that project because I was part of the mLab, where I met a motley crew of other college students with skillsets that blew my mind. My manager in that position is still a dear friend and a colleague to this day. Over the years since then, dozens of young people got to have their early experiences with programming using this software that I had been a part of writing. The original Pascal code was written by someone. Writing open source software has helped me feel connected to all of it.
+
+Coincidentally, the first commits to that package were sent up the week before I attended my first rstudio::conf(). A couple weeks ago, I gave the keynote at that same conference. That is so wild to me.
